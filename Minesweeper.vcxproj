@@ -139,6 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="lib\Display.cpp" />
+    <ClCompile Include="lib\Engine.cpp" />
+    <ClCompile Include="lib\Game.cpp" />
+    <ClCompile Include="lib\Player.cpp" />
+    <ClCompile Include="lib\State.cpp" />
     <ClCompile Include="src\Minesweeper.cpp" />
   </ItemGroup>
   <ItemGroup>

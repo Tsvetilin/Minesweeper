@@ -2,6 +2,8 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+#include <stdlib.h>
+
 typedef unsigned short int ushort;
 
 const ushort NUMBERS_ARRAY_SIZE = 5;
@@ -50,6 +52,8 @@ Bright White    97  107
     printf("\033[1;47;35mTexting\033[0m\t\t");
 */
 
-
+ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound) {
+    return rand() % (upperBound - lowerBound) + lowerBound;
+}
 
 #endif // !COMMON_H_

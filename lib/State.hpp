@@ -49,11 +49,28 @@ struct Settings {
 };
 
 struct State {
-	// Read settings
-	// Continue/save game
-	// Change settings
-	// New game
-	// Current game state
+
+public:
+
+	void ReadSettings();
+	void SaveSettings();
+	void SaveGame();
+	void NewGame();
+	void ContinueGame();
+
+	GameState UpdateGameState();
+
+	GameState GetGameState() {
+		return gameState;
+	};
+
+	Settings GetSettings() {
+		return settings;
+	};
+
+private:
+	GameState gameState;
+	Settings settings;
 };
 
 #endif // !STATE_H_

@@ -10,15 +10,17 @@ struct Engine {
 
 public:
 	char** board;
+	char** playerBoard;
 
-	void GenerateBoard(BoardSettings boardSettings);
-	void PerformMove(ushort row, ushort col);
+	void GenerateBoard(const BoardSettings boardSettings);
+	void PerformMove(const ushort row, ushort col);
 	bool HasGameFinished();
 	bool IsWin();
 
 private:
-	void initializeBoard(ushort rows, ushort cols);
-	void deleteBoard(ushort rows, ushort cols);
+	void initializeBoard(const ushort rows, const ushort cols);
+	void deleteBoard(const ushort rows);
+	void fillBoard(const ushort rows, const ushort cols, const char uncoveredChar);
 
 };
 
