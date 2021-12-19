@@ -139,9 +139,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Minesweeper.cpp" />
+    <ClCompile Include="src\Minesweeper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="lib\Display.hpp" />
+    <ClInclude Include="lib\Engine.hpp" />
+    <ClInclude Include="lib\Game.hpp" />
+    <ClInclude Include="lib\Player.hpp" />
+    <ClInclude Include="lib\State.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\settings.json" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties assets_4settings_1json__JsonSchema="https://json.schemastore.org/minecraft-item-modifier.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
