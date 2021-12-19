@@ -1,3 +1,50 @@
-{
+﻿{
+  "IngameCharacters": {
 
-}
+    "Standart": {
+      "BombMarked": "R",
+      "Covered": "-",
+      "BombRevealed": "B",
+      "Numbers": "1234"
+    },
+    "Fancy": {
+      "BombMarked": "F",
+      "Covered": "",
+      "BombRevealed": "B",
+      "Numbers": "1234"
+    },
+    "Custom": {
+      "BombMarked": "🚩",
+      "Covered": "",
+      "BombRevealed": "💣",
+      "Numbers": "1️⃣2️⃣3️⃣4️⃣"
+    }
+  },
+  "BoardSizes": [
+    {
+      "BoardRows": 9,
+      "BoardCols": 9,
+      "BombsCount": 10
+    },
+    {
+      "BoardRows": 10,
+      "BoardCols": 10,
+      "BombsCount": 15
+    },
+    {
+      "BoardRows": 16,
+      "BoardCols": 16,
+      "BombsCount": 40
+    },
+    {
+      "BoardRows": 16,
+      "BoardCols": 30,
+      "BombsCount": 99
+    },
+    {
+      "BoardRows": 24,
+      "BoardCols": 30,
+      "BombsCount": 200
+    }
+  ]
+} 

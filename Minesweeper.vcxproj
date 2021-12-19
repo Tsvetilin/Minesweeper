@@ -142,6 +142,7 @@
     <ClCompile Include="src\Minesweeper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="lib\Common.hpp" />
     <ClInclude Include="lib\Display.hpp" />
     <ClInclude Include="lib\Engine.hpp" />
     <ClInclude Include="lib\Game.hpp" />
@@ -157,7 +158,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties assets_4settings_1json__JsonSchema="https://json.schemastore.org/minecraft-item-modifier.json" />
+      <UserProperties />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
