@@ -9,48 +9,38 @@ typedef unsigned short int ushort;
 const ushort NUMBERS_CHAR_ARRAY_SIZE = 9;
 
 // ANSII Support Required
-/*
-Name            FG  BG
-Black           30  40
-Red             31  41
-Green           32  42
-Yellow          33  43
-Blue            34  44
-Magenta         35  45
-Cyan            36  46
-White           37  47
-Bright Black    90  100
-Bright Red      91  101
-Bright Green    92  102
-Bright Yellow   93  103
-Bright Blue     94  104
-Bright Magenta  95  105
-Bright Cyan     96  106
-Bright White    97  107
-
-
-    printf("\x1B[31mTexting\033[0m\t\t");
-    printf("\x1B[32mTexting\033[0m\t\t");
-    printf("\x1B[33mTexting\033[0m\t\t");
-    printf("\x1B[34mTexting\033[0m\t\t");
-    printf("\x1B[35mTexting\033[0m\n");
-
-    printf("\x1B[36mTexting\033[0m\t\t");
-    printf("\x1B[36mTexting\033[0m\t\t");
-    printf("\x1B[36mTexting\033[0m\t\t");
-    printf("\x1B[37mTexting\033[0m\t\t");
-    printf("\x1B[93mTexting\033[0m\n");
-
-    printf("\033[3;42;30mTexting\033[0m\t\t");
-    printf("\033[3;43;30mTexting\033[0m\t\t");
-    printf("\033[3;44;30mTexting\033[0m\t\t");
-    printf("\033[3;104;30mTexting\033[0m\t\t");
-    printf("\033[3;100;30mTexting\033[0m\n");
-
-    printf("\033[3;47;35mTexting\033[0m\t\t");
-    printf("\033[2;47;35mTexting\033[0m\t\t");
-    printf("\033[1;47;35mTexting\033[0m\t\t");
-*/
+#define BlackFG          "30" 
+#define RedFG            "31" 
+#define GreenFG          "32" 
+#define YellowFG         "33" 
+#define BlueFG           "34" 
+#define MagentaFG        "35" 
+#define CyanFG           "36" 
+#define WhiteFG          "37" 
+#define BrightBlackFG    "90" 
+#define BrightRedFG      "91" 
+#define BrightGreenFG    "92" 
+#define BrightYellowFG   "93" 
+#define BrightBlueFG     "94" 
+#define BrightMagentaFG  "95" 
+#define BrightCyanFG     "96" 
+#define BrightWhiteFG    "97" 
+#define BlackBG             "40"
+#define RedBG               "41"
+#define GreenBG             "42"
+#define YellowBG            "43"
+#define BlueBG              "44"
+#define MagentaBG           "45"
+#define CyanBG              "46"
+#define WhiteBG             "47"
+#define BrightBlackBG      "100"
+#define BrightRedBG        "101"
+#define BrightGreenBG      "102"
+#define BrightYellowBG     "103"
+#define BrightBlueBG       "104"
+#define BrightMagentaBG    "105"
+#define BrightCyanBG       "106"
+#define BrightWhiteBG      "107"
 
 ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound) {
     return rand() % (upperBound - lowerBound) + lowerBound;

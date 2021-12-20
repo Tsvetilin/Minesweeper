@@ -24,6 +24,7 @@ private:
 	bool isWin = false;
 
 	bool checkForWin(const BoardSettings boardSettings);
+	bool isNumber(const ushort row, const ushort col, const char* numbers);
 
 	void initializeBoard(const ushort rows, const ushort cols);
 	void deleteBoard(const ushort rows);

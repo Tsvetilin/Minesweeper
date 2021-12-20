@@ -37,8 +37,8 @@ struct BoardSettings {
 	ushort bombsCount = 10;
 	char bombRevealed = 'B';
 	char bombMarked = 'F';
-	char uncovered = '_';
-	char covered = ' ';
+	char uncovered = ' ';
+	char covered = '_';
 	char numbers[NUMBERS_CHAR_ARRAY_SIZE] = "12345678";
 };
 

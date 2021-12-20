@@ -6,8 +6,18 @@
 #include "State.hpp"
 
 // Handles Player input
+
+enum class PlayerInput {
+	None=0,
+	UpArrow=1,
+	DownArrow =2,
+	LeftArrow=3,
+	RightArrow=4,
+};
 struct Player {
 
+	bool IsAdvancedInputSupported();
+	PlayerInput GetKeyboardInput();
 	void GetInput(Settings settings);
 };
 

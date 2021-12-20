@@ -7,7 +7,6 @@ public:
 	char** playerBoard;
 
 	void LoadGame(const BoardSettings boardSettings, const char** rawBoardData, const char** rawPlayerBoardData);
-
 };
 */
 
@@ -94,7 +93,6 @@ void Engine::GenerateBoard(BoardSettings boardSettings) {
 			}
 		}
 	}
-
 }
 
 void Engine::PerformMove(const Move move, const ushort row, const ushort col, const BoardSettings boardSettings, const UncoverType uncoverType) {
@@ -114,7 +112,7 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 		return;
 	}
 
-	if (Engine::playerBoard[row][col] == boardSettings.uncovered) {
+	if (Engine::playerBoard[row][col] == boardSettings.uncovered || isNumber(row,col,boardSettings.numbers)) {
 		return;
 	}
 
@@ -143,11 +141,23 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 
 }
 
+void Engine::FinishGame(const BoardSettings boardSettings) {
+	Engine::deleteBoard(boardSettings.boardRows);
+}
+
+bool Engine::HasGameFinished() {
+	return !Engine::isPlaying;
+}
+
+bool Engine::IsWin() {
+	return Engine::isWin;
+}
+
 bool Engine::checkForWin(const BoardSettings boardSettings) {
 
 	ushort rows = boardSettings.boardRows;
 	ushort cols = boardSettings.boardCols;
-	
+
 	ushort markedBombs = 0;
 
 	for (ushort row = 0; row < rows; ++row)
@@ -164,15 +174,21 @@ bool Engine::checkForWin(const BoardSettings boardSettings) {
 		}
 	}
 
-	return markedBombs==boardSettings.bombsCount;
+	return markedBombs == boardSettings.bombsCount;
 }
 
-bool Engine::HasGameFinished() {
-	return !Engine::isPlaying;
-}
+bool Engine::isNumber(const ushort row, const ushort col, const char* numbers) {
 
-bool Engine::IsWin() {
-	return Engine::isWin;
+	ushort i = 0;
+	while (i < NUMBERS_CHAR_ARRAY_SIZE) {
+		if (Engine::playerBoard[row][col] == numbers[i]) {
+			return true;
+		}
+
+		++i;
+	}
+
+	return false;
 }
 
 void Engine::initializeBoard(const ushort rows, const ushort cols) {
