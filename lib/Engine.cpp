@@ -6,31 +6,173 @@ public:
 	char** board;
 	char** playerBoard;
 
-	void PerformMove(ushort row, ushort col);
-	bool HasGameFinished();
-	bool IsWin();
+	void LoadGame(const BoardSettings boardSettings, const char** rawBoardData, const char** rawPlayerBoardData);
+
 };
 */
 
 void Engine::GenerateBoard(BoardSettings boardSettings) {
+
+	Engine::isPlaying = true;
+	Engine::isWin = false;
 
 	ushort rows = boardSettings.boardRows;
 	ushort cols = boardSettings.boardCols;
 	ushort bombsCount = boardSettings.bombsCount;
 
 	initializeBoard(rows, cols);
-	fillBoard(rows, cols, boardSettings.uncovered);
+	fillBoard(rows, cols, boardSettings.uncovered, boardSettings.covered);
 
+	// Place bombs
 	for (ushort i = 0; i < bombsCount; ++i)
 	{
 		ushort rowIndex = 0, colIndex = 0;
 		do {
 			ushort rowIndex = GenerateRandomNumber(1, rows) - 1;
 			ushort colIndex = GenerateRandomNumber(1, cols) - 1;
-		} while (board[rowIndex][colIndex] == boardSettings.bombRevealed);
+		} while (Engine::board[rowIndex][colIndex] == boardSettings.bombRevealed);
 
-		board[rowIndex][colIndex] = boardSettings.bombRevealed;
+		Engine::board[rowIndex][colIndex] = boardSettings.bombRevealed;
 	}
+
+	// Do revealed board
+	ushort countNearbyBombs = 0;
+	for (ushort row = 0; row < rows; ++row)
+	{
+		for (ushort col = 0; col < cols; ++col)
+		{
+			if (Engine::board[row][col] == boardSettings.bombRevealed) {
+				continue;
+			}
+
+			countNearbyBombs = 0;
+
+			// up row
+			for (short i = col - 1; i < col + 2; ++i)
+			{
+				if (row - 1 < 0) {
+					break;
+				}
+
+				if (i < 0 || i > cols - 1) {
+					continue;
+				}
+
+				if (Engine::board[row - 1][i] == boardSettings.bombRevealed) {
+					countNearbyBombs++;
+				}
+			}
+
+			// down row
+			for (short i = col - 1; i < col + 2; ++i)
+			{
+				if (row + 1 > rows - 1) {
+					break;
+				}
+
+				if (i < 0 || i > cols - 1) {
+					continue;
+				}
+
+				if (Engine::board[row - 1][i] == boardSettings.bombRevealed) {
+					countNearbyBombs++;
+				}
+			}
+
+			// left
+			if (col - 1 >= 0 && Engine::board[row][col - 1] == boardSettings.bombRevealed) {
+				countNearbyBombs++;
+			}
+
+			// right
+			if (col + 1 < cols && Engine::board[row][col + 1] == boardSettings.bombRevealed) {
+				countNearbyBombs++;
+			}
+
+			if (countNearbyBombs > 0) {
+				Engine::board[row][col] = boardSettings.numbers[countNearbyBombs - 1];
+			}
+		}
+	}
+
+}
+
+void Engine::PerformMove(const Move move, const ushort row, const ushort col, const BoardSettings boardSettings, const UncoverType uncoverType) {
+	
+	if (!Engine::isPlaying) {
+		return;
+	}
+
+	ushort rows = boardSettings.boardRows;
+	ushort cols = boardSettings.boardCols;
+
+	if (0 < row || row >= rows) {
+		return;
+	}
+
+	if (0 < col || col >= cols) {
+		return;
+	}
+
+	if (Engine::playerBoard[row][col] == boardSettings.uncovered) {
+		return;
+	}
+
+	if (Engine::playerBoard[row][col] == boardSettings.bombMarked) {
+		if (move == Move::MarkBomb) {
+			Engine::playerBoard[row][col] = boardSettings.uncovered;
+		}
+		return;
+	}
+
+	if (uncoverType == UncoverType::Custom) {
+		if (Engine::board[row][col] == boardSettings.bombRevealed) {
+			Engine::isWin = false;
+			Engine::isPlaying = false;
+			// TODO: Handle player board to print
+		}
+		else {
+			Engine::playerBoard[row][col] = boardSettings.uncovered;
+		}
+	}
+
+	if (checkForWin(boardSettings)) {
+		isPlaying = false;
+		isWin = true;
+	}
+
+}
+
+bool Engine::checkForWin(const BoardSettings boardSettings) {
+
+	ushort rows = boardSettings.boardRows;
+	ushort cols = boardSettings.boardCols;
+	
+	ushort markedBombs = 0;
+
+	for (ushort row = 0; row < rows; ++row)
+	{
+		for (ushort col = 0; col < cols; ++col)
+		{
+			if (playerBoard[row][col] == boardSettings.uncovered) {
+				return false;
+			}
+
+			if (playerBoard[row][col] == boardSettings.bombMarked) {
+				++markedBombs;
+			}
+		}
+	}
+
+	return markedBombs==boardSettings.bombsCount;
+}
+
+bool Engine::HasGameFinished() {
+	return !Engine::isPlaying;
+}
+
+bool Engine::IsWin() {
+	return Engine::isWin;
 }
 
 void Engine::initializeBoard(const ushort rows, const ushort cols) {
@@ -57,14 +199,14 @@ void Engine::deleteBoard(const ushort rows) {
 	delete[] playerBoard;
 }
 
-void Engine::fillBoard(const ushort rows, const ushort cols, const char uncoveredChar) {
+void Engine::fillBoard(const ushort rows, const ushort cols, const char uncoveredChar, const char coveredChar) {
 
 	for (ushort row = 0; row < rows; ++row)
 	{
 		for (ushort col = 0; col < cols; ++col)
 		{
 			Engine::board[row][col] = uncoveredChar;
-			Engine::playerBoard[row][col] = uncoveredChar;
+			Engine::playerBoard[row][col] = coveredChar;
 		}
 	}
 }

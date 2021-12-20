@@ -6,7 +6,7 @@
 
 typedef unsigned short int ushort;
 
-const ushort NUMBERS_ARRAY_SIZE = 5;
+const ushort NUMBERS_CHAR_ARRAY_SIZE = 9;
 
 // ANSII Support Required
 /*
@@ -55,5 +55,11 @@ Bright White    97  107
 ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound) {
     return rand() % (upperBound - lowerBound) + lowerBound;
 }
+
+enum class Move {
+    None = 0,
+    Reveal = 1,
+    MarkBomb = 2,
+};
 
 #endif // !COMMON_H_

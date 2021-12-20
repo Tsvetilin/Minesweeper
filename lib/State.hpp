@@ -21,8 +21,8 @@ enum class BoardLook {
 };
 
 enum class UncoverType {
-	Default = 0,
-	Custom = 1,
+	Default = 0, // As in original game
+	Custom = 1,  // Uncover just the surrounding 8 
 };
 
 enum class ControlType {
@@ -37,15 +37,16 @@ struct BoardSettings {
 	ushort bombsCount = 10;
 	char bombRevealed = 'B';
 	char bombMarked = 'F';
-	char uncovered = ' ';
-	char numbers[NUMBERS_ARRAY_SIZE] = "1234";
+	char uncovered = '_';
+	char covered = ' ';
+	char numbers[NUMBERS_CHAR_ARRAY_SIZE] = "12345678";
 };
 
 struct Settings {
 	BoardSettings BoardSettings;								// Board settings -> board size & bombs count
-	UncoverType UncoverType = UncoverType::Custom;				// Default/custom uncover
-	ControlType ControlType = ControlType::AdvancedArrowInput;	// Arrow/Input controls
-	BoardLook BoardLook = BoardLook::Fancy;						// Fancy/default board look
+	UncoverType UncoverType = UncoverType::Default;				// Default / custom uncover
+	ControlType ControlType = ControlType::AdvancedArrowInput;	// Arrow / Input controls
+	BoardLook BoardLook = BoardLook::Fancy;				        // Fancy / default board look
 };
 
 struct State {
