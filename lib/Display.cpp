@@ -1,4 +1,5 @@
 #include "Display.hpp"
+#include "Common.hpp"
 
 #include <iostream>
 
@@ -33,14 +34,63 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** bo
 
 	if (boardLook == BoardLook::Default) {
 
-		for (ushort row = 0; row < rows; ++row)
-		{
-			for (ushort col = 0; col < cols; ++col)
+		if (rows < 10 && cols < 10) {
+			std::cout << "  ";
+			for (ushort i = 0; i < cols; i++)
 			{
-				std::cout << board[row][col];
+				std::cout << (i + 1);
 			}
-
 			std::cout << std::endl;
+
+			for (ushort i = 0; i < cols + 2; i++)
+			{
+				std::cout << "-";
+			}
+			std::cout << std::endl;
+
+			for (ushort row = 0; row < rows; ++row)
+			{
+				std::cout << (row + 1) << "|";
+				for (ushort col = 0; col < cols; ++col)
+				{
+					std::cout << board[row][col];
+				}
+
+				std::cout << std::endl;
+			}
+		}
+		else {
+			std::cout << "   ";
+			for (ushort i = 0; i < cols; i++)
+			{
+				if (i + 1 < 10) {
+					std::cout << " " << (i + 1) << " ";
+				}
+				else {
+					std::cout << (i + 1)<<" ";
+				}
+			}
+			std::cout << std::endl;
+
+			for (ushort i = 0; i < 3*cols + 2; i++)
+			{
+				std::cout << "-";
+			}
+			std::cout << std::endl;
+
+			for (ushort row = 0; row < rows; ++row)
+			{
+				if (row + 1 < 10) {
+					std::cout << " ";
+				}
+				std::cout << (row + 1) << "|";
+				for (ushort col = 0; col < cols; ++col)
+				{
+					std::cout <<" "<<board[row][col]<<" ";
+				}
+
+				std::cout << std::endl;
+			}
 		}
 	}
 	else if (boardLook == BoardLook::Fancy) {
@@ -50,7 +100,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** bo
 
 void Display::clearScreen() {
 
-#if defined _WIN32
+#if defined (_WIN32)
 	system("cls");
 #elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
 	system("clear");
@@ -66,7 +116,7 @@ void Display::clearScreen() {
 
 }
 
-void Display::colorizeOutput(const char foregroundColor[] = "", const char backgroundColor[] = "") {
+void Display::colorizeOutput(const char foregroundColor[], const char backgroundColor[]) {
 	if (foregroundColor[0] == '\0' && backgroundColor[0] == '\0') {
 		std::cout << "\033[0m";
 		return;

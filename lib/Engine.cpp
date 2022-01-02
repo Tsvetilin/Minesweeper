@@ -1,11 +1,9 @@
 #include "Engine.hpp"
+#include "Common.hpp"
 
 /*
 struct Engine {
 public:
-	char** board;
-	char** playerBoard;
-
 	void LoadGame(const BoardSettings boardSettings, const char** rawBoardData, const char** rawPlayerBoardData);
 };
 */
@@ -27,8 +25,8 @@ void Engine::GenerateBoard(BoardSettings boardSettings) {
 	{
 		ushort rowIndex = 0, colIndex = 0;
 		do {
-			ushort rowIndex = GenerateRandomNumber(1, rows) - 1;
-			ushort colIndex = GenerateRandomNumber(1, cols) - 1;
+			rowIndex = GenerateRandomNumber(1, rows) - 1;
+			colIndex = GenerateRandomNumber(1, cols) - 1;
 		} while (Engine::board[rowIndex][colIndex] == boardSettings.bombRevealed);
 
 		Engine::board[rowIndex][colIndex] = boardSettings.bombRevealed;
@@ -73,7 +71,7 @@ void Engine::GenerateBoard(BoardSettings boardSettings) {
 					continue;
 				}
 
-				if (Engine::board[row - 1][i] == boardSettings.bombRevealed) {
+				if (Engine::board[row + 1][i] == boardSettings.bombRevealed) {
 					countNearbyBombs++;
 				}
 			}
@@ -96,7 +94,7 @@ void Engine::GenerateBoard(BoardSettings boardSettings) {
 }
 
 void Engine::PerformMove(const Move move, const ushort row, const ushort col, const BoardSettings boardSettings, const UncoverType uncoverType) {
-	
+
 	if (!Engine::isPlaying) {
 		return;
 	}
@@ -112,31 +110,90 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 		return;
 	}
 
-	if (Engine::playerBoard[row][col] == boardSettings.uncovered || isNumber(row,col,boardSettings.numbers)) {
+	if (Engine::playerBoard[row][col] == boardSettings.uncovered || isNumber(row, col, boardSettings.numbers)) {
 		return;
 	}
 
 	if (Engine::playerBoard[row][col] == boardSettings.bombMarked) {
 		if (move == Move::MarkBomb) {
-			Engine::playerBoard[row][col] = boardSettings.uncovered;
+			Engine::playerBoard[row][col] = boardSettings.covered;
 		}
 		return;
 	}
 
+	if (Engine::board[row][col] == boardSettings.bombRevealed) {
+		Engine::isWin = false;
+		Engine::isPlaying = false;
+		// TODO: Handle player board to print
+		return;
+	}
+
 	if (uncoverType == UncoverType::Custom) {
-		if (Engine::board[row][col] == boardSettings.bombRevealed) {
-			Engine::isWin = false;
-			Engine::isPlaying = false;
-			// TODO: Handle player board to print
-		}
-		else {
-			Engine::playerBoard[row][col] = boardSettings.uncovered;
-		}
+
+		Engine::playerBoard[row][col] = boardSettings.uncovered;
+
+	}
+	else if (uncoverType == UncoverType::Default) {
+
+		Engine::revealToNumber(row, col, rows, cols, boardSettings.uncovered, boardSettings.covered);
+
 	}
 
 	if (checkForWin(boardSettings)) {
-		isPlaying = false;
-		isWin = true;
+		Engine::isPlaying = false;
+		Engine::isWin = true;
+	}
+
+}
+
+void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered) {
+
+	if (row > rows - 1 || row<0 || col>col - 1 || col < 0) {
+		return;
+	}
+
+	if (Engine::playerBoard[row][col] != covered) {
+		return;
+	}
+
+	Engine::playerBoard[row][col] == Engine::board[row][col];
+
+	if (Engine::board[row][col] != uncovered) {
+		return;
+	}
+
+	if (row + 1 <= rows - 1 && Engine::playerBoard[row + 1][col] == covered) {
+		Engine::playerBoard[row + 1][col] = Engine::board[row + 1][col];
+	}
+
+	if (row - 1 >= 0 && Engine::playerBoard[row - 1][col] == covered) {
+		Engine::playerBoard[row - 1][col] = Engine::board[row - 1][col];
+	}
+
+	if (col + 1 <= cols - 1 && Engine::playerBoard[row][col + 1] == covered) {
+		Engine::playerBoard[row][col + 1] = Engine::board[row][col + 1];
+	}
+
+	if (col - 1 >= 0 && Engine::playerBoard[row][col - 1] == covered) {
+		Engine::playerBoard[row][col - 1] = Engine::board[row][col - 1];
+	}
+
+
+
+	if (row + 1 <= rows - 1 && Engine::playerBoard[row + 1][col] == uncovered) {
+		revealToNumber(row + 1, col, rows, cols, uncovered, covered);
+	}
+
+	if (row - 1 >= 0 && Engine::playerBoard[row - 1][col] == uncovered) {
+		revealToNumber(row - 1, col, rows, cols, uncovered, covered);
+	}
+
+	if (col + 1 <= cols - 1 && Engine::playerBoard[row][col + 1] == uncovered) {
+		revealToNumber(row, col + 1, rows, cols, uncovered, covered);
+	}
+
+	if (col - 1 >= 0 && Engine::playerBoard[row][col - 1] == uncovered) {
+		revealToNumber(row, col - 1, rows, cols, uncovered, covered);
 	}
 
 }

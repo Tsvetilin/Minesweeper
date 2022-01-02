@@ -2,11 +2,14 @@
 #ifndef ENGINE_H_
 #define ENGINE_H_
 
-#include "Common.hpp"
 #include "State.hpp"
 
 // Contains main game logic
 struct Engine {
+
+	Engine() {
+		srand(time(0));
+	}
 
 public:
 	char** board;
@@ -22,6 +25,8 @@ public:
 private:
 	bool isPlaying = false;
 	bool isWin = false;
+
+	void revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered);
 
 	bool checkForWin(const BoardSettings boardSettings);
 	bool isNumber(const ushort row, const ushort col, const char* numbers);

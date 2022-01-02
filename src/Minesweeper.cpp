@@ -1,4 +1,4 @@
-﻿#include "../lib/Game.hpp"
+﻿#include "../lib/Game.hpp";
 
 int main()
 {
@@ -11,4 +11,5 @@ int main()
     }
 
     game.SaveAndExit();
+
 }

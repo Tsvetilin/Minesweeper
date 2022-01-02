@@ -1,9 +1,12 @@
 #include "Player.hpp"
 
+#include <iostream>
+
+#define STDIN_FILENO 0
 
 bool Player::IsAdvancedInputSupported() {
 
-#if defined __has_include && (__has_include(<conio.h>) || __has_include(<termios.h>))
+#if defined (__has_include) && (__has_include(<conio.h>) || __has_include(<termios.h>))
 	return true;
 #else
 	return false;
@@ -11,8 +14,7 @@ bool Player::IsAdvancedInputSupported() {
 
 }
 
-
-#if defined __has_include
+#if defined (__has_include)
 
 #if __has_include(<conio.h>)
 
@@ -22,80 +24,166 @@ bool Player::IsAdvancedInputSupported() {
 #define KEY_LEFT  75
 #define KEY_RIGHT 77
 #define KEY_DOWN  80
+#define ARROW_SEQUENCE 224
+#define ESCAPE 27
+#define ENTER 13
 
-PlayerInput Player::GetKeyboardInput() {
+AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
+	int c = _getch();
 
-	int c, ex;
-	c = getch();
-
-	PlayerInput input = PlayerInput::None;
-
-	if (c && c != 224)
-	{
-		return input;
+	if (c == ARROW_SEQUENCE) {
+		switch (c = _getch())
+		{
+		case KEY_UP:// H
+			return AdvancedPlayerInput::UpArrow;//key up
+		case KEY_DOWN: // K
+			return AdvancedPlayerInput::DownArrow;   // key down
+		case KEY_LEFT:// M
+			return AdvancedPlayerInput::LeftArrow;  // key left
+		case KEY_RIGHT: // P
+			return AdvancedPlayerInput::RightArrow;   // key right
+		default:
+			return AdvancedPlayerInput::None;
+		}
+	}
+	else if (c == ENTER) {
+		return AdvancedPlayerInput::Select;
+	}
+	else if (c == ESCAPE) {
+		return AdvancedPlayerInput::Escape;
+	}
+	else if (c == 'b') {
+		return AdvancedPlayerInput::MarkBomb;
+	}
+	else if (c == 'r') {
+		return AdvancedPlayerInput::Reveal;
 	}
 
-	switch (ex = getch())
-	{
-	case KEY_UP:// H
-		input = PlayerInput::UpArrow;//key up
-		break;
-	case KEY_DOWN: // K
-		input = PlayerInput::DownArrow;   // key down
-		break;
-	case KEY_LEFT:// M
-		input = PlayerInput::LeftArrow;  // key left
-		break;
-	case KEY_RIGHT: // P
-		input = PlayerInput::RightArrow;   // key right
-		break;
-	default:
-		// not arrow
-		break;
-	}
+	return AdvancedPlayerInput::None;
 
-	return input;
 }
 
 
 #elif __has_include(<termios.h>)
 
 #include <termios.h>
-#define STDIN_FILENO 0
 
-PlayerInput Player::GetKeyboardInput() {
+AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 
-	// Black magic to prevent Linux from buffering keystrokes.
-	struct termios t;
-	tcgetattr(STDIN_FILENO, &t);
-	t.c_lflag &= ~ICANON;
-	tcsetattr(STDIN_FILENO, TCSANOW, &t);
-
-	// Once the buffering is turned off, the rest is simple
 	char c, d, e;
 	cin >> c;
 	cin >> d;
 	cin >> e;
 
-	PlayerInput input = PlayerInput::None;
+	AdvancedPlayerInput input = AdvancedPlayerInput::None;
 	// Using 3 char type, Cause up down right left consist with 3 character
 	if ((c == 27) && (d = 91)) {
 		if (e == 65) {
-			input = PlayerInput::UpArrow;
+			input = AdvancedPlayerInput::UpArrow;
 		}
 		if (e == 66) {
-			input = PlayerInput::DownArrow;
+			input = AdvancedPlayerInput::DownArrow;
 		}
 		if (e == 67) {
-			input = PlayerInput::RightArrow;
+			input = AdvancedPlayerInput::RightArrow;
 		}
 		if (e == 68) {
-			input = PlayerInput::LeftArrow;
+			input = AdvancedPlayerInput::LeftArrow;
 		}
 	}
 	return input;
 }
-#endif
+
+#else
+
+AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
+	return AdvancedPlayerInput::None;
+}
 
 #endif
 
+#endif
+
+void Player::UseAdvancedInputSystem() {
+
+	if (Player::IsAdvancedInputSupported()) {
+		isAdvancedInputUsed = true;
+
+#if __has_include(<termios.h>)
+
+		// Black magic to prevent Linux from buffering keystrokes.
+		struct termios t;
+		tcgetattr(STDIN_FILENO, &t);
+		t.c_lflag &= ~ICANON;
+		tcsetattr(STDIN_FILENO, TCSANOW, &t);
+
+#endif
+	}
+}
+
+void Player::UseSimpleInputSystem() {
+	isAdvancedInputUsed = false;
+
+#if __has_include(<termios.h>)
+
+	// Black magic to prevent Linux from buffering keystrokes.
+	struct termios t;
+	tcgetattr(STDIN_FILENO, &t);
+	t.c_lflag &= ICANON;
+	tcsetattr(STDIN_FILENO, TCSANOW, &t);
+
+#endif
+}
+
+bool Player::GetInput() {
+	if (isAdvancedInputUsed) {
+		AdvancedPlayerInput input = GetAdvancedKeyboardInput();
+		return input != AdvancedPlayerInput::None;
+	}
+	else {
+		char line[COMMAND_MAX_LENGTH] = {};
+		std::cin.getline(line, COMMAND_MAX_LENGTH);
+
+		ushort ind = 0;
+		ushort words = 1;
+		
+		// trim start 
+		while (line[ind]!='\0') {
+			if (line[ind] != ' ') {
+				break;
+			}
+			++ind;
+		}
+
+		while (line[ind] != '\0') {
+			++ind;
+			if (line[ind] == ' ') {
+				if (line[ind-1]==' ') {
+					continue;
+				}
+
+				--words;
+			}
+
+		}
+
+		//trim end
+		if (ind>0 && line[ind - 1] == ' ') {
+			--words;
+		}
+
+		if (words == 1) {
+			if (strcmp(line, "quit") == 0) {
+
+			}
+		}
+		else if (words == 2)
+		{
+
+		}
+
+		else if (words == 3) {
+
+		}
+	}
+}

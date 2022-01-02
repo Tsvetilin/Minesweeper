@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="lib\Common.cpp" />
     <ClCompile Include="lib\Display.cpp" />
     <ClCompile Include="lib\Engine.cpp" />
     <ClCompile Include="lib\Game.cpp" />

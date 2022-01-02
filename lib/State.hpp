@@ -49,15 +49,23 @@ struct Settings {
 	BoardLook BoardLook = BoardLook::Fancy;				        // Fancy / default board look
 };
 
+const ushort MAIN_MENU_OPTIONS_COUNT = 4;
+
 struct State {
 
 public:
+	
 
 	void ReadSettings();
 	void SaveSettings();
 	void SaveGame();
 	void NewGame();
 	void ContinueGame();
+	void OpenMainMenu();
+	void OpenEscapeMenu();
+	void OpenSettingsMenu();
+
+	void SetStatusMessage(const char message[]);
 
 	GameState UpdateGameState();
 
@@ -69,9 +77,13 @@ public:
 		return settings;
 	};
 
+	ushort currentMenuOptionSelected;
+
 private:
 	GameState gameState;
 	Settings settings;
+
+	char statusMessage[COMMAND_MAX_LENGTH];
 };
 
 #endif // !STATE_H_

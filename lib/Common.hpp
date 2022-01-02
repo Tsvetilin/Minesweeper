@@ -3,10 +3,12 @@
 #define COMMON_H_
 
 #include <stdlib.h>
+#include <ctime>
 
 typedef unsigned short int ushort;
 
 const ushort NUMBERS_CHAR_ARRAY_SIZE = 9;
+const ushort COMMAND_MAX_LENGTH = 100;
 
 // ANSII Support Required
 #define BlackFG          "30" 
@@ -42,14 +44,13 @@ const ushort NUMBERS_CHAR_ARRAY_SIZE = 9;
 #define BrightCyanBG       "106"
 #define BrightWhiteBG      "107"
 
-ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound) {
-    return rand() % (upperBound - lowerBound) + lowerBound;
-}
 
 enum class Move {
     None = 0,
     Reveal = 1,
     MarkBomb = 2,
 };
+
+ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound);
 
 #endif // !COMMON_H_
