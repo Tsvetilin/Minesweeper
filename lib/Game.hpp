@@ -20,6 +20,8 @@ public:
 	void Update();		// Get user input, update the game state, draw the game
 	void SaveAndExit(); // Save current state and settings
 
+private:
+	bool isRunning;
 };
 
 #endif // !GAME_H_

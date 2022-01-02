@@ -4,6 +4,8 @@
 
 #include "Common.hpp"
 
+#include <vector>
+
 // Handles game state
 enum class GameState {
 	Unknown = 0,
@@ -13,6 +15,12 @@ enum class GameState {
 	Playing = 4,
 	Finished = 5,
 	Exiting = 6,
+
+	SizeSettings=10,
+	SymbolsSettings=11,
+	LookSettings=12,
+	UncoverSettings=13,
+	ControlSettings=14,
 };
 
 enum class BoardLook {
@@ -49,23 +57,58 @@ struct Settings {
 	BoardLook BoardLook = BoardLook::Fancy;				        // Fancy / default board look
 };
 
+struct Size {
+
+	Size(ushort rows, ushort cols, ushort bombs) {
+		this->rows = rows;
+		this->cols = cols;
+		this->bombs = bombs;
+	}
+
+	ushort rows;
+	ushort cols;
+	ushort bombs;
+};
+
 const ushort MAIN_MENU_OPTIONS_COUNT = 4;
+const ushort SETTINGS_MENU_OPTIONS_COUNT = 5;
+const ushort OTHER_S_MENU_OPTIONS = 2;
 
 struct State {
 
 public:
-	
+	char** rawBoardData;
+	char** rawPlayerBoardData;
+
+	ushort sizeOptions;
+	ushort symbolsOptions;
+
+	std::vector<Size> sizes;
+	std::vector<char*> symbols;
 
 	void ReadSettings();
 	void SaveSettings();
 	void SaveGame();
+	// Set state:
 	void NewGame();
 	void ContinueGame();
 	void OpenMainMenu();
 	void OpenEscapeMenu();
 	void OpenSettingsMenu();
+	void OpenSizeSettingsMenu();
+	void OpenSymbolsSettingsMenu();
+	void OpenUncoverSettingsMenu();
+	void OpenControlSettingsMenu();
+	void OpenLookSettingsMenu();
+
+	void SelectSize(ushort index);
+	void SelectSymbols(ushort index);
+	void SelectUncover(ushort index);
+	void SelectControl(ushort index);
+	void SelectLook(ushort index);
 
 	void SetStatusMessage(const char message[]);
+	char* GetStatusMessage();
 
 	GameState UpdateGameState();
 

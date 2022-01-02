@@ -8,13 +8,16 @@
 struct Display {
 
 public:
-	void WritePauseMenu(ushort currentIndexSelected);
-	void WriteMainMenu(ushort currentIndexSelected);
-	void WriteLookSettingsMenu(ushort currentIndexSelected);
-	void WriteControlSettingsMenu(ushort currentIndexSelected);
-	void WriteUncoverSettingsMenu(ushort currentIndexSelected);
-	void WriteSizeSettingsMenu(ushort currentIndexSelected);
-	void WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board);
+	void WritePauseMenu(ushort currentIndexSelected, char* statusMessage);
+	void WriteMainMenu(ushort currentIndexSelected, char* statusMessage);
+	void WriteSettingsMenu(ushort currentIndexSelected, char* statusMessage);
+	void WriteLookSettingsMenu(ushort currentIndexSelected, char* statusMessage);
+	void WriteControlSettingsMenu(ushort currentIndexSelected, char* statusMessage);
+	void WriteUncoverSettingsMenu(ushort currentIndexSelected, char* statusMessage);
+	void WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<Size> sizes, char* statusMessage);
+	void WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, char* statusMessage);
+
+	void WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board, char* statusMessage);
 
 private:
 	void clearScreen();

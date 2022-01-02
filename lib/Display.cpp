@@ -27,7 +27,7 @@ public:
 	void WriteSettingsMenu(GameState state, ushort currentIndexSelected);
 */
 
-void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board) {
+void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board, char* statusMessage) {
 
 	ushort rows = boardSize.boardRows;
 	ushort cols = boardSize.boardCols;

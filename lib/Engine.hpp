@@ -15,7 +15,7 @@ public:
 	char** board;
 	char** playerBoard;
 
-	void LoadGame(const BoardSettings boardSettings, const char** rawBoardData, const char** rawPlayerBoardData);
+	void LoadGame(const BoardSettings boardSettings, char** rawBoardData, char** rawPlayerBoardData);
 	void GenerateBoard(const BoardSettings boardSettings);
 	void PerformMove(const Move move, const ushort row, const ushort col, const BoardSettings boardSettings, const UncoverType uncoverType);
 	void FinishGame(const BoardSettings boardSettings);
