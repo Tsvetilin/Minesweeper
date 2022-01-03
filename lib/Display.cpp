@@ -21,7 +21,7 @@ void activateVirtualTerminal()
 #endif
 
 
-void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board, char* statusMessage) {
+void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board, char const * statusMessage) {
 
 	ushort rows = boardSize.boardRows;
 	ushort cols = boardSize.boardCols;
@@ -92,8 +92,8 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** bo
 	}
 }
 
-void Display::WritePauseMenu(ushort currentIndexSelected, char* statusMessage) {}
-void Display::WriteMainMenu(ushort currentIndexSelected, char* statusMessage) {
+void Display::WritePauseMenu(ushort currentIndexSelected, char const * statusMessage) {}
+void Display::WriteMainMenu(ushort currentIndexSelected, char const * statusMessage) {
 	clearScreen();
 
 	std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Start new game" << std::endl;
@@ -101,7 +101,7 @@ void Display::WriteMainMenu(ushort currentIndexSelected, char* statusMessage) {
 	std::cout << (currentIndexSelected == 3 ? ">>" : "  ") << "3. Change settings" << std::endl;
 	std::cout << (currentIndexSelected == 4 ? ">>" : "  ") << "4. Save & Exit" << std::endl;
 }
-void Display::WriteSettingsMenu(ushort currentIndexSelected, char* statusMessage) {
+void Display::WriteSettingsMenu(ushort currentIndexSelected, char const * statusMessage) {
 	clearScreen();
 
 	std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Board size" << std::endl;
@@ -127,7 +127,7 @@ enum class ControlType {
 	AdvancedArrowInput = 1,
 };
 */
-void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char* statusMessage) {
+void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char const * statusMessage) {
 	clearScreen();
 	if (currentUsedIndex == 0) {
 		colorizeOutput(GreenFG, WhiteBG);
@@ -143,7 +143,7 @@ void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentU
 	}
 
 }
-void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char* statusMessage) {
+void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char const * statusMessage) {
 	clearScreen();
 	if (currentUsedIndex == 0) {
 		colorizeOutput(GreenFG, WhiteBG);
@@ -158,7 +158,7 @@ void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort curre
 		colorizeOutput(WhiteFG, BlackBG);
 	}
 }
-void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char* statusMessage) {
+void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char const * statusMessage) {
 	clearScreen();
 
 	if (currentUsedIndex == 0) {
@@ -176,7 +176,7 @@ void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort curre
 }
 
 
-void Display::WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<Size> sizes, ushort currentUsedIndex, char* statusMessage) {
+void Display::WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<Size> sizes, ushort currentUsedIndex, char const * statusMessage) {
 	clearScreen();
 
 	for (ushort i = 0; i < options; i++)
@@ -191,7 +191,7 @@ void Display::WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options,
 		}
 	}
 }
-void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, char* statusMessage) {
+void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, char const * statusMessage) {
 	clearScreen();
 
 	for (ushort i = 0; i < options; i++)
@@ -207,7 +207,7 @@ void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort optio
 	}
 }
 
-void Display::WriteExit(char* statusMessage) {
+void Display::WriteExit(char const * statusMessage) {
 	clearScreen();
 
 	std::cout << "Exiting..." << std::endl;

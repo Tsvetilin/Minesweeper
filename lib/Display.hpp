@@ -8,18 +8,18 @@
 struct Display {
 
 public:
-	void WritePauseMenu(ushort currentIndexSelected, char* statusMessage);
-	void WriteMainMenu(ushort currentIndexSelected, char* statusMessage);
-	void WriteSettingsMenu(ushort currentIndexSelected, char* statusMessage);
-	void WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char* statusMessage);
-	void WriteControlSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char* statusMessage);
-	void WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char* statusMessage);
-	void WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<Size> sizes, ushort currentUsedIndex, char* statusMessage);
-	void WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, char* statusMessage);
+	void WritePauseMenu(ushort currentIndexSelected, char const * statusMessage);
+	void WriteMainMenu(ushort currentIndexSelected, char const * statusMessage);
+	void WriteSettingsMenu(ushort currentIndexSelected, char const * statusMessage);
+	void WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char const * statusMessage);
+	void WriteControlSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char const * statusMessage);
+	void WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char const * statusMessage);
+	void WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<Size> sizes, ushort currentUsedIndex, char const * statusMessage);
+	void WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, char const * statusMessage);
 
-	void WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board, char* statusMessage);
+	void WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board, char const * statusMessage);
 
-	void WriteExit(char* statusMessage);
+	void WriteExit(char const * statusMessage);
 
 private:
 	void clearScreen();

@@ -111,7 +111,7 @@ public:
 	void SelectLook(ushort index);
 
 	void SetStatusMessage(const char message[]);
-	char* GetStatusMessage();
+	char const * GetStatusMessage();
 
 	GameState UpdateGameState();
 

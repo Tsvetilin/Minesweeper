@@ -93,6 +93,7 @@ void Game::Update() {
 
 				case 4:
 					state.SaveGame();
+					display.WriteExit(state.GetStatusMessage());
 					isRunning = false;
 					break;
 
@@ -104,6 +105,7 @@ void Game::Update() {
 			}
 			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
 				isRunning = false;
+				state.SaveGame();
 				display.WriteExit(state.GetStatusMessage());
 			}
 			else {
@@ -211,6 +213,7 @@ void Game::Update() {
 				state.OpenSettingsMenu();
 				state.currentMenuOptionSelected = 1;
 				display.WriteSettingsMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
+				return;
 			}
 			else {
 				state.SetStatusMessage("Invalid command");
@@ -244,6 +247,7 @@ void Game::Update() {
 				state.OpenSettingsMenu();
 				state.currentMenuOptionSelected = 1;
 				display.WriteSettingsMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
+				return;
 			}
 			else {
 				state.SetStatusMessage("Invalid command");
@@ -322,5 +326,6 @@ void Game::Update() {
 }
 
 void Game::SaveAndExit() {
+	// sleep 2.5s and close
 
 }

@@ -11,14 +11,14 @@ void State::SetStatusMessage(const char message[]) {
 	strcpy_s(State::statusMessage, message);
 }
 
-char* State::GetStatusMessage() {
+char const * State::GetStatusMessage() {
 	return State::statusMessage;
 }
 
 
 void State::ReadSettings() {
 
-	// Add appropriate values
+	// TODO: Add appropriate values
 
 	State::settings.ControlType = ControlType::AdvancedArrowInput;
 	sizeOptions = 2;
