@@ -16,7 +16,21 @@ char* State::GetStatusMessage() {
 }
 
 
-void State::ReadSettings() {}
+void State::ReadSettings() {
+
+	// Add appropriate values
+
+	State::settings.ControlType = ControlType::AdvancedArrowInput;
+	sizeOptions = 2;
+	symbolsOptions = 0;
+	currentSizeIndex = 0;
+	currentSymbolsIndex = 0;
+	
+	sizes.push_back(Size(9, 9, 10));
+	sizes.push_back(Size(15, 15, 20));
+
+}
+
 void State::SaveSettings() {}
 void State::SaveGame() {}
 // Set state:
@@ -48,8 +62,23 @@ void State::OpenLookSettingsMenu() {
 	gameState = GameState::LookSettings;
 }
 
-void State::SelectSize(ushort index) {}
+
+void State::SelectSize(ushort index) {
+	settings.BoardSettings.boardRows = sizes[index].rows;
+	settings.BoardSettings.boardCols = sizes[index].cols;
+	settings.BoardSettings.bombsCount = sizes[index].bombs;
+}
+
 void State::SelectSymbols(ushort index) {}
-void State::SelectUncover(ushort index) {}
-void State::SelectControl(ushort index) {}
-void State::SelectLook(ushort index) {}
+
+void State::SelectUncover(ushort index) {
+	settings.UncoverType = (UncoverType)(index);
+}
+
+void State::SelectControl(ushort index) {
+	settings.ControlType = (ControlType)(index);
+}
+
+void State::SelectLook(ushort index) {
+	settings.BoardLook = (BoardLook)(index);
+}

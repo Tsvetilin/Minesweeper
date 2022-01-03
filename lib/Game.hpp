@@ -22,6 +22,7 @@ public:
 
 private:
 	bool isRunning;
+	void ApplySettings();
 };
 
 #endif // !GAME_H_

@@ -137,8 +137,8 @@ void Player::UseSimpleInputSystem() {
 
 bool Player::GetInput() {
 	if (isAdvancedInputUsed) {
-		AdvancedPlayerInput input = GetAdvancedKeyboardInput();
-		return input != AdvancedPlayerInput::None;
+		AdvancedInput = GetAdvancedKeyboardInput();
+		return AdvancedInput != AdvancedPlayerInput::None;
 	}
 	else {
 		char line[COMMAND_MAX_LENGTH] = {};

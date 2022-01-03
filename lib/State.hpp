@@ -82,6 +82,9 @@ public:
 
 	ushort sizeOptions;
 	ushort symbolsOptions;
+	ushort currentSizeIndex;
+	ushort currentSymbolsIndex;
+
 
 	std::vector<Size> sizes;
 	std::vector<char*> symbols;

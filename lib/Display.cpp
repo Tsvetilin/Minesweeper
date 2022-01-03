@@ -20,12 +20,6 @@ void activateVirtualTerminal()
 }
 #endif
 
-/*
-public:
-	void WritePauseMenu(GameState state, ushort currentIndexSelected);
-	void WriteMainMenu(GameState state, ushort currentIndexSelected);
-	void WriteSettingsMenu(GameState state, ushort currentIndexSelected);
-*/
 
 void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board, char* statusMessage) {
 
@@ -67,12 +61,12 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** bo
 					std::cout << " " << (i + 1) << " ";
 				}
 				else {
-					std::cout << (i + 1)<<" ";
+					std::cout << (i + 1) << " ";
 				}
 			}
 			std::cout << std::endl;
 
-			for (ushort i = 0; i < 3*cols + 2; i++)
+			for (ushort i = 0; i < 3 * cols + 2; i++)
 			{
 				std::cout << "-";
 			}
@@ -86,7 +80,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** bo
 				std::cout << (row + 1) << "|";
 				for (ushort col = 0; col < cols; ++col)
 				{
-					std::cout <<" "<<board[row][col]<<" ";
+					std::cout << " " << board[row][col] << " ";
 				}
 
 				std::cout << std::endl;
@@ -96,6 +90,127 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** bo
 	else if (boardLook == BoardLook::Fancy) {
 		// TODO: implement
 	}
+}
+
+void Display::WritePauseMenu(ushort currentIndexSelected, char* statusMessage) {}
+void Display::WriteMainMenu(ushort currentIndexSelected, char* statusMessage) {
+	clearScreen();
+
+	std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Start new game" << std::endl;
+	std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Continue game" << std::endl;
+	std::cout << (currentIndexSelected == 3 ? ">>" : "  ") << "3. Change settings" << std::endl;
+	std::cout << (currentIndexSelected == 4 ? ">>" : "  ") << "4. Save & Exit" << std::endl;
+}
+void Display::WriteSettingsMenu(ushort currentIndexSelected, char* statusMessage) {
+	clearScreen();
+
+	std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Board size" << std::endl;
+	std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Board symbols" << std::endl;
+	std::cout << (currentIndexSelected == 3 ? ">>" : "  ") << "3. Board uncover type" << std::endl;
+	std::cout << (currentIndexSelected == 4 ? ">>" : "  ") << "4. Board control type" << std::endl;
+	std::cout << (currentIndexSelected == 5 ? ">>" : "  ") << "5. Board look" << std::endl;
+}
+
+/*
+enum class BoardLook {
+	Default = 0,
+	Fancy = 1,
+};
+
+enum class UncoverType {
+	Default = 0, // As in original game
+	Custom = 1,  // Uncover just the surrounding 8
+};
+
+enum class ControlType {
+	PrimitiveInput = 0,
+	AdvancedArrowInput = 1,
+};
+*/
+void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char* statusMessage) {
+	clearScreen();
+	if (currentUsedIndex == 0) {
+		colorizeOutput(GreenFG, WhiteBG);
+		std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Default look" << std::endl;
+		colorizeOutput(WhiteFG, BlackBG);
+		std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Fancy Look" << std::endl;
+	}
+	else {
+		std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Default look" << std::endl;
+		colorizeOutput(GreenFG, WhiteBG);
+		std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Fancy Look" << std::endl;
+		colorizeOutput(WhiteFG, BlackBG);
+	}
+
+}
+void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char* statusMessage) {
+	clearScreen();
+	if (currentUsedIndex == 0) {
+		colorizeOutput(GreenFG, WhiteBG);
+		std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Standart keyboard typing input" << std::endl;
+		colorizeOutput(WhiteFG, BlackBG);
+		std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Advanced keyboard input" << std::endl;
+	}
+	else {
+		std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Standart keyboard typing input" << std::endl;
+		colorizeOutput(GreenFG, WhiteBG);
+		std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Advanced keyboard input" << std::endl;
+		colorizeOutput(WhiteFG, BlackBG);
+	}
+}
+void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, char* statusMessage) {
+	clearScreen();
+
+	if (currentUsedIndex == 0) {
+		colorizeOutput(GreenFG, WhiteBG);
+		std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Default uncovering as in the original game" << std::endl;
+		colorizeOutput(WhiteFG, BlackBG);
+		std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Custom uncovering the surrounding 8" << std::endl;
+	}
+	else {
+		std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Default uncovering as in the original game" << std::endl;
+		colorizeOutput(GreenFG, WhiteBG);
+		std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Custom uncovering the surrounding 8" << std::endl;
+		colorizeOutput(WhiteFG, BlackBG);
+	}
+}
+
+
+void Display::WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<Size> sizes, ushort currentUsedIndex, char* statusMessage) {
+	clearScreen();
+
+	for (ushort i = 0; i < options; i++)
+	{
+		if (currentUsedIndex == i) {
+			colorizeOutput(GreenFG, WhiteBG);
+			std::cout << (currentIndexSelected == i + 1 ? ">>" : "  ") << (i + 1) << ". Rows:" << sizes[i].rows << "; Cols: " << sizes[i].cols << "; Bombs: " << sizes[i].rows << std::endl;
+			colorizeOutput(WhiteFG, BlackBG);
+		}
+		else {
+			std::cout << (currentIndexSelected == i + 1 ? ">>" : "  ") << (i + 1) << ". Rows:" << sizes[i].rows << "; Cols: " << sizes[i].cols << "; Bombs: " << sizes[i].rows << std::endl;
+		}
+	}
+}
+void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, char* statusMessage) {
+	clearScreen();
+
+	for (ushort i = 0; i < options; i++)
+	{
+		if (currentUsedIndex == i) {
+			colorizeOutput(GreenFG, WhiteBG);
+			std::cout << (currentIndexSelected == i + 1 ? ">>" : "  ") << (i + 1) << ". " << sizes[i] << std::endl;
+		}
+		else {
+			std::cout << (currentIndexSelected == i + 1 ? ">>" : "  ") << (i + 1) << ". " << sizes[i] << std::endl;
+		}
+
+	}
+}
+
+void Display::WriteExit(char* statusMessage) {
+	clearScreen();
+
+	std::cout << "Exiting..." << std::endl;
 }
 
 void Display::clearScreen() {

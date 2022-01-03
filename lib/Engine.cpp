@@ -283,3 +283,5 @@ void Engine::fillBoard(const ushort rows, const ushort cols, const char uncovere
 		}
 	}
 }
+
+void Engine::LoadGame(const BoardSettings boardSettings, char** rawBoardData, char** rawPlayerBoardData){}

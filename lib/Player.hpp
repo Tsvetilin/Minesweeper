@@ -44,6 +44,10 @@ struct SimplePlayerInput {
 };*/
 
 struct Player {
+	Player() {
+		AdvancedInput = AdvancedPlayerInput::None;
+		SimpleInput = SimplePlayerInput();
+	}
 
 public:
 	//PlayerIngameCommand PlayerIngameCommand;
