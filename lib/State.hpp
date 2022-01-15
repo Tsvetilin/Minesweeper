@@ -52,7 +52,7 @@ struct BoardSettings {
 
 struct Settings {
 	BoardSettings BoardSettings;								// Board settings -> board size & bombs count
-	UncoverType UncoverType = UncoverType::Default;				// Default / custom uncover
+	UncoverType UncoverType = UncoverType::Custom;				// Default / custom uncover
 	ControlType ControlType = ControlType::AdvancedArrowInput;	// Arrow / Input controls
 	BoardLook BoardLook = BoardLook::Fancy;				        // Fancy / default board look
 };
@@ -110,6 +110,17 @@ public:
 	void SelectControl(ushort index);
 	void SelectLook(ushort index);
 
+	void IncreaseMenuOptionSelected(ushort optionsCount);
+	void DecreaseMenuOptionSelected(ushort optionsCount);
+
+	void MoveLeftIngame();
+	void MoveRightIngame();
+	void MoveUpIngame();
+	void MoveDownIngame();
+
+	void LockIngamePosition();
+	void UnlockIngamePosition();
+
 	void SetStatusMessage(const char message[]);
 	char const * GetStatusMessage();
 
@@ -124,6 +135,10 @@ public:
 	};
 
 	ushort currentMenuOptionSelected;
+
+	ushort currentInGameRowIndex;
+	ushort currentInGameColIndex;
+	bool isLockedPosition = false;
 
 private:
 	GameState gameState;

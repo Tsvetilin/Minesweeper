@@ -18,6 +18,7 @@ public:
 	void WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, char const * statusMessage);
 
 	void WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board, char const * statusMessage);
+	void WriteBoard(BoardLook boardLook, BoardSettings boardSize, ushort currentRowIndex, ushort currentColIndex, char** board, char const* statusMessage);
 
 	void WriteExit(char const * statusMessage);
 

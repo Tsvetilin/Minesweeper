@@ -22,6 +22,7 @@ void activateVirtualTerminal()
 
 
 void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** board, char const * statusMessage) {
+	clearScreen();
 
 	ushort rows = boardSize.boardRows;
 	ushort cols = boardSize.boardCols;
@@ -36,12 +37,12 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** bo
 			}
 			std::cout << std::endl;
 
-			for (ushort i = 0; i < cols + 2; i++)
+		/*	for (ushort i = 0; i < cols + 2; i++)
 			{
 				std::cout << "-";
 			}
 			std::cout << std::endl;
-
+			*/
 			for (ushort row = 0; row < rows; ++row)
 			{
 				std::cout << (row + 1) << "|";
@@ -89,8 +90,207 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, char** bo
 	}
 	else if (boardLook == BoardLook::Fancy) {
 		// TODO: implement
+
+		if (rows < 10 && cols < 10) {
+			std::cout << "  ";
+			for (ushort i = 0; i < cols; i++)
+			{
+				std::cout << (i + 1);
+			}
+			std::cout << std::endl;
+
+		/*	for (ushort i = 0; i < cols + 2; i++)
+			{
+				std::cout << "-";
+			}
+			std::cout << std::endl;*/
+
+			for (ushort row = 0; row < rows; ++row)
+			{
+				std::cout << (row + 1) << "|";
+				for (ushort col = 0; col < cols; ++col)
+				{
+					std::cout << board[row][col];
+				}
+
+				std::cout << std::endl;
+			}
+		}
+		else {
+			std::cout << "   ";
+			for (ushort i = 0; i < cols; i++)
+			{
+				if (i + 1 < 10) {
+					std::cout << " " << (i + 1) << " ";
+				}
+				else {
+					std::cout << (i + 1) << " ";
+				}
+			}
+			std::cout << std::endl;
+
+		/*	for (ushort i = 0; i < 3 * cols + 2; i++)
+			{
+				std::cout << "-";
+			}
+			std::cout << std::endl;
+			*/
+			for (ushort row = 0; row < rows; ++row)
+			{
+				if (row + 1 < 10) {
+					std::cout << " ";
+				}
+				std::cout << (row + 1) << "|";
+				for (ushort col = 0; col < cols; ++col)
+				{
+					std::cout << " " << board[row][col] << " ";
+				}
+
+				std::cout << std::endl;
+			}
+		}
+
 	}
 }
+
+void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize,ushort currentRowIndex, ushort currentColIndex, char** board, char const* statusMessage) {
+	clearScreen();
+
+	ushort rows = boardSize.boardRows;
+	ushort cols = boardSize.boardCols;
+
+	if (boardLook == BoardLook::Default) {
+
+		if (rows < 10 && cols < 10) {
+			std::cout << "  ";
+			for (ushort i = 0; i < cols; i++)
+			{
+				std::cout << (i + 1);
+			}
+			std::cout << std::endl;
+
+			/*	for (ushort i = 0; i < cols + 2; i++)
+				{
+					std::cout << "-";
+				}
+				std::cout << std::endl;
+				*/
+			for (ushort row = 0; row < rows; ++row)
+			{
+				std::cout << (row + 1) << "|";
+				for (ushort col = 0; col < cols; ++col)
+				{
+					std::cout << board[row][col];
+				}
+
+				std::cout << std::endl;
+			}
+		}
+		else {
+			std::cout << "   ";
+			for (ushort i = 0; i < cols; i++)
+			{
+				if (i + 1 < 10) {
+					std::cout << " " << (i + 1) << " ";
+				}
+				else {
+					std::cout << (i + 1) << " ";
+				}
+			}
+			std::cout << std::endl;
+
+			for (ushort i = 0; i < 3 * cols + 2; i++)
+			{
+				std::cout << "-";
+			}
+			std::cout << std::endl;
+
+			for (ushort row = 0; row < rows; ++row)
+			{
+				if (row + 1 < 10) {
+					std::cout << " ";
+				}
+				std::cout << (row + 1) << "|";
+				for (ushort col = 0; col < cols; ++col)
+				{
+					std::cout << " " << board[row][col] << " ";
+				}
+
+				std::cout << std::endl;
+			}
+		}
+	}
+	else if (boardLook == BoardLook::Fancy) {
+		// TODO: implement
+
+		if (rows < 10 && cols < 10) {
+			std::cout << "  ";
+			for (ushort i = 0; i < cols; i++)
+			{
+				std::cout << (i + 1);
+			}
+			std::cout << std::endl;
+
+			/*	for (ushort i = 0; i < cols + 2; i++)
+				{
+					std::cout << "-";
+				}
+				std::cout << std::endl;*/
+
+			for (ushort row = 0; row < rows; ++row)
+			{
+				std::cout << (row + 1) << "|";
+				for (ushort col = 0; col < cols; ++col)
+				{
+					if (row == currentRowIndex && col == currentColIndex) {
+						colorizeOutput(BlueBG, WhiteFG);
+					}
+					std::cout << board[row][col];
+					if (row == currentRowIndex && col == currentColIndex) {
+						colorizeOutput(BlackBG, WhiteFG);
+					}
+				}
+
+				std::cout << std::endl;
+			}
+		}
+		else {
+			std::cout << "   ";
+			for (ushort i = 0; i < cols; i++)
+			{
+				if (i + 1 < 10) {
+					std::cout << " " << (i + 1) << " ";
+				}
+				else {
+					std::cout << (i + 1) << " ";
+				}
+			}
+			std::cout << std::endl;
+
+			/*	for (ushort i = 0; i < 3 * cols + 2; i++)
+				{
+					std::cout << "-";
+				}
+				std::cout << std::endl;
+				*/
+			for (ushort row = 0; row < rows; ++row)
+			{
+				if (row + 1 < 10) {
+					std::cout << " ";
+				}
+				std::cout << (row + 1) << "|";
+				for (ushort col = 0; col < cols; ++col)
+				{
+					std::cout << " " << board[row][col] << " ";
+				}
+
+				std::cout << std::endl;
+			}
+		}
+
+	}
+}
+
 
 void Display::WritePauseMenu(ushort currentIndexSelected, char const * statusMessage) {}
 void Display::WriteMainMenu(ushort currentIndexSelected, char const * statusMessage) {

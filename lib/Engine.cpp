@@ -102,11 +102,11 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 	ushort rows = boardSettings.boardRows;
 	ushort cols = boardSettings.boardCols;
 
-	if (0 < row || row >= rows) {
+	if (0 > row || row >= rows) {
 		return;
 	}
 
-	if (0 < col || col >= cols) {
+	if (0 > col || col >= cols) {
 		return;
 	}
 
@@ -114,10 +114,18 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 		return;
 	}
 
-	if (Engine::playerBoard[row][col] == boardSettings.bombMarked) {
-		if (move == Move::MarkBomb) {
+	if (move == Move::MarkBomb) {
+		if (Engine::playerBoard[row][col] == boardSettings.bombMarked)
+		{
 			Engine::playerBoard[row][col] = boardSettings.covered;
 		}
+		else {
+			Engine::playerBoard[row][col] = boardSettings.bombMarked;
+		}
+		return;
+	}
+
+	if (move == Move::None) {
 		return;
 	}
 
@@ -129,8 +137,22 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 	}
 
 	if (uncoverType == UncoverType::Custom) {
+		if (Engine::board[row][col] == boardSettings.uncovered) {
+			Engine::playerBoard[row - 1][col - 1] = Engine::board[row - 1][col - 1];
+			Engine::playerBoard[row - 1][col] = Engine::board[row - 1][col];
+			Engine::playerBoard[row - 1][col + 1] = Engine::board[row - 1][col + 1];
 
-		Engine::playerBoard[row][col] = boardSettings.uncovered;
+			Engine::playerBoard[row][col - 1] = Engine::board[row][col - 1];
+			Engine::playerBoard[row][col] = Engine::board[row][col];
+			Engine::playerBoard[row][col + 1] = Engine::board[row][col + 1];
+
+			Engine::playerBoard[row + 1][col - 1] = Engine::board[row + 1][col - 1];
+			Engine::playerBoard[row + 1][col] = Engine::board[row + 1][col];
+			Engine::playerBoard[row + 1][col + 1] = Engine::board[row + 1][col + 1];
+		}
+		else {
+			Engine::playerBoard[row][col] = Engine::board[row][col];
+		}
 
 	}
 	else if (uncoverType == UncoverType::Default) {
@@ -148,7 +170,7 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 
 void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered) {
 
-	if (row > rows - 1 || row<0 || col>col - 1 || col < 0) {
+	if (row > rows - 1 || row<0 || col>cols - 1 || col < 0) {
 		return;
 	}
 
@@ -284,4 +306,4 @@ void Engine::fillBoard(const ushort rows, const ushort cols, const char uncovere
 	}
 }
 
-void Engine::LoadGame(const BoardSettings boardSettings, char** rawBoardData, char** rawPlayerBoardData){}
+void Engine::LoadGame(const BoardSettings boardSettings, char** rawBoardData, char** rawPlayerBoardData) {}
