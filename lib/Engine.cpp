@@ -1,9 +1,6 @@
 #include "Engine.hpp"
 #include "Common.hpp"
 
-#include<iostream>
-//TODO: remove
-
 /*
 struct Engine {
 public:
@@ -197,7 +194,6 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 }
 
 void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered, const char const * numbers) {
-	std::cout << row << " " << col << std::endl;
 
 	if (row > rows - 1 || row<0 || col>cols - 1 || col < 0) {
 		return;

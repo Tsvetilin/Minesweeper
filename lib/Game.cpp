@@ -7,15 +7,19 @@ void Game::Start() {
 	// Read settings
 	state.ReadSettings();
 	ApplySettings();
-
-	state.OpenMainMenu();
-	state.currentMenuOptionSelected = 1;
-
-	display.WriteMainMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
+	display.WriteManual();
 }
 
 void Game::ApplySettings() {
-	Game::player.UseAdvancedInputSystem();
+	const Settings& settings = Game::state.GetSettings();
+	if (settings.ControlType == ControlType::AdvancedArrowInput) {
+		player.UseAdvancedInputSystem();
+	}
+	else {
+		player.UseSimpleInputSystem();
+	}
+
+	// TODO: finish
 }
 
 bool Game::IsRunning() {
@@ -33,10 +37,16 @@ void Game::Update() {
 	const Settings& currentSettings = state.GetSettings();
 	state.SetStatusMessage("");
 
-	std::cout << (int)currentState << "  " << (int)player.AdvancedInput << "  " << (int)currentSettings.ControlType << "\n";
+	//std::cout << (int)currentState << "  " << (int)player.AdvancedInput << "  " << (int)currentSettings.ControlType << "\n";
 
 	if (currentSettings.ControlType == ControlType::AdvancedArrowInput) {
-		if (currentState == GameState::MainMenu) {
+		if (currentState == GameState::Unknown) {
+			if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+				state.OpenMainMenu();
+				display.WriteMainMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
+			}
+		}
+		else if (currentState == GameState::MainMenu) {
 			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(MAIN_MENU_OPTIONS_COUNT);
 				display.WriteMainMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
@@ -57,8 +67,8 @@ void Game::Update() {
 				case 1:
 					state.NewGame();
 					engine.GenerateBoard(currentSettings.BoardSettings);
-					//display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.playerBoard, state.GetStatusMessage());
-					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.board, state.GetStatusMessage());
+					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.playerBoard, state.GetStatusMessage());
+					//display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.board, state.GetStatusMessage());
 					break;
 
 				case 2:
@@ -80,24 +90,22 @@ void Game::Update() {
 					break;
 
 				case 4:
-					state.SaveGame();
 					display.WriteExit(state.GetStatusMessage());
 					isRunning = false;
 					break;
 
 				default:
-					state.SetStatusMessage("Invalid command");
+					state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
 					display.WriteMainMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
 					break;
 				}
 			}
 			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
 				isRunning = false;
-				state.SaveGame();
 				display.WriteExit(state.GetStatusMessage());
 			}
 			else {
-				state.SetStatusMessage("Invalid command");
+				state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
 				display.WriteMainMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
 			}
 		}
@@ -147,7 +155,7 @@ void Game::Update() {
 					break;
 
 				default:
-					state.SetStatusMessage("Invalid command");
+					state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
 					display.WriteSettingsMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
 					break;
 				}
@@ -157,7 +165,7 @@ void Game::Update() {
 				display.WriteMainMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
 			}
 			else {
-				state.SetStatusMessage("Invalid command");
+				state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
 				display.WriteSettingsMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
 			}
 		}
@@ -185,7 +193,7 @@ void Game::Update() {
 				return;
 			}
 			else {
-				state.SetStatusMessage("Invalid command");
+				state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
 			}
 			display.WriteSizeSettingsMenu(state.currentMenuOptionSelected, state.sizeOptions, state.sizes, state.currentSizeIndex, state.GetStatusMessage());
 		}
@@ -211,7 +219,7 @@ void Game::Update() {
 				return;
 			}
 			else {
-				state.SetStatusMessage("Invalid command");
+				state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
 			}
 			display.WriteSymbolsSettingsMenu(state.currentMenuOptionSelected, state.symbolsOptions, state.symbols, state.currentSymbolsIndex, state.GetStatusMessage());
 		}
@@ -247,7 +255,7 @@ void Game::Update() {
 				return;
 			}
 			else {
-				state.SetStatusMessage("Invalid command");
+				state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
 			}
 
 			switch (state.GetGameState())
@@ -266,6 +274,7 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::Playing) {
+			state.SetStatusMessage("Use Arrow keys to navigate & press Enter to lock a position.");
 			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
 				state.MoveDownIngame();
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.playerBoard, state.GetStatusMessage());
@@ -299,12 +308,12 @@ void Game::Update() {
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.playerBoard, state.GetStatusMessage());
 			}
 			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
-				isRunning = false;
-				state.SaveGame();
-				display.WriteExit(state.GetStatusMessage());
+				state.OpenEscapeMenu();
+				state.SetStatusMessage("");
+				display.WritePauseMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
 			}
 			else {
-				state.SetStatusMessage("Invalid command");
+				state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.playerBoard, state.GetStatusMessage());
 			}
 
@@ -312,10 +321,10 @@ void Game::Update() {
 				state.FinishGame();
 
 				if (engine.IsWin()) {
-					state.SetStatusMessage("You won! GG");
+					state.SetStatusMessage("You won! GG!\nPress Escape/Enter to continue...");
 				}
 				else {
-					state.SetStatusMessage("You lost! Try again");
+					state.SetStatusMessage("You lost! Try again!\nPress Escape/Enter to continue...");
 				}
 
 				display.WriteFinishBoard(currentSettings.BoardLook, currentSettings.BoardSettings, engine.playerBoard, engine.board, state.GetStatusMessage());
@@ -324,17 +333,58 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::Finished) {
-			if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+			if (player.AdvancedInput == AdvancedPlayerInput::Escape || player.AdvancedInput == AdvancedPlayerInput::Select) {
 				state.OpenMainMenu();
 				display.WriteMainMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
 			}
 		}
 
 		else if (currentState == GameState::EscapeMenu) {
-			
+
+			/*
+			1. Resume
+			2. Save and Exit
+			*/
+
+			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
+				state.IncreaseMenuOptionSelected(OTHER_S_MENU_OPTIONS);
+				display.WritePauseMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
+			}
+			else if (player.AdvancedInput == AdvancedPlayerInput::UpArrow) {
+				state.DecreaseMenuOptionSelected(OTHER_S_MENU_OPTIONS);
+				display.WritePauseMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
+			}
+			else if (player.AdvancedInput == AdvancedPlayerInput::Select) {
+				switch (state.currentMenuOptionSelected)
+				{
+				case 1:
+					state.ResumeGame();
+					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.playerBoard, state.GetStatusMessage());
+					break;
+
+				case 2:
+					state.SaveGame(engine.playerBoard, engine.board);
+					state.OpenMainMenu();
+					display.WriteMainMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
+					break;
+				default:
+					state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet.");
+					display.WritePauseMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
+					break;
+				}
+			}
+			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+				state.ResumeGame();
+				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.playerBoard, state.GetStatusMessage());
+			}
+			else {
+				state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
+				display.WriteMainMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
+			}
 		}
 
 		else if (currentState == GameState::Exiting) {
+			state.SetStatusMessage("Thanks for playing!");
 			isRunning = false;
 			display.WriteExit(state.GetStatusMessage());
 		}

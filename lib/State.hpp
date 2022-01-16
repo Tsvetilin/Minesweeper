@@ -76,6 +76,7 @@ const ushort OTHER_S_MENU_OPTIONS = 2;
 
 struct State {
 
+	State();
 public:
 	char** rawBoardData;
 	char** rawPlayerBoardData;
@@ -91,9 +92,10 @@ public:
 
 	void ReadSettings();
 	void SaveSettings();
-	void SaveGame();
+	void SaveGame(const char* const* playerBoard, const char* const* board);
 	// Set state:
 	void NewGame();
+	void ResumeGame();
 	void ContinueGame();
 	void FinishGame();
 	void OpenMainMenu();

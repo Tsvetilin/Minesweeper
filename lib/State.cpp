@@ -1,6 +1,11 @@
 #include "State.hpp"
 
 #include <fstream>
+#include <string>
+
+State::State() {
+	State::gameState = GameState::Unknown;
+}
 
 void State::OpenMainMenu() {
 	State::gameState = GameState::MainMenu;
@@ -18,16 +23,38 @@ const char const* State::GetStatusMessage() {
 
 void State::ReadSettings() {
 
-	// TODO: Add appropriate values
+	std::fstream settingsFile;
+	settingsFile.open(GAME_SETTINGS_FILE, std::ios::binary | std::ios::in);
+
+	if (settingsFile.is_open()) {
+		settingsFile.read((char*)&(State::settings),sizeof(State::settings));
+		settingsFile.close();
+	}
+
+	std::fstream settingsTemplate;
+	settingsTemplate.open(SETTINGS_TEMPLATE_FILE, std::ios::binary | std::ios::in);
+	if (settingsTemplate.is_open()) {
+		std::string buffer;
+		while (true) {
+			std::getline(settingsTemplate, buffer);
+			if (buffer[0] == '\0') {
+				break;
+			}
+
+		}
+	}
+	else {
+		sizeOptions = 2;
+		symbolsOptions = 0;
+		currentSizeIndex = 0;
+		currentSymbolsIndex = 0;
+
+		sizes.push_back(Size(9, 9, 10));
+		sizes.push_back(Size(15, 15, 20));
+	}
 
 	State::settings.ControlType = ControlType::AdvancedArrowInput;
-	sizeOptions = 2;
-	symbolsOptions = 0;
-	currentSizeIndex = 0;
-	currentSymbolsIndex = 0;
 
-	sizes.push_back(Size(9, 9, 10));
-	sizes.push_back(Size(15, 15, 20));
 
 }
 void State::IncreaseMenuOptionSelected(ushort optionsCount) {
@@ -90,17 +117,24 @@ void State::UnlockIngamePosition() {
 }
 
 void State::SaveSettings() {}
-void State::SaveGame() {}
+void State::SaveGame(const char* const* playerBoard, const char* const* board){}
 // Set state:
 void State::NewGame() {
 	gameState = GameState::Playing;
 	currentInGameColIndex = 0;
 	currentInGameRowIndex = 0;
 	isLockedPosition = false;
+	// Make impossible to read file
+}
+
+void State::ResumeGame() {
+	gameState = GameState::Playing;
+	isLockedPosition = false;
 }
 
 void State::ContinueGame() {
 	gameState = GameState::Playing;
+	// Make impossible to read file
 }
 
 void State::FinishGame() {
@@ -114,6 +148,7 @@ void State::OpenEscapeMenu() {
 void State::OpenSettingsMenu() {
 	currentMenuOptionSelected = 1;
 	gameState = GameState::Settings;
+	// Make impossible to read file
 }
 void State::OpenSizeSettingsMenu() {
 	gameState = GameState::SizeSettings;

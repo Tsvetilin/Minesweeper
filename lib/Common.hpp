@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #ifndef COMMON_H_
 #define COMMON_H_
 
@@ -9,6 +9,9 @@ typedef unsigned short int ushort;
 
 const ushort NUMBERS_CHAR_ARRAY_SIZE = 9;
 const ushort COMMAND_MAX_LENGTH = 100;
+
+const std::string GAME_SETTINGS_FILE = "minesweeper.settings";
+const std::string SETTINGS_TEMPLATE_FILE = "settings.json";
 
 // ANSII Support Required
 #define BlackFG          "30" 
@@ -43,6 +46,18 @@ const ushort COMMAND_MAX_LENGTH = 100;
 #define BrightMagentaBG    "105"
 #define BrightCyanBG       "106"
 #define BrightWhiteBG      "107"
+
+#define VLLeft (char)185
+#define VerticalLine (char)186
+#define URAngle (char)187
+#define DRAngle (char)188
+#define DLAngle (char)200
+#define ULAngle (char)201
+#define HLUp (char)202
+#define HLDown (char)203
+#define VLRight (char)204
+#define HorizontalLine (char)205
+#define Crossing (char)206
 
 
 enum class Move {
