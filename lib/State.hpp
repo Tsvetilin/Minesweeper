@@ -45,14 +45,14 @@ struct BoardSettings {
 	ushort bombsCount = 10;
 	char bombRevealed = 'B';
 	char bombMarked = 'F';
-	char uncovered = ' ';
+	char uncovered = '-';
 	char covered = '_';
 	char numbers[NUMBERS_CHAR_ARRAY_SIZE] = "12345678";
 };
 
 struct Settings {
 	BoardSettings BoardSettings;								// Board settings -> board size & bombs count
-	UncoverType UncoverType = UncoverType::Custom;				// Default / custom uncover
+	UncoverType UncoverType = UncoverType::Default;				// Default / custom uncover
 	ControlType ControlType = ControlType::AdvancedArrowInput;	// Arrow / Input controls
 	BoardLook BoardLook = BoardLook::Fancy;				        // Fancy / default board look
 };
@@ -95,6 +95,7 @@ public:
 	// Set state:
 	void NewGame();
 	void ContinueGame();
+	void FinishGame();
 	void OpenMainMenu();
 	void OpenEscapeMenu();
 	void OpenSettingsMenu();
@@ -122,15 +123,15 @@ public:
 	void UnlockIngamePosition();
 
 	void SetStatusMessage(const char message[]);
-	char const * GetStatusMessage();
+	const char const* GetStatusMessage();
 
 	GameState UpdateGameState();
 
-	GameState GetGameState() {
+	const GameState& GetGameState() {
 		return gameState;
 	};
 
-	Settings GetSettings() {
+	const Settings& GetSettings() {
 		return settings;
 	};
 

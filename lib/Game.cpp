@@ -24,13 +24,13 @@ bool Game::IsRunning() {
 
 void Game::Update() {
 
-	GameState currentState = Game::state.GetGameState();
+	const GameState& currentState = Game::state.GetGameState();
 	bool input = Game::player.GetInput();
 	if (!input) {
 		return;
 	}
 
-	Settings currentSettings = state.GetSettings();
+	const Settings& currentSettings = state.GetSettings();
 	state.SetStatusMessage("");
 
 	std::cout << (int)currentState << "  " << (int)player.AdvancedInput << "  " << (int)currentSettings.ControlType << "\n";
@@ -250,8 +250,7 @@ void Game::Update() {
 				state.SetStatusMessage("Invalid command");
 			}
 
-			currentState = state.GetGameState();
-			switch (currentState)
+			switch (state.GetGameState())
 			{
 			case GameState::LookSettings:
 				display.WriteLookSettingsMenu(state.currentMenuOptionSelected, (int)currentSettings.BoardLook, state.GetStatusMessage());
@@ -267,11 +266,6 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::Playing) {
-			if (engine.HasGameFinished()) {
-				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.board, state.GetStatusMessage());
-				return;
-			}
-
 			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
 				state.MoveDownIngame();
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.playerBoard, state.GetStatusMessage());
@@ -290,7 +284,7 @@ void Game::Update() {
 			}
 			else if (player.AdvancedInput == AdvancedPlayerInput::Select) {
 				state.LockIngamePosition();
-				state.SetStatusMessage("Position locked. Press B for marking bomb or R for reveal.");
+				state.SetStatusMessage("Position locked. Press F for marking bomb or R for reveal.");
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.playerBoard, state.GetStatusMessage());
 			}
 			else if (player.AdvancedInput == AdvancedPlayerInput::MarkBomb || player.AdvancedInput == AdvancedPlayerInput::Reveal) {
@@ -313,8 +307,37 @@ void Game::Update() {
 				state.SetStatusMessage("Invalid command");
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.playerBoard, state.GetStatusMessage());
 			}
+
+			if (engine.HasGameFinished()) {
+				state.FinishGame();
+
+				if (engine.IsWin()) {
+					state.SetStatusMessage("You won! GG");
+				}
+				else {
+					state.SetStatusMessage("You lost! Try again");
+				}
+
+				display.WriteFinishBoard(currentSettings.BoardLook, currentSettings.BoardSettings, engine.playerBoard, engine.board, state.GetStatusMessage());
+				return;
+			}
 		}
 
+		else if (currentState == GameState::Finished) {
+			if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+				state.OpenMainMenu();
+				display.WriteMainMenu(state.currentMenuOptionSelected, state.GetStatusMessage());
+			}
+		}
+
+		else if (currentState == GameState::EscapeMenu) {
+			
+		}
+
+		else if (currentState == GameState::Exiting) {
+			isRunning = false;
+			display.WriteExit(state.GetStatusMessage());
+		}
 
 
 	}

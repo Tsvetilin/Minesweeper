@@ -98,9 +98,15 @@ void State::NewGame() {
 	currentInGameRowIndex = 0;
 	isLockedPosition = false;
 }
+
 void State::ContinueGame() {
 	gameState = GameState::Playing;
 }
+
+void State::FinishGame() {
+	gameState = GameState::Finished;
+}
+
 void State::OpenEscapeMenu() {
 	gameState = GameState::EscapeMenu;
 	currentMenuOptionSelected = 1;

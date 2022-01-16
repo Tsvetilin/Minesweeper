@@ -52,10 +52,10 @@ AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 	else if (c == ESCAPE) {
 		return AdvancedPlayerInput::Escape;
 	}
-	else if (c == 'b') {
+	else if (c == 'f' || c == 'F') {
 		return AdvancedPlayerInput::MarkBomb;
 	}
-	else if (c == 'r') {
+	else if (c == 'r' || c == 'R') {
 		return AdvancedPlayerInput::Reveal;
 	}
 
@@ -146,9 +146,9 @@ bool Player::GetInput() {
 
 		ushort ind = 0;
 		ushort words = 1;
-		
+
 		// trim start 
-		while (line[ind]!='\0') {
+		while (line[ind] != '\0') {
 			if (line[ind] != ' ') {
 				break;
 			}
@@ -158,7 +158,7 @@ bool Player::GetInput() {
 		while (line[ind] != '\0') {
 			++ind;
 			if (line[ind] == ' ') {
-				if (line[ind-1]==' ') {
+				if (line[ind - 1] == ' ') {
 					continue;
 				}
 
@@ -168,7 +168,7 @@ bool Player::GetInput() {
 		}
 
 		//trim end
-		if (ind>0 && line[ind - 1] == ' ') {
+		if (ind > 0 && line[ind - 1] == ' ') {
 			--words;
 		}
 

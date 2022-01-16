@@ -1,6 +1,9 @@
 #include "Engine.hpp"
 #include "Common.hpp"
 
+#include<iostream>
+//TODO: remove
+
 /*
 struct Engine {
 public:
@@ -129,26 +132,53 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 		return;
 	}
 
+	if (Engine::playerBoard[row][col] == boardSettings.bombMarked) {
+		return;
+	}
+
 	if (Engine::board[row][col] == boardSettings.bombRevealed) {
 		Engine::isWin = false;
 		Engine::isPlaying = false;
-		// TODO: Handle player board to print
+		// TODO: Handle player board to print -> done ?
+		Engine::playerBoard[row][col] = boardSettings.bombRevealed;
 		return;
 	}
 
 	if (uncoverType == UncoverType::Custom) {
 		if (Engine::board[row][col] == boardSettings.uncovered) {
-			Engine::playerBoard[row - 1][col - 1] = Engine::board[row - 1][col - 1];
-			Engine::playerBoard[row - 1][col] = Engine::board[row - 1][col];
-			Engine::playerBoard[row - 1][col + 1] = Engine::board[row - 1][col + 1];
+			if (row > 0) {
+				if (col > 0) {
+					Engine::playerBoard[row - 1][col - 1] = Engine::board[row - 1][col - 1];
+				}
+			
+				Engine::playerBoard[row - 1][col] = Engine::board[row - 1][col];
+				
+				if (col < cols - 1) {
+					Engine::playerBoard[row - 1][col + 1] = Engine::board[row - 1][col + 1];
+				}
+			}
 
-			Engine::playerBoard[row][col - 1] = Engine::board[row][col - 1];
+			if (col > 0) {
+				Engine::playerBoard[row][col - 1] = Engine::board[row][col - 1];
+			}
+			
 			Engine::playerBoard[row][col] = Engine::board[row][col];
-			Engine::playerBoard[row][col + 1] = Engine::board[row][col + 1];
+			
+			if (col < cols - 1) {
+				Engine::playerBoard[row][col + 1] = Engine::board[row][col + 1];
+			}
 
-			Engine::playerBoard[row + 1][col - 1] = Engine::board[row + 1][col - 1];
-			Engine::playerBoard[row + 1][col] = Engine::board[row + 1][col];
-			Engine::playerBoard[row + 1][col + 1] = Engine::board[row + 1][col + 1];
+			if (row < rows - 1) {
+				if (col > 0) {
+					Engine::playerBoard[row + 1][col - 1] = Engine::board[row + 1][col - 1];
+				}
+				
+				Engine::playerBoard[row + 1][col] = Engine::board[row + 1][col];
+				
+				if (col < cols - 1) {
+					Engine::playerBoard[row + 1][col + 1] = Engine::board[row + 1][col + 1];
+				}
+			}
 		}
 		else {
 			Engine::playerBoard[row][col] = Engine::board[row][col];
@@ -156,9 +186,7 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 
 	}
 	else if (uncoverType == UncoverType::Default) {
-
-		Engine::revealToNumber(row, col, rows, cols, boardSettings.uncovered, boardSettings.covered);
-
+		Engine::revealToNumber(row, col, rows, cols, boardSettings.uncovered, boardSettings.covered,boardSettings.numbers);
 	}
 
 	if (checkForWin(boardSettings)) {
@@ -168,56 +196,28 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 
 }
 
-void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered) {
+void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered, const char const * numbers) {
+	std::cout << row << " " << col << std::endl;
 
 	if (row > rows - 1 || row<0 || col>cols - 1 || col < 0) {
 		return;
 	}
 
-	if (Engine::playerBoard[row][col] != covered) {
+	if (visitedBoard[row][col]) {
 		return;
 	}
 
-	Engine::playerBoard[row][col] == Engine::board[row][col];
+	Engine::playerBoard[row][col] = Engine::board[row][col];
+	Engine::visitedBoard[row][col] = true;
 
-	if (Engine::board[row][col] != uncovered) {
+	if(isNumber(row, col, numbers)){
 		return;
 	}
 
-	if (row + 1 <= rows - 1 && Engine::playerBoard[row + 1][col] == covered) {
-		Engine::playerBoard[row + 1][col] = Engine::board[row + 1][col];
-	}
-
-	if (row - 1 >= 0 && Engine::playerBoard[row - 1][col] == covered) {
-		Engine::playerBoard[row - 1][col] = Engine::board[row - 1][col];
-	}
-
-	if (col + 1 <= cols - 1 && Engine::playerBoard[row][col + 1] == covered) {
-		Engine::playerBoard[row][col + 1] = Engine::board[row][col + 1];
-	}
-
-	if (col - 1 >= 0 && Engine::playerBoard[row][col - 1] == covered) {
-		Engine::playerBoard[row][col - 1] = Engine::board[row][col - 1];
-	}
-
-
-
-	if (row + 1 <= rows - 1 && Engine::playerBoard[row + 1][col] == uncovered) {
-		revealToNumber(row + 1, col, rows, cols, uncovered, covered);
-	}
-
-	if (row - 1 >= 0 && Engine::playerBoard[row - 1][col] == uncovered) {
-		revealToNumber(row - 1, col, rows, cols, uncovered, covered);
-	}
-
-	if (col + 1 <= cols - 1 && Engine::playerBoard[row][col + 1] == uncovered) {
-		revealToNumber(row, col + 1, rows, cols, uncovered, covered);
-	}
-
-	if (col - 1 >= 0 && Engine::playerBoard[row][col - 1] == uncovered) {
-		revealToNumber(row, col - 1, rows, cols, uncovered, covered);
-	}
-
+	revealToNumber(row + 1, col, rows, cols, uncovered, covered, numbers);
+	revealToNumber(row - 1, col, rows, cols, uncovered, covered, numbers);
+	revealToNumber(row, col + 1, rows, cols, uncovered, covered, numbers);
+	revealToNumber(row, col - 1, rows, cols, uncovered, covered, numbers);
 }
 
 void Engine::FinishGame(const BoardSettings boardSettings) {
@@ -257,7 +257,6 @@ bool Engine::checkForWin(const BoardSettings boardSettings) {
 }
 
 bool Engine::isNumber(const ushort row, const ushort col, const char* numbers) {
-
 	ushort i = 0;
 	while (i < NUMBERS_CHAR_ARRAY_SIZE) {
 		if (Engine::playerBoard[row][col] == numbers[i]) {
@@ -274,11 +273,13 @@ void Engine::initializeBoard(const ushort rows, const ushort cols) {
 
 	Engine::board = new char* [rows];
 	Engine::playerBoard = new char* [rows];
+	Engine::visitedBoard = new bool* [rows];
 
 	for (ushort row = 0; row < rows; ++row)
 	{
 		Engine::playerBoard[row] = new char[cols];
 		Engine::board[row] = new char[cols];
+		Engine::visitedBoard[row] = new bool[cols];
 	}
 }
 
@@ -288,10 +289,12 @@ void Engine::deleteBoard(const ushort rows) {
 	{
 		delete[] Engine::playerBoard[row];
 		delete[] Engine::board[row];
+		delete[] Engine::visitedBoard[row];
 	}
 
 	delete[] board;
 	delete[] playerBoard;
+	delete[] visitedBoard;
 }
 
 void Engine::fillBoard(const ushort rows, const ushort cols, const char uncoveredChar, const char coveredChar) {
@@ -302,6 +305,7 @@ void Engine::fillBoard(const ushort rows, const ushort cols, const char uncovere
 		{
 			Engine::board[row][col] = uncoveredChar;
 			Engine::playerBoard[row][col] = coveredChar;
+			Engine::visitedBoard[row][col] = false;
 		}
 	}
 }

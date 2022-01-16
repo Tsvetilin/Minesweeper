@@ -14,6 +14,7 @@ struct Engine {
 public:
 	char** board;
 	char** playerBoard;
+	bool** visitedBoard;
 
 	void LoadGame(const BoardSettings boardSettings, char** rawBoardData, char** rawPlayerBoardData);
 	void GenerateBoard(const BoardSettings boardSettings);
@@ -26,7 +27,7 @@ private:
 	bool isPlaying = false;
 	bool isWin = false;
 
-	void revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered);
+	void revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered, const char const* numbers);
 
 	bool checkForWin(const BoardSettings boardSettings);
 	bool isNumber(const ushort row, const ushort col, const char* numbers);
