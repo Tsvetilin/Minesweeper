@@ -5,13 +5,13 @@
       "Covered": "-",
       "Uncoverd": "0",
       "BombRevealed": "X",
-      "Numbers": "12345678",
+      "Numbers": "12345678"
     },
     "Fancy": {
       "BombMarked": "F",
       "Covered": "_",
       "Uncoverd": "-",
-      "BombRevealed": "B"
+      "BombRevealed": "B",
       "Numbers": "12345678"
     },
     "Custom": {

@@ -78,21 +78,14 @@ struct State {
 
 	State();
 public:
-	char** rawBoardData;
-	char** rawPlayerBoardData;
-
-	ushort sizeOptions;
-	ushort symbolsOptions;
-	ushort currentSizeIndex;
-	ushort currentSymbolsIndex;
-
-
 	std::vector<Size> sizes;
 	std::vector<char*> symbols;
 
 	void ReadSettings();
 	void SaveSettings();
-	void SaveGame(const char* const* playerBoard, const char* const* board);
+	bool SaveGame(const char* const* playerBoard, const char* const* board);
+	void DeleteSavedGame();
+
 	// Set state:
 	void NewGame();
 	void ResumeGame();
@@ -127,7 +120,7 @@ public:
 	void SetStatusMessage(const char message[]);
 	const char const* GetStatusMessage();
 
-	GameState UpdateGameState();
+	const GameState& UpdateGameState();
 
 	const GameState& GetGameState() {
 		return gameState;
@@ -137,13 +130,34 @@ public:
 		return settings;
 	};
 
+	const ushort& GetCurrentMenuOptionSelected();
+	const ushort& GetCurrentInGameRowIndex();
+	const ushort& GetCurrentInGameColIndex();
+	const bool& GetLockedPosition();
+	const char const* const* GetRawBoardData();
+	const char const* const* GetRawPlayerBoardData();
+	const ushort& GetSizeOptions();
+	const ushort& GetSymbolsOptions();
+	const ushort& GetCurrentSizeIndex();
+	const ushort& GetCurrentSymbolsIndex();
+	const bool& CanContinueGame();
+
+private:
+	char** rawBoardData;
+	char** rawPlayerBoardData;
+
+	ushort sizeOptions;
+	ushort symbolsOptions;
+	ushort currentSizeIndex;
+	ushort currentSymbolsIndex;
+
 	ushort currentMenuOptionSelected;
 
 	ushort currentInGameRowIndex;
 	ushort currentInGameColIndex;
 	bool isLockedPosition = false;
+	bool canContinueGame = false;
 
-private:
 	GameState gameState;
 	Settings settings;
 

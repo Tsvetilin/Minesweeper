@@ -1,14 +1,12 @@
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include "Engine.hpp"
 #include "Common.hpp"
 
-/*
-struct Engine {
-public:
-	void LoadGame(const BoardSettings boardSettings, const char** rawBoardData, const char** rawPlayerBoardData);
-};
-*/
 
-void Engine::GenerateBoard(BoardSettings boardSettings) {
+void Engine::GenerateBoard(const BoardSettings& boardSettings) {
 
 	Engine::isPlaying = true;
 	Engine::isWin = false;
@@ -93,7 +91,7 @@ void Engine::GenerateBoard(BoardSettings boardSettings) {
 	}
 }
 
-void Engine::PerformMove(const Move move, const ushort row, const ushort col, const BoardSettings boardSettings, const UncoverType uncoverType) {
+void Engine::PerformMove(const Move move, const ushort row, const ushort col, const BoardSettings& boardSettings, const UncoverType uncoverType) {
 
 	if (!Engine::isPlaying) {
 		return;
@@ -216,7 +214,7 @@ void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char
 	revealToNumber(row, col - 1, rows, cols, uncovered, covered, numbers);
 }
 
-void Engine::FinishGame(const BoardSettings boardSettings) {
+void Engine::FinishGame(const BoardSettings& boardSettings) {
 	Engine::deleteBoard(boardSettings.boardRows);
 }
 
@@ -228,7 +226,7 @@ bool Engine::IsWin() {
 	return Engine::isWin;
 }
 
-bool Engine::checkForWin(const BoardSettings boardSettings) {
+bool Engine::checkForWin(const BoardSettings& boardSettings) {
 
 	ushort rows = boardSettings.boardRows;
 	ushort cols = boardSettings.boardCols;
@@ -306,4 +304,36 @@ void Engine::fillBoard(const ushort rows, const ushort cols, const char uncovere
 	}
 }
 
-void Engine::LoadGame(const BoardSettings boardSettings, char** rawBoardData, char** rawPlayerBoardData) {}
+void Engine::LoadGame(const BoardSettings& boardSettings, const char const* const* rawBoardData, const char const* const* rawPlayerBoardData) {
+	
+	initializeBoard(boardSettings.boardRows,boardSettings.boardCols);
+
+	for (ushort i = 0; i < boardSettings.boardRows; ++i)
+	{
+		copyLine(rawBoardData[i], board[i], boardSettings.boardCols);
+	}
+
+	for (ushort i = 0; i < boardSettings.boardRows; ++i)
+	{
+		copyLine(rawPlayerBoardData[i], playerBoard[i], boardSettings.boardCols);
+	}
+
+	isPlaying = true;
+	isWin = false;
+
+	for (ushort row = 0; row < boardSettings.boardRows; ++row)
+	{
+		for (ushort col = 0; col < boardSettings.boardCols; ++col)
+		{
+			Engine::visitedBoard[row][col] = false;
+		}
+	}
+}
+
+const char const* const* Engine::GetPlayerBoard() {
+	return playerBoard;
+}
+
+const char const* const* Engine::GetBoard() {
+	return board;
+}

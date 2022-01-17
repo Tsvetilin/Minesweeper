@@ -10,8 +10,9 @@ typedef unsigned short int ushort;
 const ushort NUMBERS_CHAR_ARRAY_SIZE = 9;
 const ushort COMMAND_MAX_LENGTH = 100;
 
-const std::string GAME_SETTINGS_FILE = "minesweeper.settings";
-const std::string SETTINGS_TEMPLATE_FILE = "settings.json";
+const char GAME_SETTINGS_FILE[] = "settings.minesweeper";
+const char SETTINGS_TEMPLATE_FILE[] = "settingsTemplate.minesweeper.json";
+const char SAVED_GAME_FILE[] = "game.minesweeper";
 
 // ANSII Support Required
 #define BlackFG          "30" 
@@ -67,5 +68,8 @@ enum class Move {
 };
 
 ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound);
+void initializeMatrix(char** &matrix, ushort rows, ushort cols);
+void copyLine(const char const* source, char* &destination, ushort cols);
+void deleteMatrix(char** &matrix, ushort rows);
 
 #endif // !COMMON_H_

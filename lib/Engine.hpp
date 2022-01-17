@@ -12,24 +12,26 @@ struct Engine {
 	}
 
 public:
-	char** board;
-	char** playerBoard;
-	bool** visitedBoard;
+	const char const* const* GetPlayerBoard();
+	const char const* const* GetBoard();
 
-	void LoadGame(const BoardSettings boardSettings, char** rawBoardData, char** rawPlayerBoardData);
-	void GenerateBoard(const BoardSettings boardSettings);
-	void PerformMove(const Move move, const ushort row, const ushort col, const BoardSettings boardSettings, const UncoverType uncoverType);
-	void FinishGame(const BoardSettings boardSettings);
+	void LoadGame(const BoardSettings& boardSettings, const char const* const* rawBoardData, const char const* const* rawPlayerBoardData);
+	void GenerateBoard(const BoardSettings& boardSettings);
+	void PerformMove(const Move move, const ushort row, const ushort col, const BoardSettings& boardSettings, const UncoverType uncoverType);
+	void FinishGame(const BoardSettings& boardSettings);
 	bool HasGameFinished();
 	bool IsWin();
 
 private:
 	bool isPlaying = false;
 	bool isWin = false;
+	bool** visitedBoard;
+	char** board;
+	char** playerBoard;
 
-	void revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered, const char const* numbers);
+	void revealToNumber(const short row, const short col, const ushort rows, const ushort cols, const char uncovered, const char covered, const char const* numbers);
 
-	bool checkForWin(const BoardSettings boardSettings);
+	bool checkForWin(const BoardSettings& boardSettings);
 	bool isNumber(const ushort row, const ushort col, const char* numbers);
 
 	void initializeBoard(const ushort rows, const ushort cols);
