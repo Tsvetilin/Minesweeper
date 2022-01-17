@@ -21,7 +21,7 @@ public:
 	void SaveAndExit(); // Save current state and settings
 
 private:
-	bool isRunning;
+	bool isRunning = false;
 	void ApplySettings();
 };
 

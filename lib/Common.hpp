@@ -60,16 +60,9 @@ const char SAVED_GAME_FILE[] = "game.minesweeper";
 #define HorizontalLine (char)205
 #define Crossing (char)206
 
-
-enum class Move {
-    None = 0,
-    Reveal = 1,
-    MarkBomb = 2,
-};
-
 ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound);
 void initializeMatrix(char** &matrix, ushort rows, ushort cols);
-void copyLine(const char const* source, char* &destination, ushort cols);
+void copyLine(const char* const source, char* &destination, ushort cols);
 void deleteMatrix(char** &matrix, ushort rows);
 
 #endif // !COMMON_H_

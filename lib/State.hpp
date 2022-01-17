@@ -83,7 +83,7 @@ public:
 
 	void ReadSettings();
 	void SaveSettings();
-	bool SaveGame(const char* const* playerBoard, const char* const* board);
+	bool SaveGame(const char* const* const playerBoard, const char* const* const board);
 	void DeleteSavedGame();
 
 	// Set state:
@@ -118,7 +118,7 @@ public:
 	void UnlockIngamePosition();
 
 	void SetStatusMessage(const char message[]);
-	const char const* GetStatusMessage();
+	const char* const GetStatusMessage();
 
 	const GameState& UpdateGameState();
 
@@ -134,8 +134,8 @@ public:
 	const ushort& GetCurrentInGameRowIndex();
 	const ushort& GetCurrentInGameColIndex();
 	const bool& GetLockedPosition();
-	const char const* const* GetRawBoardData();
-	const char const* const* GetRawPlayerBoardData();
+	const char* const* const GetRawBoardData();
+	const char* const* const GetRawPlayerBoardData();
 	const ushort& GetSizeOptions();
 	const ushort& GetSymbolsOptions();
 	const ushort& GetCurrentSizeIndex();

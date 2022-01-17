@@ -20,7 +20,7 @@ void activateVirtualTerminal()
 }
 #endif
 
-void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int currentRowIndex, int currentColIndex, const char const* const* board, char const* statusMessage) {
+void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int currentRowIndex, int currentColIndex, const char* const* const board, const char* const statusMessage) {
 	clearScreen();
 
 	ushort rows = boardSize.boardRows;
@@ -248,7 +248,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 	std::cout << std::endl << std::endl << statusMessage;
 }
 
-void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, const char const* const* playerBoard, const char const* const* board, const char const* statusMessage) {
+void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, const char *const *const playerBoard, const char* const* const board, const char* const statusMessage) {
 	clearScreen();
 
 	ushort rows = boardSize.boardRows;
@@ -569,7 +569,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 }
 
 
-void Display::WritePauseMenu(ushort currentIndexSelected, const char const* statusMessage) {
+void Display::WritePauseMenu(ushort currentIndexSelected, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -579,7 +579,7 @@ void Display::WritePauseMenu(ushort currentIndexSelected, const char const* stat
 	std::cout << std::endl << std::endl << statusMessage;
 }
 
-void Display::WriteMainMenu(ushort currentIndexSelected, const char const* statusMessage) {
+void Display::WriteMainMenu(ushort currentIndexSelected, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -591,7 +591,7 @@ void Display::WriteMainMenu(ushort currentIndexSelected, const char const* statu
 	std::cout << std::endl << std::endl << statusMessage;
 }
 
-void Display::WriteSettingsMenu(ushort currentIndexSelected, const char const* statusMessage) {
+void Display::WriteSettingsMenu(ushort currentIndexSelected, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -604,7 +604,7 @@ void Display::WriteSettingsMenu(ushort currentIndexSelected, const char const* s
 	std::cout << std::endl << std::endl << statusMessage;
 }
 
-void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char const* statusMessage) {
+void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -625,7 +625,7 @@ void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentU
 
 	std::cout << std::endl << std::endl << statusMessage;
 }
-void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char const* statusMessage) {
+void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -646,7 +646,7 @@ void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort curre
 
 	std::cout << std::endl << std::endl << statusMessage;
 }
-void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char const* statusMessage) {
+void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -670,7 +670,7 @@ void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort curre
 }
 
 
-void Display::WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<Size> sizes, ushort currentUsedIndex, const char const* statusMessage) {
+void Display::WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<Size> sizes, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -689,7 +689,7 @@ void Display::WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options,
 
 	std::cout << std::endl << std::endl << statusMessage;
 }
-void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, const char const* statusMessage) {
+void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -745,7 +745,7 @@ void Display::WriteManual() {
 
 }
 
-void Display::WriteExit(const char const* statusMessage) {
+void Display::WriteExit(const char* const statusMessage) {
 	clearScreen();
 
 	std::cout << "Exiting..." << std::endl;

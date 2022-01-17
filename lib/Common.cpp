@@ -20,7 +20,7 @@ void deleteMatrix(char** &matrix, ushort rows) {
 	delete[] matrix;
 }
 
-void copyLine(const char const* source, char* &destination, ushort cols) {
+void copyLine(const char* const source, char* &destination, ushort cols) {
 	for (ushort i = 0; i < cols; ++i)
 	{
 		destination[i] = source[i];

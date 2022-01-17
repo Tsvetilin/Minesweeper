@@ -191,7 +191,7 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 
 }
 
-void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered, const char const * numbers) {
+void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered, const char* const numbers) {
 
 	if (row > rows - 1 || row<0 || col>cols - 1 || col < 0) {
 		return;
@@ -304,7 +304,7 @@ void Engine::fillBoard(const ushort rows, const ushort cols, const char uncovere
 	}
 }
 
-void Engine::LoadGame(const BoardSettings& boardSettings, const char const* const* rawBoardData, const char const* const* rawPlayerBoardData) {
+void Engine::LoadGame(const BoardSettings& boardSettings, const char* const* const rawBoardData, const char* const* const rawPlayerBoardData) {
 	
 	initializeBoard(boardSettings.boardRows,boardSettings.boardCols);
 
@@ -330,10 +330,10 @@ void Engine::LoadGame(const BoardSettings& boardSettings, const char const* cons
 	}
 }
 
-const char const* const* Engine::GetPlayerBoard() {
+const char* const* const Engine::GetPlayerBoard() {
 	return playerBoard;
 }
 
-const char const* const* Engine::GetBoard() {
+const char* const* const Engine::GetBoard() {
 	return board;
 }

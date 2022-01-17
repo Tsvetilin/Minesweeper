@@ -41,22 +41,24 @@ void Game::Update() {
 	//std::cout << (int)currentState << "  " << (int)player.AdvancedInput << "  " << (int)currentSettings.ControlType << "\n";
 
 	if (currentSettings.ControlType == ControlType::AdvancedArrowInput) {
+		const AdvancedPlayerInput& advancedInput = player.GetAdvancedInput();
+
 		if (currentState == GameState::Unknown) {
-			if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+			if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.OpenMainMenu();
 				display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
 		}
 		else if (currentState == GameState::MainMenu) {
-			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
+			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(MAIN_MENU_OPTIONS_COUNT);
 				display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::UpArrow) {
+			else if (advancedInput == AdvancedPlayerInput::UpArrow) {
 				state.DecreaseMenuOptionSelected(MAIN_MENU_OPTIONS_COUNT);
 				display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Select) {
+			else if (advancedInput == AdvancedPlayerInput::Select) {
 				/*
 				1. Start new game
 				2. Continue game
@@ -102,7 +104,7 @@ void Game::Update() {
 					break;
 				}
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+			else if (advancedInput == AdvancedPlayerInput::Escape) {
 				isRunning = false;
 				display.WriteExit(state.GetStatusMessage());
 			}
@@ -113,15 +115,15 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::Settings) {
-			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
+			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(SETTINGS_MENU_OPTIONS_COUNT);
 				display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::UpArrow) {
+			else if (advancedInput == AdvancedPlayerInput::UpArrow) {
 				state.DecreaseMenuOptionSelected(SETTINGS_MENU_OPTIONS_COUNT);
 				display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Select) {
+			else if (advancedInput == AdvancedPlayerInput::Select) {
 				/*
 					1. board size
 					2. board symbols
@@ -162,7 +164,7 @@ void Game::Update() {
 					break;
 				}
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+			else if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.OpenMainMenu();
 				display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
@@ -173,15 +175,15 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::SizeSettings) {
-			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
+			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(state.GetSizeOptions());
 
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::UpArrow) {
+			else if (advancedInput == AdvancedPlayerInput::UpArrow) {
 				state.DecreaseMenuOptionSelected(state.GetSizeOptions());
 
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Select) {
+			else if (advancedInput == AdvancedPlayerInput::Select) {
 				state.SelectSize(state.GetCurrentMenuOptionSelected() - 1);
 				state.SaveSettings();
 				ApplySettings();
@@ -189,7 +191,7 @@ void Game::Update() {
 				display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 				return;
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+			else if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.OpenSettingsMenu();
 				display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 				return;
@@ -201,13 +203,13 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::SymbolsSettings) {
-			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
+			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(state.GetSymbolsOptions());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::UpArrow) {
+			else if (advancedInput == AdvancedPlayerInput::UpArrow) {
 				state.DecreaseMenuOptionSelected(state.GetSymbolsOptions());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Select) {
+			else if (advancedInput == AdvancedPlayerInput::Select) {
 				state.SelectSymbols(state.GetCurrentMenuOptionSelected() - 1);
 				state.SaveSettings();
 				ApplySettings();
@@ -215,7 +217,7 @@ void Game::Update() {
 				display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 				return;
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+			else if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.OpenSettingsMenu();
 				display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 				return;
@@ -226,13 +228,13 @@ void Game::Update() {
 			display.WriteSymbolsSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetSymbolsOptions(), state.symbols, state.GetCurrentSymbolsIndex(), state.GetStatusMessage());
 		}
 		else if (currentState == GameState::LookSettings || currentState == GameState::UncoverSettings || currentState == GameState::ControlSettings) {
-			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
+			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(OTHER_S_MENU_OPTIONS);
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::UpArrow) {
+			else if (advancedInput == AdvancedPlayerInput::UpArrow) {
 				state.DecreaseMenuOptionSelected(OTHER_S_MENU_OPTIONS);
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Select) {
+			else if (advancedInput == AdvancedPlayerInput::Select) {
 				switch (currentState)
 				{
 				case GameState::LookSettings:
@@ -251,7 +253,7 @@ void Game::Update() {
 				state.OpenSettingsMenu();
 				display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+			else if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.OpenSettingsMenu();
 				display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 				return;
@@ -277,30 +279,30 @@ void Game::Update() {
 
 		else if (currentState == GameState::Playing) {
 			state.SetStatusMessage("Use Arrow keys to navigate & press Enter to lock a position.");
-			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
+			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.MoveDownIngame();
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}																					   
-			else if (player.AdvancedInput == AdvancedPlayerInput::UpArrow) {					   
+			else if (advancedInput == AdvancedPlayerInput::UpArrow) {
 				state.MoveUpIngame();															   
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}																					  
-			else if (player.AdvancedInput == AdvancedPlayerInput::LeftArrow) {					  
+			else if (advancedInput == AdvancedPlayerInput::LeftArrow) {
 				state.MoveLeftIngame();															  
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}																					
-			else if (player.AdvancedInput == AdvancedPlayerInput::RightArrow) {					
+			else if (advancedInput == AdvancedPlayerInput::RightArrow) {
 				state.MoveRightIngame();														
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Select) {
+			else if (advancedInput == AdvancedPlayerInput::Select) {
 				state.LockIngamePosition();
 				state.SetStatusMessage("Position locked. Press F for marking bomb or R for reveal.");
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::MarkBomb || player.AdvancedInput == AdvancedPlayerInput::Reveal) {
+			else if (advancedInput == AdvancedPlayerInput::MarkBomb || advancedInput == AdvancedPlayerInput::Reveal) {
 				if (state.GetLockedPosition()) {
-					Move move = player.AdvancedInput == AdvancedPlayerInput::MarkBomb ? Move::MarkBomb : Move::Reveal;
+					Move move = advancedInput == AdvancedPlayerInput::MarkBomb ? Move::MarkBomb : Move::Reveal;
 					state.UnlockIngamePosition();
 					engine.PerformMove(move, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), currentSettings.BoardSettings, currentSettings.UncoverType);
 				}
@@ -309,7 +311,7 @@ void Game::Update() {
 				}
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+			else if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.OpenEscapeMenu();
 				state.SetStatusMessage("");
 				display.WritePauseMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
@@ -335,7 +337,7 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::Finished) {
-			if (player.AdvancedInput == AdvancedPlayerInput::Escape || player.AdvancedInput == AdvancedPlayerInput::Select) {
+			if (advancedInput == AdvancedPlayerInput::Escape || advancedInput == AdvancedPlayerInput::Select) {
 				engine.FinishGame(currentSettings.BoardSettings);
 				state.OpenMainMenu();
 				display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
@@ -349,15 +351,15 @@ void Game::Update() {
 			2. Save and Exit
 			*/
 
-			if (player.AdvancedInput == AdvancedPlayerInput::DownArrow) {
+			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(OTHER_S_MENU_OPTIONS);
 				display.WritePauseMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::UpArrow) {
+			else if (advancedInput == AdvancedPlayerInput::UpArrow) {
 				state.DecreaseMenuOptionSelected(OTHER_S_MENU_OPTIONS);
 				display.WritePauseMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Select) {
+			else if (advancedInput == AdvancedPlayerInput::Select) {
 				switch (state.GetCurrentMenuOptionSelected())
 				{
 				case 1:
@@ -381,7 +383,7 @@ void Game::Update() {
 					break;
 				}
 			}
-			else if (player.AdvancedInput == AdvancedPlayerInput::Escape) {
+			else if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.ResumeGame();
 				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}

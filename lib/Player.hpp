@@ -34,6 +34,7 @@ struct SimplePlayerInput {
 	ushort num2;
 	char cmd[COMMAND_MAX_LENGTH];
 	char ingameCmd;
+	bool isValidCmd;
 };
 
 // move=None & relative coords when using advanced input
@@ -51,8 +52,8 @@ struct Player {
 
 public:
 	//PlayerIngameCommand PlayerIngameCommand;
-	AdvancedPlayerInput AdvancedInput;
-	SimplePlayerInput SimpleInput;
+	const AdvancedPlayerInput& GetAdvancedInput();
+	const SimplePlayerInput& GetSimpleInput();
 	bool IsAdvancedInputSupported();
 	void UseAdvancedInputSystem(); // TODO: set linux terminal termios read options
 	void UseSimpleInputSystem();// TODO: set linux terminal termios read options
@@ -62,6 +63,8 @@ private:
 	bool isAdvancedInputUsed = false;
 	AdvancedPlayerInput GetAdvancedKeyboardInput();
 	SimplePlayerInput GetSimpleKeyboardInput();
+	AdvancedPlayerInput AdvancedInput;
+	SimplePlayerInput SimpleInput;
 
 };
 

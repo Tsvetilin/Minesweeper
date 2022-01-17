@@ -141,49 +141,73 @@ bool Player::GetInput() {
 		return AdvancedInput != AdvancedPlayerInput::None;
 	}
 	else {
-		char line[COMMAND_MAX_LENGTH] = {};
-		std::cin.getline(line, COMMAND_MAX_LENGTH);
+		SimpleInput = GetSimpleKeyboardInput();
+		return SimpleInput.isValidCmd;
+	}
+}
 
-		ushort ind = 0;
-		ushort words = 1;
+SimplePlayerInput Player::GetSimpleKeyboardInput(){
 
-		// trim start 
-		while (line[ind] != '\0') {
-			if (line[ind] != ' ') {
-				break;
-			}
-			++ind;
+	SimplePlayerInput result;
+	result.isValidCmd = false;
+
+	char line[COMMAND_MAX_LENGTH] = {};
+	std::cin.getline(line, COMMAND_MAX_LENGTH);
+
+	ushort ind = 0;
+	ushort words = 1;
+
+	// trim start 
+	while (line[ind] != '\0') {
+		if (line[ind] != ' ') {
+			break;
 		}
+		++ind;
+	}
 
-		while (line[ind] != '\0') {
-			++ind;
-			if (line[ind] == ' ') {
-				if (line[ind - 1] == ' ') {
-					continue;
-				}
-
-				--words;
+	while (line[ind] != '\0') {
+		++ind;
+		if (line[ind] == ' ') {
+			if (line[ind - 1] == ' ') {
+				continue;
 			}
 
-		}
-
-		//trim end
-		if (ind > 0 && line[ind - 1] == ' ') {
 			--words;
 		}
 
-		if (words == 1) {
-			if (strcmp(line, "quit") == 0) {
+	}
 
-			}
-		}
-		else if (words == 2)
-		{
+	//trim end
+	if (ind > 0 && line[ind - 1] == ' ') {
+		--words;
+	}
 
-		}
-
-		else if (words == 3) {
-
+	if (words == 1) {
+		if (line[0] == 'Q' || line[0] == 'q') {
+			result.isValidCmd = true;
+			result.ingameCmd = 'q';
 		}
 	}
+	else if (words == 2)
+	{
+
+	}
+
+	else if (words == 3) {
+
+	}
+	else {
+
+	}
+
+	return result;
+}
+
+
+const AdvancedPlayerInput& Player::GetAdvancedInput() {
+	return AdvancedInput;
+}
+
+const SimplePlayerInput& Player::GetSimpleInput() {
+	return SimpleInput;
 }

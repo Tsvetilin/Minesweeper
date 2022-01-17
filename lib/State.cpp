@@ -17,6 +17,8 @@ State::State() {
 	currentInGameColIndex = 0;
 	currentInGameRowIndex = 0;
 	currentMenuOptionSelected = 0;
+	currentSizeIndex = 0;
+	currentSymbolsIndex = 0;
 }
 
 void State::OpenMainMenu() {
@@ -28,7 +30,7 @@ void State::SetStatusMessage(const char message[]) {
 	strcpy_s(State::statusMessage, message);
 }
 
-const char const* State::GetStatusMessage() {
+const char* const State::GetStatusMessage() {
 	return State::statusMessage;
 }
 
@@ -305,11 +307,11 @@ const bool& State::GetLockedPosition() {
 	return State::isLockedPosition;
 }
 
-const char const* const* State::GetRawBoardData() {
+const char* const* const State::GetRawBoardData() {
 	return rawBoardData;
 }
 
-const char const* const* State::GetRawPlayerBoardData() {
+const char* const* const State::GetRawPlayerBoardData() {
 	return rawPlayerBoardData;
 }
 
