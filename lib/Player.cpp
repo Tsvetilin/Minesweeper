@@ -52,10 +52,10 @@ AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 	else if (c == ESCAPE) {
 		return AdvancedPlayerInput::Escape;
 	}
-	else if (c == 'f' || c == 'F') {
+	else if (c == MarkChar || c == MarkChar + LOWER_TO_UPPER_TRANSFORM) {
 		return AdvancedPlayerInput::MarkBomb;
 	}
-	else if (c == 'r' || c == 'R') {
+	else if (c == RevealChar || c == RevealChar + LOWER_TO_UPPER_TRANSFORM) {
 		return AdvancedPlayerInput::Reveal;
 	}
 
@@ -91,6 +91,8 @@ AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 			input = AdvancedPlayerInput::LeftArrow;
 		}
 	}
+
+	// TODO: enter/escape F,R
 	return input;
 }
 
@@ -146,7 +148,7 @@ bool Player::GetInput() {
 	}
 }
 
-SimplePlayerInput Player::GetSimpleKeyboardInput(){
+SimplePlayerInput Player::GetSimpleKeyboardInput() {
 
 	SimplePlayerInput result;
 	result.isValidCmd = false;
@@ -182,22 +184,83 @@ SimplePlayerInput Player::GetSimpleKeyboardInput(){
 		--words;
 	}
 
+	// TODO: Support for more complex cmds
+
 	if (words == 1) {
-		if (line[0] == 'Q' || line[0] == 'q') {
+		if (line[0] == QuitChar || line[0] == QuitChar+LOWER_TO_UPPER_TRANSFORM) {
 			result.isValidCmd = true;
 			result.ingameCmd = 'q';
+		}
+		else if (line[0] >= '0' && line[0] <= '9') {
+			result.isValidCmd = true;
+			result.ingameCmd = line[0];
 		}
 	}
 	else if (words == 2)
 	{
-
+		//?
 	}
-
 	else if (words == 3) {
+		ushort n1 = 0, n2 = 0;
+		bool isW2 = false;
+		bool isW3 = false;
+		int currentIndex = 0;
+		while (line[currentIndex] == ' ') {
+			++currentIndex;
+		}
+		while (true) {
+			if (line[currentIndex] == ' ') {
+				break;
+			}
+			if (line[currentIndex] >= '0' && line[currentIndex] <= '9') {
+				n1 = n1 * 10 + line[currentIndex] - '0';
+			}
+			else {
+				return result;
+			}
+			++currentIndex;
+		}
 
+		while (line[currentIndex] == ' ') {
+			++currentIndex;
+		}
+
+		while (true) {
+			if (line[currentIndex] == ' ') {
+				break;
+			}
+			if (line[currentIndex] >= '0' && line[currentIndex] <= '9') {
+				n2 = n2 * 10 + line[currentIndex] - '0';
+			}
+			else {
+				return result;
+			}
+			++currentIndex;
+		}
+
+		while (line[currentIndex] == ' ') {
+			++currentIndex;
+		}
+		if (line[currentIndex + 1] != ' ' && line[currentIndex + 1] != '\0') {
+			return result;
+		}
+		if (line[currentIndex] == MarkChar || line[currentIndex] == MarkChar+LOWER_TO_UPPER_TRANSFORM)
+		{
+			result.ingameCmd = MarkChar;
+		}
+		else if (line[currentIndex] == RevealChar || line[currentIndex] == MarkChar+LOWER_TO_UPPER_TRANSFORM) {
+			result.ingameCmd = RevealChar;
+		}
+		else {
+			return result;
+		}
+
+		result.num1 = n1;
+		result.num2 = n2;
+		result.isValidCmd = true;
 	}
 	else {
-
+		//?
 	}
 
 	return result;

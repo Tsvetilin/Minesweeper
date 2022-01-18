@@ -8,13 +8,14 @@
 typedef unsigned short int ushort;
 
 const ushort NUMBERS_CHAR_ARRAY_SIZE = 9;
-const ushort COMMAND_MAX_LENGTH = 100;
+const ushort COMMAND_MAX_LENGTH = 256;
+
+const char LOWER_TO_UPPER_TRANSFORM = 'A' - 'a';
 
 const char GAME_SETTINGS_FILE[] = "settings.minesweeper";
 const char SETTINGS_TEMPLATE_FILE[] = "settingsTemplate.minesweeper.json";
 const char SAVED_GAME_FILE[] = "game.minesweeper";
 
-// ANSII Support Required
 #define BlackFG          "30" 
 #define RedFG            "31" 
 #define GreenFG          "32" 
@@ -59,6 +60,12 @@ const char SAVED_GAME_FILE[] = "game.minesweeper";
 #define VLRight (char)204
 #define HorizontalLine (char)205
 #define Crossing (char)206
+
+#define QuitChar 'q'
+#define RevealChar 'r'
+#define MarkChar 'f'
+
+#define InvalidIndex -1
 
 ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound);
 void initializeMatrix(char** &matrix, ushort rows, ushort cols);
