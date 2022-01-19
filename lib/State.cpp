@@ -11,15 +11,6 @@
 #include<iostream>
 // TODO: remove
 
-State::State() {
-	State::gameState = GameState::Unknown;
-	canContinueGame = true;
-	currentInGameColIndex = 0;
-	currentInGameRowIndex = 0;
-	currentMenuOptionSelected = 0;
-	currentSizeIndex = 0;
-	currentSymbolsIndex = 0;
-}
 
 void State::OpenMainMenu() {
 	State::gameState = GameState::MainMenu;
@@ -27,7 +18,7 @@ void State::OpenMainMenu() {
 }
 
 void State::SetStatusMessage(const char message[]) {
-	strcpy_s(State::statusMessage, message);
+	strcpy(State::statusMessage, message);
 }
 
 const char* const State::GetStatusMessage() {
@@ -123,7 +114,7 @@ void State::DecreaseMenuOptionSelected(ushort optionsCount) {
 
 void State::MoveLeftIngame() {
 	if (currentInGameColIndex == 0) {
-		currentInGameColIndex = settings.BoardSettings.boardCols - 1;
+		currentInGameColIndex = settings.boardSettings.boardCols - 1;
 	}
 	else {
 		--currentInGameColIndex;
@@ -133,7 +124,7 @@ void State::MoveLeftIngame() {
 
 void State::MoveRightIngame() {
 	++currentInGameColIndex;
-	if (currentInGameColIndex > settings.BoardSettings.boardCols - 1) {
+	if (currentInGameColIndex > settings.boardSettings.boardCols - 1) {
 		currentInGameColIndex = 0;
 	}
 	isLockedPosition = false;
@@ -141,7 +132,7 @@ void State::MoveRightIngame() {
 
 void State::MoveUpIngame() {
 	if (currentInGameRowIndex == 0) {
-		currentInGameRowIndex = settings.BoardSettings.boardRows - 1;
+		currentInGameRowIndex = settings.boardSettings.boardRows - 1;
 	}
 	else {
 		--currentInGameRowIndex;
@@ -152,7 +143,7 @@ void State::MoveUpIngame() {
 
 void State::MoveDownIngame() {
 	++currentInGameRowIndex;
-	if (currentInGameRowIndex > settings.BoardSettings.boardRows - 1) {
+	if (currentInGameRowIndex > settings.boardSettings.boardRows - 1) {
 		currentInGameRowIndex = 0;
 	}
 	isLockedPosition = false;
@@ -185,18 +176,18 @@ bool State::SaveGame(const char* const* playerBoard, const char* const* board) {
 		return false;
 	}
 
-	for (ushort i = 0; i < settings.BoardSettings.boardRows; i++)
+	for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
 	{
-		for (ushort j = 0; j < settings.BoardSettings.boardCols; j++)
+		for (ushort j = 0; j < settings.boardSettings.boardCols; j++)
 		{
 			savedGame << board[i][j];
 		}
 		savedGame << std::endl;
 	}
 
-	for (ushort i = 0; i < settings.BoardSettings.boardRows; i++)
+	for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
 	{
-		for (ushort j = 0; j < settings.BoardSettings.boardCols; j++)
+		for (ushort j = 0; j < settings.boardSettings.boardCols; j++)
 		{
 			savedGame << playerBoard[i][j];
 		}
@@ -204,6 +195,7 @@ bool State::SaveGame(const char* const* playerBoard, const char* const* board) {
 	}
 	savedGame.close();
 	canContinueGame = true;
+	return true;
 }
 
 // Set state:
@@ -226,8 +218,8 @@ void State::ContinueGame() {
 	currentInGameColIndex = 0;
 	currentInGameRowIndex = 0;
 	isLockedPosition = false;
-	deleteMatrix(rawBoardData, settings.BoardSettings.boardRows);
-	deleteMatrix(rawPlayerBoardData, settings.BoardSettings.boardRows);
+	deleteMatrix(rawBoardData, settings.boardSettings.boardRows);
+	deleteMatrix(rawPlayerBoardData, settings.boardSettings.boardRows);
 }
 
 void State::FinishGame() {
@@ -267,36 +259,36 @@ void State::OpenLookSettingsMenu() {
 
 void State::SelectSize(ushort index) {
 	currentSizeIndex = index;
-	settings.BoardSettings.boardRows = sizes[index].rows;
-	settings.BoardSettings.boardCols = sizes[index].cols;
-	settings.BoardSettings.bombsCount = sizes[index].bombs;
+	settings.boardSettings.boardRows = sizes[index].rows;
+	settings.boardSettings.boardCols = sizes[index].cols;
+	settings.boardSettings.bombsCount = sizes[index].bombs;
 	canContinueGame = false;
 }
 
 void State::SelectSymbols(ushort index) {
 	currentSymbolsIndex = index;
-	settings.BoardSettings.bombMarked = symbols[index][0];
-	settings.BoardSettings.covered = symbols[index][1];
-	settings.BoardSettings.uncovered = symbols[index][2];
-	settings.BoardSettings.bombRevealed = symbols[index][3];
+	settings.boardSettings.bombMarked = symbols[index][0];
+	settings.boardSettings.covered = symbols[index][1];
+	settings.boardSettings.uncovered = symbols[index][2];
+	settings.boardSettings.bombRevealed = symbols[index][3];
 	for (ushort i = 0; i < 8; i++)
 	{
-		settings.BoardSettings.numbers[i] = symbols[index][4 + i];
+		settings.boardSettings.numbers[i] = symbols[index][4 + i];
 	}
 	canContinueGame = false;
 }
 
 void State::SelectUncover(ushort index) {
-	settings.UncoverType = (UncoverType)(index);
+	settings.uncoverType = (UncoverType)(index);
 	canContinueGame = false;
 }
 
 void State::SelectControl(ushort index) {
-	settings.ControlType = (ControlType)(index);
+	settings.controlType = (ControlType)(index);
 }
 
 void State::SelectLook(ushort index) {
-	settings.BoardLook = (BoardLook)(index);
+	settings.boardLook = (BoardLook)(index);
 }
 
 const ushort& State::GetCurrentMenuOptionSelected() {
@@ -350,8 +342,8 @@ const bool& State::CanContinueGame() {
 		}
 
 		std::string buffer;
-		initializeMatrix(rawBoardData, settings.BoardSettings.boardRows, settings.BoardSettings.boardCols);
-		initializeMatrix(rawPlayerBoardData, settings.BoardSettings.boardRows, settings.BoardSettings.boardCols);
+		initializeMatrix(rawBoardData, settings.boardSettings.boardRows, settings.boardSettings.boardCols);
+		initializeMatrix(rawPlayerBoardData, settings.boardSettings.boardRows, settings.boardSettings.boardCols);
 
 		std::getline(savedGame, buffer);
 		if (buffer[0] == '\0') {
@@ -359,15 +351,15 @@ const bool& State::CanContinueGame() {
 			return canContinueGame;
 		}
 
-		for (ushort i = 0; i < settings.BoardSettings.boardRows; i++)
+		for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
 		{
-			copyLine(buffer.c_str(), rawBoardData[i], settings.BoardSettings.boardCols);
+			copyLine(buffer.c_str(), rawBoardData[i], settings.boardSettings.boardCols);
 			std::getline(savedGame, buffer);
 		}
 
-		for (ushort i = 0; i < settings.BoardSettings.boardRows; i++)
+		for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
 		{
-			copyLine(buffer.c_str(), rawPlayerBoardData[i], settings.BoardSettings.boardCols);
+			copyLine(buffer.c_str(), rawPlayerBoardData[i], settings.boardSettings.boardCols);
 			std::getline(savedGame, buffer);
 		}
 		savedGame.close();

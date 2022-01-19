@@ -56,7 +56,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 					}
 					std::cout << board[row][col];
 					if (isColorized) {
-						colorizeOutput(BlackBG, WhiteFG);
+						colorizeOutput();
 					}
 
 				}
@@ -100,7 +100,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 					}
 					std::cout << " " << board[row][col] << " ";
 					if (isColorized) {
-						colorizeOutput(BlackBG, WhiteFG);
+						colorizeOutput();
 					}
 				}
 
@@ -162,16 +162,16 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 						colorizeOutput(YellowBG, BlackFG);
 						isColorized = true;
 					}
-				
+
 					if (board[row][col] == boardSize.covered) {
 						std::cout << " ";
 					}
 					else {
 						std::cout << board[row][col];
 					}
-					
+
 					if (isColorized) {
-						colorizeOutput(BlackBG, WhiteFG);
+						colorizeOutput();
 					}
 
 					std::cout << VerticalLine;
@@ -192,7 +192,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 			for (ushort i = 0; i < cols; i++)
 			{
 				if (i + 1 < 10) {
-					std::cout << " " << (i + 1)<<" " << VerticalLine;
+					std::cout << " " << (i + 1) << " " << VerticalLine;
 				}
 				else {
 					std::cout << (i + 1) << " " << VerticalLine;
@@ -211,7 +211,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 				if (row + 1 < 10) {
 					std::cout << " ";
 				}
-				std::cout << " "<<(row + 1) << VerticalLine;
+				std::cout << " " << (row + 1) << VerticalLine;
 				for (ushort col = 0; col < cols; ++col)
 				{
 					bool isColorized = false;
@@ -229,7 +229,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 					}
 					std::cout << " " << board[row][col] << " ";
 					if (isColorized) {
-						colorizeOutput(BlackBG, WhiteFG);
+						colorizeOutput();
 					}
 					std::cout << VerticalLine;
 				}
@@ -248,7 +248,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
-void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, const char *const *const playerBoard, const char* const* const board, const char* const statusMessage) {
+void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, const char* const* const playerBoard, const char* const* const board, const char* const statusMessage) {
 	clearScreen();
 
 	ushort rows = boardSize.boardRows;
@@ -312,7 +312,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 					}
 
 					if (isResetNeeded) {
-						colorizeOutput(BlackBG, WhiteFG);
+						colorizeOutput();
 					}
 				}
 
@@ -384,7 +384,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 					}
 
 					if (isResetNeeded) {
-						colorizeOutput(BlackBG, WhiteFG);
+						colorizeOutput();
 					}
 				}
 
@@ -462,7 +462,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 
 
 					if (isResetNeeded) {
-						colorizeOutput(BlackBG, WhiteFG);
+						colorizeOutput();
 					}
 					std::cout << VerticalLine;
 				}
@@ -550,7 +550,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 					}
 
 					if (isResetNeeded) {
-						colorizeOutput(BlackBG, WhiteFG);
+						colorizeOutput();
 					}
 					std::cout << VerticalLine;
 				}
@@ -612,7 +612,7 @@ void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentU
 		std::cout << (currentIndexSelected == 1 ? ">>" : "  ");
 		colorizeOutput(GreenFG, WhiteBG);
 		std::cout << "1. Default look" << std::endl;
-		colorizeOutput(WhiteFG, BlackBG);
+		colorizeOutput();
 		std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Fancy Look" << std::endl;
 	}
 	else {
@@ -620,7 +620,7 @@ void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentU
 		std::cout << (currentIndexSelected == 2 ? ">>" : "  ");
 		colorizeOutput(GreenFG, WhiteBG);
 		std::cout << "2. Fancy Look" << std::endl;
-		colorizeOutput(WhiteFG, BlackBG);
+		colorizeOutput();
 	}
 
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
@@ -633,7 +633,7 @@ void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort curre
 		std::cout << (currentIndexSelected == 1 ? ">>" : "  ");
 		colorizeOutput(GreenFG, WhiteBG);
 		std::cout << "1. Standart keyboard typing input" << std::endl;
-		colorizeOutput(WhiteFG, BlackBG);
+		colorizeOutput();
 		std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Advanced keyboard input" << std::endl;
 	}
 	else {
@@ -641,7 +641,7 @@ void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort curre
 		std::cout << (currentIndexSelected == 2 ? ">>" : "  ");
 		colorizeOutput(GreenFG, WhiteBG);
 		std::cout << "2. Advanced keyboard input" << std::endl;
-		colorizeOutput(WhiteFG, BlackBG);
+		colorizeOutput();
 	}
 
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
@@ -654,7 +654,7 @@ void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort curre
 		std::cout << (currentIndexSelected == 1 ? ">>" : "  ");
 		colorizeOutput(GreenFG, WhiteBG);
 		std::cout << "1. Default uncovering as in the original game" << std::endl;
-		colorizeOutput(WhiteFG, BlackBG);
+		colorizeOutput();
 		std::cout << (currentIndexSelected == 2 ? ">>" : "  ");
 		std::cout << "2. Custom uncovering the surrounding 8" << std::endl;
 	}
@@ -663,7 +663,7 @@ void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort curre
 		std::cout << (currentIndexSelected == 2 ? ">>" : "  ");
 		colorizeOutput(GreenFG, WhiteBG);
 		std::cout << "2. Custom uncovering the surrounding 8" << std::endl;
-		colorizeOutput(WhiteFG, BlackBG);
+		colorizeOutput();
 	}
 
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
@@ -700,7 +700,7 @@ void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort optio
 
 			colorizeOutput(GreenFG, WhiteBG);
 			std::cout << (i + 1) << ". " << sizes[i] << std::endl;
-			colorizeOutput(WhiteFG, BlackBG);
+			colorizeOutput();
 		}
 		else {
 			std::cout << (i + 1) << ". " << sizes[i] << std::endl;
@@ -708,7 +708,7 @@ void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort optio
 
 	}
 
-	std::cout << std::endl << std::endl << statusMessage<<std::endl;
+	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
 void Display::writeHeader() {
@@ -749,7 +749,7 @@ void Display::WriteManual() {
 void Display::WriteExit(const char* const statusMessage) {
 	clearScreen();
 
-	std::cout << "Exiting..." << std::endl<< std::endl;
+	std::cout << "Exiting..." << std::endl << std::endl;
 }
 
 void Display::clearScreen() {
@@ -770,9 +770,10 @@ void Display::clearScreen() {
 
 }
 
+// No params = set to default
 void Display::colorizeOutput(const char foregroundColor[], const char backgroundColor[]) {
 	if (foregroundColor[0] == '\0' && backgroundColor[0] == '\0') {
-		std::cout << "\033[0m";
+		std::cout << "\033[0;0m";
 		return;
 	}
 

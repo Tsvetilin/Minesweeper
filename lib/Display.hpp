@@ -17,15 +17,15 @@ public:
 	void WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<Size> sizes, ushort currentUsedIndex, const char* const statusMessage);
 	void WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, const char* const statusMessage);
 
-	void WriteBoard(BoardLook boardLook, BoardSettings boardSize, int currentRowIndex, int currentColIndex, const char* const* const board, const char *const statusMessage);
-	void WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, const char* const* const playerBoard, const char* const* const board, const char *const statusMessage);
+	void WriteBoard(BoardLook boardLook, BoardSettings boardSize, int currentRowIndex, int currentColIndex, const char* const* const board, const char* const statusMessage);
+	void WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, const char* const* const playerBoard, const char* const* const board, const char* const statusMessage);
 	void WriteExit(const char* const statusMessage);
 
 	void WriteManual();
 
 private:
 	void clearScreen();
-	void colorizeOutput(const char foregroundColor[], const char backgroundColor[]);
+	void colorizeOutput(const char foregroundColor[] = "", const char backgroundColor[] = "");
 
 	void writeHeader();
 };

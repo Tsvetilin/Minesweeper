@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#define STDIN_FILENO 0
-
 bool Player::IsAdvancedInputSupported() {
 
 #if defined (__has_include) && (__has_include(<conio.h>) || __has_include(<termios.h>))
@@ -70,6 +68,7 @@ AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 #elif __has_include(<termios.h>)
 
 #include <termios.h>
+#include <unistd.h>
 
 AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 
@@ -114,16 +113,16 @@ AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 		}
 	}
 	else if (buff[1] == buff[2] && buff[1] == '\0') {
-		if (buff[2] == 10) {
+		if (buff[0] == 10) {
 			input = AdvancedPlayerInput::Select;
 		}
-		else if (buff[2] == 113 || buff[2] == 81) {
+		else if (buff[0] == 113 || buff[0] == 81) {
 			input = AdvancedPlayerInput::Escape;
 		}
-		else if (buff[2] == 70 || buff[2] == 102) {
+		else if (buff[0] == 70 || buff[0] == 102) {
 			input = AdvancedPlayerInput::MarkBomb;
 		}
-		else if (buff[2] == 114 || buff[2] == 82) {
+		else if (buff[0] == 114 || buff[0] == 82) {
 			input = AdvancedPlayerInput::Reveal;
 		}
 	}

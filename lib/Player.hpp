@@ -6,6 +6,7 @@
 
 #if defined(__has_include) && __has_include(<termios.h>)
 #include<termios.h>
+#define STDIN_FILENO 0
 #endif
 
 // Handles Player input

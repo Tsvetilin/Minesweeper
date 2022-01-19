@@ -13,7 +13,7 @@ void Game::Start() {
 
 void Game::ApplySettings() {
 	const Settings& settings = Game::state.GetSettings();
-	if (settings.ControlType == ControlType::AdvancedArrowInput && player.IsAdvancedInputSupported()) {
+	if (settings.controlType == ControlType::AdvancedArrowInput && player.IsAdvancedInputSupported()) {
 		player.UseAdvancedInputSystem();
 	}
 	else {
@@ -41,13 +41,16 @@ void Game::Update() {
 
 	//std::cout << (int)currentState << "  " << (int)player.AdvancedInput << "  " << (int)currentSettings.ControlType << "\n";
 
-	if (currentSettings.ControlType == ControlType::AdvancedArrowInput) {
+	if (currentSettings.controlType == ControlType::AdvancedArrowInput) {
 		const AdvancedPlayerInput& advancedInput = player.GetAdvancedInput();
 
 		if (currentState == GameState::Unknown) {
 			if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.OpenMainMenu();
 				display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
+			}
+			else {
+				display.WriteManual();
 			}
 		}
 		else if (currentState == GameState::MainMenu) {
@@ -70,17 +73,17 @@ void Game::Update() {
 				{
 				case 1:
 					state.NewGame();
-					engine.GenerateBoard(currentSettings.BoardSettings);
+					engine.GenerateBoard(currentSettings.boardSettings);
 					state.SetStatusMessage("Use Arrow keys to navigate & press Enter to lock a position.");
-					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+					display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 					break;
 
 				case 2:
 					if (state.CanContinueGame()) {
-						engine.LoadGame(currentSettings.BoardSettings, state.GetRawBoardData(), state.GetRawPlayerBoardData());
+						engine.LoadGame(currentSettings.boardSettings, state.GetRawBoardData(), state.GetRawPlayerBoardData());
 						state.ContinueGame();
 						state.SetStatusMessage("Use Arrow keys to navigate & press Enter to lock a position.");
-						display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+						display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 					}
 					else {
 						state.SetStatusMessage("Can't load previous game!");
@@ -145,17 +148,17 @@ void Game::Update() {
 
 				case 3:
 					state.OpenUncoverSettingsMenu();
-					display.WriteUncoverSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.UncoverType, state.GetStatusMessage());
+					display.WriteUncoverSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.uncoverType, state.GetStatusMessage());
 					break;
 
 				case 4:
 					state.OpenControlSettingsMenu();
-					display.WriteControlSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.ControlType, state.GetStatusMessage());
+					display.WriteControlSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.controlType, state.GetStatusMessage());
 					break;
 
 				case 5:
 					state.OpenLookSettingsMenu();
-					display.WriteLookSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.BoardLook, state.GetStatusMessage());
+					display.WriteLookSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.boardLook, state.GetStatusMessage());
 					break;
 
 				default:
@@ -265,13 +268,13 @@ void Game::Update() {
 			switch (state.GetGameState())
 			{
 			case GameState::LookSettings:
-				display.WriteLookSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.BoardLook, state.GetStatusMessage());
+				display.WriteLookSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.boardLook, state.GetStatusMessage());
 				break;
 			case GameState::UncoverSettings:
-				display.WriteUncoverSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.UncoverType, state.GetStatusMessage());
+				display.WriteUncoverSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.uncoverType, state.GetStatusMessage());
 				break;
 			case GameState::ControlSettings:
-				display.WriteControlSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.ControlType, state.GetStatusMessage());
+				display.WriteControlSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.controlType, state.GetStatusMessage());
 				break;
 			}
 
@@ -281,35 +284,35 @@ void Game::Update() {
 			state.SetStatusMessage("Use Arrow keys to navigate & press Enter to lock a position.");
 			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.MoveDownIngame();
-				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+				display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 			else if (advancedInput == AdvancedPlayerInput::UpArrow) {
 				state.MoveUpIngame();
-				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+				display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 			else if (advancedInput == AdvancedPlayerInput::LeftArrow) {
 				state.MoveLeftIngame();
-				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+				display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 			else if (advancedInput == AdvancedPlayerInput::RightArrow) {
 				state.MoveRightIngame();
-				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+				display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 			else if (advancedInput == AdvancedPlayerInput::Select) {
 				state.LockIngamePosition();
 				state.SetStatusMessage("Position locked. Press F for marking bomb or R for reveal.");
-				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+				display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 			else if (advancedInput == AdvancedPlayerInput::MarkBomb || advancedInput == AdvancedPlayerInput::Reveal) {
 				if (state.GetLockedPosition()) {
 					Move move = advancedInput == AdvancedPlayerInput::MarkBomb ? Move::MarkBomb : Move::Reveal;
 					state.UnlockIngamePosition();
-					engine.PerformMove(move, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), currentSettings.BoardSettings, currentSettings.UncoverType);
+					engine.PerformMove(move, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), currentSettings.boardSettings, currentSettings.uncoverType);
 				}
 				else {
 					state.SetStatusMessage("Please lock your position by pressing Enter!");
 				}
-				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+				display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 			else if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.OpenEscapeMenu();
@@ -318,7 +321,7 @@ void Game::Update() {
 			}
 			else {
 				state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
-				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameColIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+				display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameColIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 
 			if (engine.HasGameFinished()) {
@@ -331,16 +334,25 @@ void Game::Update() {
 					state.SetStatusMessage("You lost! Try again!\nPress Escape/Enter to continue...");
 				}
 
-				display.WriteFinishBoard(currentSettings.BoardLook, currentSettings.BoardSettings, engine.GetPlayerBoard(), engine.GetBoard(), state.GetStatusMessage());
+				display.WriteFinishBoard(currentSettings.boardLook, currentSettings.boardSettings, engine.GetPlayerBoard(), engine.GetBoard(), state.GetStatusMessage());
 				return;
 			}
 		}
 
 		else if (currentState == GameState::Finished) {
 			if (advancedInput == AdvancedPlayerInput::Escape || advancedInput == AdvancedPlayerInput::Select) {
-				engine.FinishGame(currentSettings.BoardSettings);
+				engine.FinishGame(currentSettings.boardSettings);
 				state.OpenMainMenu();
 				display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
+			}
+			else {
+				if (engine.IsWin()) {
+					state.SetStatusMessage("You won! GG!\nPress Escape/Enter to continue...");
+				}
+				else {
+					state.SetStatusMessage("You lost! Try again!\nPress Escape/Enter to continue...");
+				}
+				display.WriteFinishBoard(currentSettings.boardLook, currentSettings.boardSettings, engine.GetPlayerBoard(), engine.GetBoard(), state.GetStatusMessage());
 			}
 		}
 
@@ -362,7 +374,7 @@ void Game::Update() {
 				{
 				case 1:
 					state.ResumeGame();
-					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+					display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 					break;
 
 				case 2:
@@ -383,7 +395,7 @@ void Game::Update() {
 			}
 			else if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.ResumeGame();
-				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+				display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 			else {
 				state.SetStatusMessage("Status: Invalid command! Please use Arrow keys / Escape / Enter and make sure you are writing in the English alphabet. ");
@@ -399,7 +411,7 @@ void Game::Update() {
 
 
 	}
-	else if (currentSettings.ControlType == ControlType::PrimitiveInput)
+	else if (currentSettings.controlType == ControlType::PrimitiveInput)
 	{
 		const SimplePlayerInput& simpleInput = player.GetSimpleInput();
 		const char cmd = simpleInput.ingameCmd;
@@ -431,17 +443,17 @@ void Game::Update() {
 				{
 				case '1':
 					state.NewGame();
-					engine.GenerateBoard(currentSettings.BoardSettings);
+					engine.GenerateBoard(currentSettings.boardSettings);
 					state.SetStatusMessage("Write [row] [column] [cmd], where cmd is F for marking a bomb or R for revealing a position.");
-					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
+					display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
 					break;
 
 				case '2':
 					if (state.CanContinueGame()) {
-						engine.LoadGame(currentSettings.BoardSettings, state.GetRawBoardData(), state.GetRawPlayerBoardData());
+						engine.LoadGame(currentSettings.boardSettings, state.GetRawBoardData(), state.GetRawPlayerBoardData());
 						state.ContinueGame();
 						state.SetStatusMessage("Write [row] [column] [cmd], where cmd is F for marking a bomb or R for revealing a position.");
-						display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
+						display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
 					}
 					else {
 						state.SetStatusMessage("Can't load previous game! Write a number from 1 to 4 to select an option.");
@@ -498,19 +510,19 @@ void Game::Update() {
 				case '3':
 					state.OpenUncoverSettingsMenu();
 					state.SetStatusMessage("Write the number of you choice or Q to go back!");
-					display.WriteUncoverSettingsMenu(InvalidIndex, (int)currentSettings.UncoverType, state.GetStatusMessage());
+					display.WriteUncoverSettingsMenu(InvalidIndex, (int)currentSettings.uncoverType, state.GetStatusMessage());
 					break;
 
 				case '4':
 					state.OpenControlSettingsMenu();
 					state.SetStatusMessage("Write the number of you choice or Q to go back!");
-					display.WriteControlSettingsMenu(InvalidIndex, (int)currentSettings.ControlType, state.GetStatusMessage());
+					display.WriteControlSettingsMenu(InvalidIndex, (int)currentSettings.controlType, state.GetStatusMessage());
 					break;
 
 				case '5':
 					state.OpenLookSettingsMenu();
 					state.SetStatusMessage("Write the number of you choice or Q to go back!");
-					display.WriteLookSettingsMenu(InvalidIndex, (int)currentSettings.BoardLook, state.GetStatusMessage());
+					display.WriteLookSettingsMenu(InvalidIndex, (int)currentSettings.boardLook, state.GetStatusMessage());
 					break;
 
 				case QuitChar:
@@ -612,13 +624,13 @@ void Game::Update() {
 			switch (state.GetGameState())
 			{
 			case GameState::LookSettings:
-				display.WriteLookSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.BoardLook, state.GetStatusMessage());
+				display.WriteLookSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.boardLook, state.GetStatusMessage());
 				break;
 			case GameState::UncoverSettings:
-				display.WriteUncoverSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.UncoverType, state.GetStatusMessage());
+				display.WriteUncoverSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.uncoverType, state.GetStatusMessage());
 				break;
 			case GameState::ControlSettings:
-				display.WriteControlSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.ControlType, state.GetStatusMessage());
+				display.WriteControlSettingsMenu(state.GetCurrentMenuOptionSelected(), (int)currentSettings.controlType, state.GetStatusMessage());
 				break;
 			}
 		}
@@ -632,20 +644,20 @@ void Game::Update() {
 					state.SetStatusMessage("Write the number of you choice or Q to go back!");
 					display.WritePauseMenu(InvalidIndex, state.GetStatusMessage());
 				}
-				else if (num1 > 0 && num1 <= currentSettings.BoardSettings.boardRows && num2 > 0 && num2 < currentSettings.BoardSettings.boardCols) {
+				else if (num1 > 0 && num1 <= currentSettings.boardSettings.boardRows && num2 > 0 && num2 < currentSettings.boardSettings.boardCols) {
 					Move move = cmd == MarkChar ? Move::MarkBomb : Move::Reveal;
-					engine.PerformMove(move, num1 - 1, num2 - 1, currentSettings.BoardSettings, currentSettings.UncoverType);
-					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
+					engine.PerformMove(move, num1 - 1, num2 - 1, currentSettings.boardSettings, currentSettings.uncoverType);
+					display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
 				}
 				else
 				{
 					state.SetStatusMessage("Status: Invalid command! Write [row] [column] [cmd], where cmd is F for marking a bomb or R for revealing a position. Write Q for pausing.");
-					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
+					display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
 				}
 			}
 			else {
 				state.SetStatusMessage("Status: Invalid command! Write [row] [column] [cmd], where cmd is F for marking a bomb or R for revealing a position. Write Q for pausing.");
-				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
+				display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 
 			if (engine.HasGameFinished()) {
@@ -658,21 +670,21 @@ void Game::Update() {
 					state.SetStatusMessage("You lost! Try again!\nWrite Q to continue...");
 				}
 
-				display.WriteFinishBoard(currentSettings.BoardLook, currentSettings.BoardSettings, engine.GetPlayerBoard(), engine.GetBoard(), state.GetStatusMessage());
+				display.WriteFinishBoard(currentSettings.boardLook, currentSettings.boardSettings, engine.GetPlayerBoard(), engine.GetBoard(), state.GetStatusMessage());
 				return;
 			}
 		}
 
 		else if (currentState == GameState::Finished) {
 			if (isValid && cmd == QuitChar) {
-				engine.FinishGame(currentSettings.BoardSettings);
+				engine.FinishGame(currentSettings.boardSettings);
 				state.OpenMainMenu();
 				state.SetStatusMessage("Write a number from 1 to 4 to select an option.");
 				display.WriteMainMenu(InvalidIndex, state.GetStatusMessage());
 			}
 			else {
 				state.SetStatusMessage("Status: Invalid command! Write Q to continue...");
-				display.WriteFinishBoard(currentSettings.BoardLook, currentSettings.BoardSettings, engine.GetPlayerBoard(), engine.GetBoard(), state.GetStatusMessage());
+				display.WriteFinishBoard(currentSettings.boardLook, currentSettings.boardSettings, engine.GetPlayerBoard(), engine.GetBoard(), state.GetStatusMessage());
 			}
 		}
 
@@ -685,7 +697,7 @@ void Game::Update() {
 				if (cmd == QuitChar) {
 					state.ResumeGame();
 					state.SetStatusMessage("Status: Invalid command! Write [row] [column] [cmd], where cmd is F for marking a bomb or R for revealing a position. Write Q for pausing.");
-					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+					display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 
 				}
 				else if (cmd > '0' && cmd <= OTHER_S_MENU_OPTIONS + '0') {
@@ -693,7 +705,7 @@ void Game::Update() {
 					{
 					case '1':
 						state.ResumeGame();
-						display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
+						display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
 						break;
 
 					case '2':
@@ -703,7 +715,7 @@ void Game::Update() {
 						else {
 							state.DeleteSavedGame();
 						}
-						engine.FinishGame(currentSettings.BoardSettings);
+						engine.FinishGame(currentSettings.boardSettings);
 						state.SetStatusMessage("Write a number from 1 to 4 to select an option.");
 						state.OpenMainMenu();
 						display.WriteMainMenu(InvalidIndex, state.GetStatusMessage());

@@ -9,6 +9,10 @@
 
 struct Game {
 
+	Game() {
+		isRunning = false;
+	}
+
 public:
 	Engine engine;
 	State state;

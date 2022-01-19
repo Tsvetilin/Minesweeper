@@ -51,10 +51,10 @@ struct BoardSettings {
 };
 
 struct Settings {
-	BoardSettings BoardSettings;								// Board settings -> board size & bombs count
-	UncoverType UncoverType = UncoverType::Default;				// Default / custom uncover
-	ControlType ControlType = ControlType::AdvancedArrowInput;	// Arrow / Input controls
-	BoardLook BoardLook = BoardLook::Fancy;				        // Fancy / default board look
+	BoardSettings boardSettings;								// Board settings -> board size & bombs count
+	UncoverType uncoverType = UncoverType::Default;				// Default / custom uncover
+	ControlType controlType = ControlType::AdvancedArrowInput;	// Arrow / Input controls
+	BoardLook boardLook = BoardLook::Fancy;				        // Fancy / default board look
 };
 
 struct Size {
@@ -76,7 +76,16 @@ const ushort OTHER_S_MENU_OPTIONS = 2;
 
 struct State {
 
-	State();
+	State() {
+		State::gameState = GameState::Unknown;
+		canContinueGame = true;
+		currentInGameColIndex = 0;
+		currentInGameRowIndex = 0;
+		currentMenuOptionSelected = 0;
+		currentSizeIndex = 0;
+		currentSymbolsIndex = 0;
+	};
+
 public:
 	std::vector<Size> sizes;
 	std::vector<char*> symbols;
