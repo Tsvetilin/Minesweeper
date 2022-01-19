@@ -34,14 +34,14 @@ AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 	if (c == ARROW_SEQUENCE) {
 		switch (c = _getch())
 		{
-		case KEY_UP:// H
-			return AdvancedPlayerInput::UpArrow;//key up
+		case KEY_UP: // H
+			return AdvancedPlayerInput::UpArrow;
 		case KEY_DOWN: // K
-			return AdvancedPlayerInput::DownArrow;   // key down
-		case KEY_LEFT:// M
-			return AdvancedPlayerInput::LeftArrow;  // key left
+			return AdvancedPlayerInput::DownArrow;
+		case KEY_LEFT: // M
+			return AdvancedPlayerInput::LeftArrow;
 		case KEY_RIGHT: // P
-			return AdvancedPlayerInput::RightArrow;   // key right
+			return AdvancedPlayerInput::RightArrow;
 		default:
 			return AdvancedPlayerInput::None;
 		}
@@ -58,6 +58,9 @@ AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 	else if (c == RevealChar || c == RevealChar + LOWER_TO_UPPER_TRANSFORM) {
 		return AdvancedPlayerInput::Reveal;
 	}
+	else if (c == QuitChar || c == QuitChar + LOWER_TO_UPPER_TRANSFORM) {
+		return AdvancedPlayerInput::Escape;
+	}
 
 	return AdvancedPlayerInput::None;
 
@@ -70,30 +73,63 @@ AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 
 AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 
-	char c, d, e;
-	cin >> c;
-	cin >> d;
-	cin >> e;
+	char buff[3];
+	buff[0] = '\0';
+	buff[1] = '\0';
+	buff[2] = '\0';
+
+	int i = 0;
+	char c = '\0';
+	int n = 0;
+
+	// Read at least one character.
+	while (n < 1) {
+		n = read(STDIN_FILENO, &c, 1);
+	}
+
+	while (i < 3 && n > 0) {
+		buff[i++] = c;
+		n = read(fileno(stdin), &c, 1);
+	}
 
 	AdvancedPlayerInput input = AdvancedPlayerInput::None;
-	// Using 3 char type, Cause up down right left consist with 3 character
-	if ((c == 27) && (d = 91)) {
-		if (e == 65) {
-			input = AdvancedPlayerInput::UpArrow;
+
+	if (buff[0] == 27) {
+		if (buff[1] == 91) {
+			if (buff[2] == 65) {
+				input = AdvancedPlayerInput::UpArrow;
+			}
+			if (buff[2] == 66) {
+				input = AdvancedPlayerInput::DownArrow;
+			}
+			if (buff[2] == 67) {
+				input = AdvancedPlayerInput::RightArrow;
+			}
+			if (buff[2] == 68) {
+				input = AdvancedPlayerInput::LeftArrow;
+			}
 		}
-		if (e == 66) {
-			input = AdvancedPlayerInput::DownArrow;
+		else if (buff[1] == buff[2] && buff[1] == '\0') {
+			input = AdvancedPlayerInput::Escape;
 		}
-		if (e == 67) {
-			input = AdvancedPlayerInput::RightArrow;
+	}
+	else if (buff[1] == buff[2] && buff[1] == '\0') {
+		if (buff[2] == 10) {
+			input = AdvancedPlayerInput::Select;
 		}
-		if (e == 68) {
-			input = AdvancedPlayerInput::LeftArrow;
+		else if (buff[2] == 113 || buff[2] == 81) {
+			input = AdvancedPlayerInput::Escape;
+		}
+		else if (buff[2] == 70 || buff[2] == 102) {
+			input = AdvancedPlayerInput::MarkBomb;
+		}
+		else if (buff[2] == 114 || buff[2] == 82) {
+			input = AdvancedPlayerInput::Reveal;
 		}
 	}
 
-	// TODO: enter/escape F,R
 	return input;
+
 }
 
 #else
@@ -111,30 +147,30 @@ void Player::UseAdvancedInputSystem() {
 	if (Player::IsAdvancedInputSupported()) {
 		isAdvancedInputUsed = true;
 
-#if __has_include(<termios.h>)
+#if defined(__has_include) && __has_include(<termios.h>)
 
 		// Black magic to prevent Linux from buffering keystrokes.
-		struct termios t;
-		tcgetattr(STDIN_FILENO, &t);
-		t.c_lflag &= ~ICANON;
-		tcsetattr(STDIN_FILENO, TCSANOW, &t);
+		tcgetattr(STDIN_FILENO, &terminal);
+		terminal.c_lflag &= ~ICANON;
+		terminal.c_cc[VTIME] = 0;
+		terminal.c_cc[VMIN] = 0;
+		tcsetattr(STDIN_FILENO, TCSANOW, &terminal);
 
 #endif
 	}
 }
 
 void Player::UseSimpleInputSystem() {
-	isAdvancedInputUsed = false;
 
-#if __has_include(<termios.h>)
+#if defined(__has_include) && __has_include(<termios.h>)
 
-	// Black magic to prevent Linux from buffering keystrokes.
-	struct termios t;
-	tcgetattr(STDIN_FILENO, &t);
-	t.c_lflag &= ICANON;
-	tcsetattr(STDIN_FILENO, TCSANOW, &t);
+	if (isAdvancedInputUsed) {
+		tcsetattr(STDIN_FILENO, TCSANOW, &canonicalTerminal);
+	}
 
 #endif
+
+	isAdvancedInputUsed = false;
 }
 
 bool Player::GetInput() {
@@ -174,7 +210,7 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 				continue;
 			}
 
-			--words;
+			++words;
 		}
 
 	}
@@ -186,8 +222,18 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 
 	// TODO: Support for more complex cmds
 
+	ind = 0;
+	// trim start 
+	while (line[ind] != '\0') {
+		if (line[ind] != ' ') {
+			break;
+		}
+		++ind;
+	}
+
+
 	if (words == 1) {
-		if (line[0] == QuitChar || line[0] == QuitChar+LOWER_TO_UPPER_TRANSFORM) {
+		if ((line[ind] == QuitChar || line[ind] == QuitChar + LOWER_TO_UPPER_TRANSFORM) && (line[ind + 1] == ' ' || line[ind + 1] == '\0')) {
 			result.isValidCmd = true;
 			result.ingameCmd = 'q';
 		}
@@ -244,11 +290,11 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 		if (line[currentIndex + 1] != ' ' && line[currentIndex + 1] != '\0') {
 			return result;
 		}
-		if (line[currentIndex] == MarkChar || line[currentIndex] == MarkChar+LOWER_TO_UPPER_TRANSFORM)
+		if (line[currentIndex] == MarkChar || line[currentIndex] == MarkChar + LOWER_TO_UPPER_TRANSFORM)
 		{
 			result.ingameCmd = MarkChar;
 		}
-		else if (line[currentIndex] == RevealChar || line[currentIndex] == MarkChar+LOWER_TO_UPPER_TRANSFORM) {
+		else if (line[currentIndex] == RevealChar || line[currentIndex] == MarkChar + LOWER_TO_UPPER_TRANSFORM) {
 			result.ingameCmd = RevealChar;
 		}
 		else {

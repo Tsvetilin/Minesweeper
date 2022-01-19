@@ -4,18 +4,12 @@
 
 #include "State.hpp"
 
+#if defined(__has_include) && __has_include(<termios.h>)
+#include<termios.h>
+#endif
+
 // Handles Player input
 
-/*enum class PlayerInput {
-	None = 0,
-	Quit = 1,
-	Save = 2,
-	Escape = 3,
-	Select = 4,
-	IngameInput = 5,
-	SettingsInput = 6,
-};
-*/
 enum class AdvancedPlayerInput {
 	None = 0,
 	UpArrow = 1,
@@ -37,21 +31,19 @@ struct SimplePlayerInput {
 	bool isValidCmd;
 };
 
-// move=None & relative coords when using advanced input
-/*struct PlayerIngameCommand {
-	Move move;
-	short row;
-	short col;
-};*/
-
 struct Player {
 	Player() {
 		AdvancedInput = AdvancedPlayerInput::None;
 		SimpleInput = SimplePlayerInput();
+
+#if defined(__has_include) && __has_include(<termios.h>)
+		tcgetattr(STDIN_FILENO, &canonicalTerminal);
+		terminal = canonicalTerminal;
+#endif
+
 	}
 
 public:
-	//PlayerIngameCommand PlayerIngameCommand;
 	const AdvancedPlayerInput& GetAdvancedInput();
 	const SimplePlayerInput& GetSimpleInput();
 	bool IsAdvancedInputSupported();
@@ -60,7 +52,14 @@ public:
 	bool GetInput();
 
 private:
+
+#if defined(__has_include) && __has_include(<termios.h>)
+	struct termios terminal;
+	struct termios canonicalTerminal;
+#endif
+
 	bool isAdvancedInputUsed = false;
+
 	AdvancedPlayerInput GetAdvancedKeyboardInput();
 	SimplePlayerInput GetSimpleKeyboardInput();
 	AdvancedPlayerInput AdvancedInput;

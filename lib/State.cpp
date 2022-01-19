@@ -70,12 +70,15 @@ void State::ReadSettings() {
 		// TODO: handle approptiate utf-8 support
 		char* a = new char[50];
 		char* b = new char[50];
-		//char* c = new char[50];
+
 		strcpy(a, "R-0X12345678");
 		strcpy(b, "F_-B12345678");
-		//strcpy(c, "🚩⬛☐💣1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣");
+
 		symbols.push_back(a);
 		symbols.push_back(b);
+
+		//char* c = new char[50];
+		//strcpy(c, "🚩⬛☐💣1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣");
 		//symbols.push_back(c);
 
 		sizes.push_back(Size(9, 9, 10));
@@ -85,6 +88,13 @@ void State::ReadSettings() {
 		sizes.push_back(Size(24, 30, 200));
 	}
 
+}
+
+void State::DeleteSettingsAllocatedMemory() {
+	for (ushort i = 0; i < symbolsOptions; ++i)
+	{
+		delete[] symbols[i];
+	}
 }
 
 void State::DeleteSavedGame() {
@@ -283,12 +293,10 @@ void State::SelectUncover(ushort index) {
 
 void State::SelectControl(ushort index) {
 	settings.ControlType = (ControlType)(index);
-	canContinueGame = false;
 }
 
 void State::SelectLook(ushort index) {
 	settings.BoardLook = (BoardLook)(index);
-	canContinueGame = false;
 }
 
 const ushort& State::GetCurrentMenuOptionSelected() {

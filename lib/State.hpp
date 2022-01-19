@@ -86,6 +86,8 @@ public:
 	bool SaveGame(const char* const* const playerBoard, const char* const* const board);
 	void DeleteSavedGame();
 
+	void DeleteSettingsAllocatedMemory();
+
 	// Set state:
 	void NewGame();
 	void ResumeGame();

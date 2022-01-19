@@ -245,7 +245,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 
 	}
 
-	std::cout << std::endl << std::endl << statusMessage;
+	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
 void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, const char *const *const playerBoard, const char* const* const board, const char* const statusMessage) {
@@ -565,7 +565,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 		}
 	}
 
-	std::cout << std::endl << std::endl << statusMessage;
+	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
 
@@ -576,7 +576,7 @@ void Display::WritePauseMenu(ushort currentIndexSelected, const char* const stat
 	std::cout << (currentIndexSelected == 1 ? ">>" : "  ") << "1. Resume" << std::endl;
 	std::cout << (currentIndexSelected == 2 ? ">>" : "  ") << "2. Save and Exit" << std::endl;
 
-	std::cout << std::endl << std::endl << statusMessage;
+	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
 void Display::WriteMainMenu(ushort currentIndexSelected, const char* const statusMessage) {
@@ -588,7 +588,7 @@ void Display::WriteMainMenu(ushort currentIndexSelected, const char* const statu
 	std::cout << (currentIndexSelected == 3 ? ">>" : "  ") << "3. Change settings" << std::endl;
 	std::cout << (currentIndexSelected == 4 ? ">>" : "  ") << "4. Save & Exit" << std::endl;
 
-	std::cout << std::endl << std::endl << statusMessage;
+	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
 void Display::WriteSettingsMenu(ushort currentIndexSelected, const char* const statusMessage) {
@@ -601,7 +601,7 @@ void Display::WriteSettingsMenu(ushort currentIndexSelected, const char* const s
 	std::cout << (currentIndexSelected == 4 ? ">>" : "  ") << "4. Board control type" << std::endl;
 	std::cout << (currentIndexSelected == 5 ? ">>" : "  ") << "5. Board look" << std::endl;
 
-	std::cout << std::endl << std::endl << statusMessage;
+	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
 void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
@@ -623,7 +623,7 @@ void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentU
 		colorizeOutput(WhiteFG, BlackBG);
 	}
 
-	std::cout << std::endl << std::endl << statusMessage;
+	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
@@ -644,7 +644,7 @@ void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort curre
 		colorizeOutput(WhiteFG, BlackBG);
 	}
 
-	std::cout << std::endl << std::endl << statusMessage;
+	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
@@ -666,7 +666,7 @@ void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort curre
 		colorizeOutput(WhiteFG, BlackBG);
 	}
 
-	std::cout << std::endl << std::endl << statusMessage;
+	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
 
@@ -687,7 +687,7 @@ void Display::WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options,
 		}
 	}
 
-	std::cout << std::endl << std::endl << statusMessage;
+	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
@@ -708,7 +708,7 @@ void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort optio
 
 	}
 
-	std::cout << std::endl << std::endl << statusMessage;
+	std::cout << std::endl << std::endl << statusMessage<<std::endl;
 }
 
 void Display::writeHeader() {
@@ -718,6 +718,7 @@ void Display::writeHeader() {
 }
 
 void Display::WriteManual() {
+	clearScreen();
 	writeHeader();
 
 	std::cout << "Welcome, fellow gamer!" << std::endl;
@@ -725,7 +726,7 @@ void Display::WriteManual() {
 	std::cout << "Here are some things you need to know before start playing:" << std::endl;
 	std::cout << "0. All of the settings and features listed below are accesible via the menu!" << std::endl;
 	std::cout << "1. The game has two working modes:" << std::endl;
-	std::cout << "		 a. Controlling via arrow keys and the keyboard in general. This type of control uses Up/Down/Left/Right keys to navigate, as well as Enter/Escape buttons. Some commands require other keys to be pressed. IMPORTANT: Using English alphabet is required to be able to detect the commands!" << std::endl;
+	std::cout << "		 a. Controlling via arrow keys and the key presses. This type of control uses Up/Down/Left/Right keys to navigate, as well as Enter/Escape buttons. Some commands require other keys to be pressed. IMPORTANT: Using English alphabet is required to be able to detect the commands!" << std::endl;
 	std::cout << "		 b. Controlling via writing to the console." << std::endl;
 	std::cout << "2. There are two styles of the game:" << std::endl;
 	std::cout << "		 a. Borderless: minimalistic." << std::endl;
@@ -736,19 +737,19 @@ void Display::WriteManual() {
 	std::cout << "4. There are several board size presets." << std::endl;
 	std::cout << "5. There are several symbols presets, representing the different. IMPORTANT: Not all consoles may support those!" << std::endl;
 	std::cout << std::endl;
-	std::cout << "You can always go Back or Pause by pressing Escape (if 1a) or Write Q (if 1b)!" << std::endl;
+	std::cout << "You can always go Back or Pause by pressing Escape or Q (if 1a) or Write Q (if 1b)!" << std::endl;
 	std::cout << std::endl;
 	std::cout << "Note: Not all functionality may be supported on your OS and the console you are using!" << std::endl;
 	std::cout << std::endl;
-	std::cout << "Press Escape (if 1a) or Write Q (if 1b) to continue!" << std::endl;
-
+	std::cout << "Press Escape or Q (if 1a) or Write Q (if 1b) to continue!" << std::endl;
+	std::cout << std::endl;
 
 }
 
 void Display::WriteExit(const char* const statusMessage) {
 	clearScreen();
 
-	std::cout << "Exiting..." << std::endl;
+	std::cout << "Exiting..." << std::endl<< std::endl;
 }
 
 void Display::clearScreen() {

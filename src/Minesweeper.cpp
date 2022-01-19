@@ -12,4 +12,5 @@ int main()
 
     game.SaveAndExit();
 
+    return 0;
 }

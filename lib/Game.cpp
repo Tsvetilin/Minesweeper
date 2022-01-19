@@ -73,13 +73,12 @@ void Game::Update() {
 					engine.GenerateBoard(currentSettings.BoardSettings);
 					state.SetStatusMessage("Use Arrow keys to navigate & press Enter to lock a position.");
 					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
-					//display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.currentInGameRowIndex, state.currentInGameColIndex, engine.board, state.GetStatusMessage());
 					break;
 
 				case 2:
 					if (state.CanContinueGame()) {
 						engine.LoadGame(currentSettings.BoardSettings, state.GetRawBoardData(), state.GetRawPlayerBoardData());
-						state.ContinueGame(); // TODO: delete alloc memory
+						state.ContinueGame();
 						state.SetStatusMessage("Use Arrow keys to navigate & press Enter to lock a position.");
 						display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 					}
@@ -346,12 +345,10 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::EscapeMenu) {
-
 			/*
 			1. Resume
 			2. Save and Exit
 			*/
-
 			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(OTHER_S_MENU_OPTIONS);
 				display.WritePauseMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
@@ -417,6 +414,9 @@ void Game::Update() {
 				state.OpenMainMenu();
 				display.WriteMainMenu(-1, state.GetStatusMessage());
 			}
+			else {
+				display.WriteManual();
+			}
 		}
 
 		else if (currentState == GameState::MainMenu) {
@@ -441,7 +441,7 @@ void Game::Update() {
 						engine.LoadGame(currentSettings.BoardSettings, state.GetRawBoardData(), state.GetRawPlayerBoardData());
 						state.ContinueGame();
 						state.SetStatusMessage("Write [row] [column] [cmd], where cmd is F for marking a bomb or R for revealing a position.");
-						display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+						display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
 					}
 					else {
 						state.SetStatusMessage("Can't load previous game! Write a number from 1 to 4 to select an option.");
@@ -514,9 +514,9 @@ void Game::Update() {
 					break;
 
 				case QuitChar:
-					isRunning = false;
-					state.SetStatusMessage("Write the number of you choice!");
-					display.WriteExit(state.GetStatusMessage());
+					state.OpenMainMenu();
+					state.SetStatusMessage("Write a number from 1 to 4 to select an option.");
+					display.WriteMainMenu(InvalidIndex, state.GetStatusMessage());
 					break;
 
 				default:
@@ -643,6 +643,10 @@ void Game::Update() {
 					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
 				}
 			}
+			else {
+				state.SetStatusMessage("Status: Invalid command! Write [row] [column] [cmd], where cmd is F for marking a bomb or R for revealing a position. Write Q for pausing.");
+				display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, InvalidIndex, InvalidIndex, engine.GetPlayerBoard(), state.GetStatusMessage());
+			}
 
 			if (engine.HasGameFinished()) {
 				state.FinishGame();
@@ -660,7 +664,7 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::Finished) {
-			if (isValid && cmd==QuitChar) {
+			if (isValid && cmd == QuitChar) {
 				engine.FinishGame(currentSettings.BoardSettings);
 				state.OpenMainMenu();
 				state.SetStatusMessage("Write a number from 1 to 4 to select an option.");
@@ -673,7 +677,6 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::EscapeMenu) {
-
 			/*
 			1. Resume
 			2. Save and Exit
@@ -685,8 +688,8 @@ void Game::Update() {
 					display.WriteBoard(currentSettings.BoardLook, currentSettings.BoardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 
 				}
-					else if (cmd > '0' && cmd <= OTHER_S_MENU_OPTIONS + '0') {
-					switch (state.GetCurrentMenuOptionSelected())
+				else if (cmd > '0' && cmd <= OTHER_S_MENU_OPTIONS + '0') {
+					switch (cmd)
 					{
 					case '1':
 						state.ResumeGame();
@@ -700,6 +703,7 @@ void Game::Update() {
 						else {
 							state.DeleteSavedGame();
 						}
+						engine.FinishGame(currentSettings.BoardSettings);
 						state.SetStatusMessage("Write a number from 1 to 4 to select an option.");
 						state.OpenMainMenu();
 						display.WriteMainMenu(InvalidIndex, state.GetStatusMessage());
@@ -723,6 +727,6 @@ void Game::Update() {
 }
 
 void Game::SaveAndExit() {
-	// sleep 2.5s and close
-
+	state.DeleteSettingsAllocatedMemory();
+	state.SaveSettings();
 }
