@@ -1,30 +1,16 @@
-﻿#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
-#include "State.hpp"
+﻿#include "State.hpp"
 
 #include <fstream>
 #include <string>
 #include <cstring>
 
-#include<iostream>
-// TODO: remove
-
-
-void State::OpenMainMenu() {
-	State::gameState = GameState::MainMenu;
-	State::currentMenuOptionSelected = 1;
-}
-
 void State::SetStatusMessage(const char message[]) {
-	strcpy(State::statusMessage, message);
+	copyString(message, statusMessage, (ushort)strlen(message));
 }
 
 const char* const State::GetStatusMessage() {
 	return State::statusMessage;
 }
-
 
 void State::ReadSettings() {
 
@@ -52,39 +38,37 @@ void State::ReadSettings() {
 		settingsTemplate.close();
 	}
 	else {
-		sizeOptions = 5;
-		symbolsOptions = 2;
+		// add default settings options
 
 		currentSizeIndex = 0;
 		currentSymbolsIndex = 0;
 
+		symbolsOptions = 2;
+		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE]{ "F_-B12345678" });
+		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE]{ "R-0X12345678" });
+	
+
 		// TODO: handle approptiate utf-8 support
-		char* a = new char[50];
-		char* b = new char[50];
+		//symbols.push_back( new char[80]{u8"🚩⬛☐💣1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣"});
 
-		strcpy(a, "R-0X12345678");
-		strcpy(b, "F_-B12345678");
-
-		symbols.push_back(a);
-		symbols.push_back(b);
-
-		//char* c = new char[50];
-		//strcpy(c, "🚩⬛☐💣1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣");
-		//symbols.push_back(c);
-
-		sizes.push_back(Size(9, 9, 10));
-		sizes.push_back(Size(10, 10, 15));
-		sizes.push_back(Size(16, 16, 40));
-		sizes.push_back(Size(16, 30, 99));
-		sizes.push_back(Size(24, 30, 200));
+		sizeOptions = 5;
+		sizes.push_back(new Size(9, 9, 10));
+		sizes.push_back(new Size(10, 10, 15));
+		sizes.push_back(new Size(16, 16, 40));
+		sizes.push_back(new Size(16, 30, 99));
+		sizes.push_back(new Size(24, 30, 200));
 	}
-
 }
 
 void State::DeleteSettingsAllocatedMemory() {
 	for (ushort i = 0; i < symbolsOptions; ++i)
 	{
 		delete[] symbols[i];
+	}
+
+	for (ushort i = 0; i < sizeOptions; ++i)
+	{
+		delete sizes[i];
 	}
 }
 
@@ -98,6 +82,150 @@ void State::DeleteSavedGame() {
 	}
 }
 
+void State::SaveSettings() {
+	std::fstream settingsFile;
+	settingsFile.open(GAME_SETTINGS_FILE, std::ios::binary | std::ios::out);
+
+	if (settingsFile.is_open()) {
+		settingsFile.write((char*)&(State::settings), sizeof(State::settings));
+		settingsFile.close();
+	}
+}
+
+bool State::SaveGame(const char* const* playerBoard, const char* const* board) {
+	std::fstream savedGame;
+	savedGame.open(SAVED_GAME_FILE, std::ios::out);
+
+	if (!savedGame.is_open()) {
+		canContinueGame = false;
+		return false;
+	}
+
+	for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
+	{
+		for (ushort j = 0; j < settings.boardSettings.boardCols; j++)
+		{
+			savedGame << board[i][j];
+		}
+		savedGame << std::endl;
+	}
+
+	for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
+	{
+		for (ushort j = 0; j < settings.boardSettings.boardCols; j++)
+		{
+			savedGame << playerBoard[i][j];
+		}
+		savedGame << std::endl;
+	}
+	savedGame.close();
+	canContinueGame = true;
+	return true;
+}
+
+const bool& State::CanContinueGame() {
+	if (canContinueGame) {
+
+		std::fstream savedGame;
+		savedGame.open(SAVED_GAME_FILE, std::ios::in);
+
+		if (!savedGame.is_open()) {
+			canContinueGame = false;
+			return canContinueGame;
+		}
+
+		std::string buffer;
+		rawBoardData = initializeMatrix(settings.boardSettings.boardRows, settings.boardSettings.boardCols);
+		rawPlayerBoardData = initializeMatrix(settings.boardSettings.boardRows, settings.boardSettings.boardCols);
+
+		std::getline(savedGame, buffer);
+		if (buffer[0] == '\0') {
+			canContinueGame = false;
+			return canContinueGame;
+		}
+
+		for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
+		{
+			copyLine(buffer.c_str(), rawBoardData[i], settings.boardSettings.boardCols);
+			std::getline(savedGame, buffer);
+		}
+
+		for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
+		{
+			copyLine(buffer.c_str(), rawPlayerBoardData[i], settings.boardSettings.boardCols);
+			std::getline(savedGame, buffer);
+		}
+		savedGame.close();
+
+		DeleteSavedGame();
+	}
+
+	return canContinueGame;
+}
+
+
+// Set state:
+void State::OpenMainMenu() {
+	State::gameState = GameState::MainMenu;
+	State::currentMenuOptionSelected = 1;
+}
+
+void State::NewGame() {
+	currentInGameColIndex = 0;
+	currentInGameRowIndex = 0;
+	canContinueGame = false;
+	ResumeGame();
+}
+
+void State::ResumeGame() {
+	gameState = GameState::Playing;
+	isLockedPosition = false;
+}
+
+void State::ContinueGame() {
+	ResumeGame();
+	canContinueGame = false;
+	currentInGameColIndex = 0;
+	currentInGameRowIndex = 0;
+	deleteMatrix(rawBoardData, settings.boardSettings.boardRows);
+	deleteMatrix(rawPlayerBoardData, settings.boardSettings.boardRows);
+}
+
+void State::FinishGame() {
+	gameState = GameState::Finished;
+	canContinueGame = false;
+}
+
+void State::OpenEscapeMenu() {
+	gameState = GameState::EscapeMenu;
+	currentMenuOptionSelected = 1;
+}
+void State::OpenSettingsMenu() {
+	currentMenuOptionSelected = 1;
+	gameState = GameState::Settings;
+}
+void State::OpenSizeSettingsMenu() {
+	gameState = GameState::SizeSettings;
+	currentMenuOptionSelected = 1;
+}
+void State::OpenSymbolsSettingsMenu() {
+	gameState = GameState::SymbolsSettings;
+	currentMenuOptionSelected = 1;
+}
+void State::OpenUncoverSettingsMenu() {
+	gameState = GameState::UncoverSettings;
+	currentMenuOptionSelected = 1;
+}
+void State::OpenControlSettingsMenu() {
+	gameState = GameState::ControlSettings;
+	currentMenuOptionSelected = 1;
+}
+void State::OpenLookSettingsMenu() {
+	gameState = GameState::LookSettings;
+	currentMenuOptionSelected = 1;
+}
+
+// Ingame state modifiers:
 void State::IncreaseMenuOptionSelected(ushort optionsCount) {
 	++currentMenuOptionSelected;
 	if (currentMenuOptionSelected > optionsCount) {
@@ -157,111 +285,12 @@ void State::UnlockIngamePosition() {
 	isLockedPosition = false;
 }
 
-void State::SaveSettings() {
-	std::fstream settingsFile;
-	settingsFile.open(GAME_SETTINGS_FILE, std::ios::binary | std::ios::out);
-
-	if (settingsFile.is_open()) {
-		settingsFile.write((char*)&(State::settings), sizeof(State::settings));
-		settingsFile.close();
-	}
-}
-
-bool State::SaveGame(const char* const* playerBoard, const char* const* board) {
-	std::fstream savedGame;
-	savedGame.open(SAVED_GAME_FILE, std::ios::out);
-
-	if (!savedGame.is_open()) {
-		canContinueGame = false;
-		return false;
-	}
-
-	for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
-	{
-		for (ushort j = 0; j < settings.boardSettings.boardCols; j++)
-		{
-			savedGame << board[i][j];
-		}
-		savedGame << std::endl;
-	}
-
-	for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
-	{
-		for (ushort j = 0; j < settings.boardSettings.boardCols; j++)
-		{
-			savedGame << playerBoard[i][j];
-		}
-		savedGame << std::endl;
-	}
-	savedGame.close();
-	canContinueGame = true;
-	return true;
-}
-
-// Set state:
-void State::NewGame() {
-	gameState = GameState::Playing;
-	currentInGameColIndex = 0;
-	currentInGameRowIndex = 0;
-	isLockedPosition = false;
-	canContinueGame = false;
-}
-
-void State::ResumeGame() {
-	gameState = GameState::Playing;
-	isLockedPosition = false;
-}
-
-void State::ContinueGame() {
-	gameState = GameState::Playing;
-	canContinueGame = false;
-	currentInGameColIndex = 0;
-	currentInGameRowIndex = 0;
-	isLockedPosition = false;
-	deleteMatrix(rawBoardData, settings.boardSettings.boardRows);
-	deleteMatrix(rawPlayerBoardData, settings.boardSettings.boardRows);
-}
-
-void State::FinishGame() {
-	gameState = GameState::Finished;
-	canContinueGame = false;
-}
-
-void State::OpenEscapeMenu() {
-	gameState = GameState::EscapeMenu;
-	currentMenuOptionSelected = 1;
-}
-void State::OpenSettingsMenu() {
-	currentMenuOptionSelected = 1;
-	gameState = GameState::Settings;
-}
-void State::OpenSizeSettingsMenu() {
-	gameState = GameState::SizeSettings;
-	currentMenuOptionSelected = 1;
-}
-void State::OpenSymbolsSettingsMenu() {
-	gameState = GameState::SymbolsSettings;
-	currentMenuOptionSelected = 1;
-}
-void State::OpenUncoverSettingsMenu() {
-	gameState = GameState::UncoverSettings;
-	currentMenuOptionSelected = 1;
-}
-void State::OpenControlSettingsMenu() {
-	gameState = GameState::ControlSettings;
-	currentMenuOptionSelected = 1;
-}
-void State::OpenLookSettingsMenu() {
-	gameState = GameState::LookSettings;
-	currentMenuOptionSelected = 1;
-}
-
-
+// Change settings:
 void State::SelectSize(ushort index) {
 	currentSizeIndex = index;
-	settings.boardSettings.boardRows = sizes[index].rows;
-	settings.boardSettings.boardCols = sizes[index].cols;
-	settings.boardSettings.bombsCount = sizes[index].bombs;
+	settings.boardSettings.boardRows = sizes[index]->rows;
+	settings.boardSettings.boardCols = sizes[index]->cols;
+	settings.boardSettings.bombsCount = sizes[index]->bombs;
 	canContinueGame = false;
 }
 
@@ -291,6 +320,8 @@ void State::SelectLook(ushort index) {
 	settings.boardLook = (BoardLook)(index);
 }
 
+
+// Getters:
 const ushort& State::GetCurrentMenuOptionSelected() {
 	return State::currentMenuOptionSelected;
 }
@@ -330,43 +361,11 @@ const ushort& State::GetCurrentSizeIndex() {
 const ushort& State::GetCurrentSymbolsIndex() {
 	return currentSymbolsIndex;
 }
-const bool& State::CanContinueGame() {
-	if (canContinueGame) {
 
-		std::fstream savedGame;
-		savedGame.open(SAVED_GAME_FILE, std::ios::in);
-
-		if (!savedGame.is_open()) {
-			canContinueGame = false;
-			return canContinueGame;
-		}
-
-		std::string buffer;
-		initializeMatrix(rawBoardData, settings.boardSettings.boardRows, settings.boardSettings.boardCols);
-		initializeMatrix(rawPlayerBoardData, settings.boardSettings.boardRows, settings.boardSettings.boardCols);
-
-		std::getline(savedGame, buffer);
-		if (buffer[0] == '\0') {
-			canContinueGame = false;
-			return canContinueGame;
-		}
-
-		for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
-		{
-			copyLine(buffer.c_str(), rawBoardData[i], settings.boardSettings.boardCols);
-			std::getline(savedGame, buffer);
-		}
-
-		for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
-		{
-			copyLine(buffer.c_str(), rawPlayerBoardData[i], settings.boardSettings.boardCols);
-			std::getline(savedGame, buffer);
-		}
-		savedGame.close();
-
-		DeleteSavedGame();
-	}
-
-	return canContinueGame;
+const GameState& State::GetGameState() {
+	return gameState;
 }
 
+const Settings& State::GetSettings() {
+	return settings;
+}

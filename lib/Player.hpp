@@ -25,15 +25,23 @@ enum class AdvancedPlayerInput {
 };
 
 struct SimplePlayerInput {
+	SimplePlayerInput() {
+		num1 = 0;
+		num2 = 0;
+		ingameCmd = '\0';
+		isValidCmd = false;
+	}
+
 	ushort num1;
 	ushort num2;
-	char cmd[COMMAND_MAX_LENGTH];
 	char ingameCmd;
 	bool isValidCmd;
 };
 
 struct Player {
 	Player() {
+		isAdvancedInputUsed = false;
+
 		AdvancedInput = AdvancedPlayerInput::None;
 		SimpleInput = SimplePlayerInput();
 
@@ -48,8 +56,8 @@ public:
 	const AdvancedPlayerInput& GetAdvancedInput();
 	const SimplePlayerInput& GetSimpleInput();
 	bool IsAdvancedInputSupported();
-	void UseAdvancedInputSystem(); // TODO: set linux terminal termios read options
-	void UseSimpleInputSystem();// TODO: set linux terminal termios read options
+	void UseAdvancedInputSystem();
+	void UseSimpleInputSystem();
 	bool GetInput();
 
 private:
@@ -59,7 +67,7 @@ private:
 	struct termios canonicalTerminal;
 #endif
 
-	bool isAdvancedInputUsed = false;
+	bool isAdvancedInputUsed;
 
 	AdvancedPlayerInput GetAdvancedKeyboardInput();
 	SimplePlayerInput GetSimpleKeyboardInput();

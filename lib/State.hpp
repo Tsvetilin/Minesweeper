@@ -40,14 +40,30 @@ enum class ControlType {
 
 // Default board settings
 struct BoardSettings {
-	ushort boardRows = 9;
-	ushort boardCols = 9;
-	ushort bombsCount = 10;
-	char bombRevealed = 'B';
-	char bombMarked = 'F';
-	char uncovered = '-';
-	char covered = '_';
-	char numbers[NUMBERS_CHAR_ARRAY_SIZE] = "12345678";
+
+	BoardSettings() {
+		// Default settings
+
+		boardRows = 9;
+		boardCols = 9;
+		bombsCount = 10;
+		bombRevealed = 'B';
+		bombMarked = 'F';
+		uncovered = '-';
+		covered = '_';
+		char numbersDefault[NUMBERS_CHAR_ARRAY_SIZE]{ "12345678" };
+
+		copyString(numbersDefault,numbers,(ushort)strlen(numbersDefault));
+	}
+
+	ushort boardRows;
+	ushort boardCols;
+	ushort bombsCount;
+	char bombRevealed;
+	char bombMarked;
+	char uncovered;
+	char covered;
+	char numbers[NUMBERS_CHAR_ARRAY_SIZE];
 };
 
 struct Settings {
@@ -84,10 +100,16 @@ struct State {
 		currentMenuOptionSelected = 0;
 		currentSizeIndex = 0;
 		currentSymbolsIndex = 0;
+		sizeOptions = 0;
+		symbolsOptions = 0;
+		rawPlayerBoardData = nullptr;
+		rawBoardData = nullptr;
+		isLockedPosition = false;
+		statusMessage[0]='\0';
 	};
 
 public:
-	std::vector<Size> sizes;
+	std::vector<Size*> sizes;
 	std::vector<char*> symbols;
 
 	void ReadSettings();
@@ -133,13 +155,8 @@ public:
 
 	const GameState& UpdateGameState();
 
-	const GameState& GetGameState() {
-		return gameState;
-	};
-
-	const Settings& GetSettings() {
-		return settings;
-	};
+	const GameState& GetGameState();
+	const Settings& GetSettings();
 
 	const ushort& GetCurrentMenuOptionSelected();
 	const ushort& GetCurrentInGameRowIndex();
@@ -166,8 +183,8 @@ private:
 
 	ushort currentInGameRowIndex;
 	ushort currentInGameColIndex;
-	bool isLockedPosition = false;
-	bool canContinueGame = false;
+	bool isLockedPosition;
+	bool canContinueGame;
 
 	GameState gameState;
 	Settings settings;

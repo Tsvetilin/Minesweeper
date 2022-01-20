@@ -384,6 +384,7 @@ void Game::Update() {
 					else {
 						state.DeleteSavedGame();
 					}
+					engine.FinishGame(currentSettings.boardSettings);
 					state.OpenMainMenu();
 					display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 					break;

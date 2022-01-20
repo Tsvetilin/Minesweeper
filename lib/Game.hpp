@@ -14,18 +14,18 @@ struct Game {
 	}
 
 public:
-	Engine engine;
-	State state;
-	Display display;
-	Player player;
-
 	void Start();		// Initialize according to settings
 	bool IsRunning();	// Return true/false according to current state
 	void Update();		// Get user input, update the game state, draw the game
 	void SaveAndExit(); // Save current state and settings
 
 private:
-	bool isRunning = false;
+	Engine engine;
+	State state;
+	Display display;
+	Player player;
+
+	bool isRunning;
 	void ApplySettings();
 };
 

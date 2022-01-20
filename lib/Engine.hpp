@@ -15,6 +15,12 @@ struct Engine {
 
 	Engine() {
 		srand((ushort)time(NULL));
+
+		visitedBoard = nullptr;
+		board = nullptr;
+		playerBoard = nullptr;
+		isPlaying = false;
+		isWin = false;
 	}
 
 public:
@@ -29,8 +35,8 @@ public:
 	bool IsWin();
 
 private:
-	bool isPlaying = false;
-	bool isWin = false;
+	bool isPlaying;
+	bool isWin;
 	bool** visitedBoard;
 	char** board;
 	char** playerBoard;

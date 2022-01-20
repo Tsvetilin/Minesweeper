@@ -3,22 +3,86 @@
 
 #include <iostream>
 
-#ifdef _WIN32
-#include <windows.h>
+void Display::writeBoardTop(bool isFancyBoard, bool isSmallBoard, ushort cols) {
+	if (isFancyBoard) {
+		if (isSmallBoard) {
+			std::cout << " " << VerticalLine;
+			for (ushort i = 0; i < cols; i++)
+			{
+				std::cout << (i + 1) << VerticalLine;
+			}
+			std::cout << std::endl;
 
-#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
-#define DISABLE_NEWLINE_AUTO_RETURN  0x0008
+			for (ushort i = 0; i < cols; i++)
+			{
+				std::cout << HorizontalLine << Crossing;
+			}
+			std::cout << HorizontalLine << VLLeft << std::endl;
+		}
+		else {
+			std::cout << "   " << VerticalLine;
+			for (ushort i = 0; i < cols; i++)
+			{
+				if (i + 1 < 10) {
+					std::cout << " " << (i + 1) << " " << VerticalLine;
+				}
+				else {
+					std::cout << (i + 1) << " " << VerticalLine;
+				}
+			}
+			std::cout << std::endl;
 
-void activateVirtualTerminal()
-{
-	HANDLE handleOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	DWORD consoleMode;
-	GetConsoleMode(handleOut, &consoleMode);
-	consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-	consoleMode |= DISABLE_NEWLINE_AUTO_RETURN;
-	SetConsoleMode(handleOut, consoleMode);
+			for (ushort i = 0; i < cols; i++)
+			{
+				std::cout << HorizontalLine << HorizontalLine << HorizontalLine << Crossing;
+			}
+			std::cout << HorizontalLine << HorizontalLine << HorizontalLine << VLLeft << std::endl;
+		}
+	}
+	else {
+
+		if (isSmallBoard) {
+			std::cout << "  ";
+			for (ushort i = 0; i < cols; i++)
+			{
+				std::cout << (i + 1);
+			}
+			std::cout << std::endl;
+		}
+		else {
+			std::cout << "   ";
+			for (ushort i = 0; i < cols; i++)
+			{
+				if (i + 1 < 10) {
+					std::cout << " " << (i + 1) << " ";
+				}
+				else {
+					std::cout << (i + 1) << " ";
+				}
+			}
+			std::cout << std::endl;
+		}
+	}
 }
-#endif
+
+void Display::writeBoardBottom(bool isSmallBoard, ushort cols) {
+	if (isSmallBoard) {
+		for (ushort i = 0; i < cols; i++)
+		{
+			std::cout << HorizontalLine << Crossing;
+		}
+		std::cout << HorizontalLine << VLLeft << std::endl;
+	}
+	else {
+		for (ushort i = 0; i < cols; i++)
+		{
+			std::cout << HorizontalLine << HorizontalLine << HorizontalLine << Crossing;
+		}
+		std::cout << HorizontalLine << HorizontalLine << HorizontalLine << VLLeft << std::endl;
+	}
+
+}
+
 
 void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int currentRowIndex, int currentColIndex, const char* const* const board, const char* const statusMessage) {
 	clearScreen();
@@ -29,13 +93,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 	if (boardLook == BoardLook::Default) {
 
 		if (rows < 10 && cols < 10) {
-			std::cout << "  ";
-			for (ushort i = 0; i < cols; i++)
-			{
-				std::cout << (i + 1);
-			}
-			std::cout << std::endl;
-
+			writeBoardTop(false, true, cols);
 			for (ushort row = 0; row < rows; ++row)
 			{
 				std::cout << (row + 1) << "|";
@@ -65,18 +123,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 			}
 		}
 		else {
-			std::cout << "   ";
-			for (ushort i = 0; i < cols; i++)
-			{
-				if (i + 1 < 10) {
-					std::cout << " " << (i + 1) << " ";
-				}
-				else {
-					std::cout << (i + 1) << " ";
-				}
-			}
-			std::cout << std::endl;
-
+			writeBoardTop(false, false, cols);
 			for (ushort row = 0; row < rows; ++row)
 			{
 				if (row + 1 < 10) {
@@ -110,39 +157,26 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 	}
 	else if (boardLook == BoardLook::Fancy) {
 		/*
-╔═══╦═══╗
-║   ║   ║
-╠═══╬═══╣
-║   ║   ║
-╚═══╩═══╝
-#define VLLeft (char)185
-#define VerticalLine (char)186
-#define URAngle (char)187
-#define DRAngle (char)188
-#define DLAngle (char)200
-#define ULAngle (char)201
-#define HLUp (char)202
-#define HLDown (char)203
-#define VLRight (char)204
-#define HorizontalLine (char)205
-#define Crossing (char)206
-
+		╔═══╦═══╗
+		║   ║   ║
+		╠═══╬═══╣
+		║   ║   ║
+		╚═══╩═══╝
+		#define VLLeft (char)185
+		#define VerticalLine (char)186
+		#define URAngle (char)187
+		#define DRAngle (char)188
+		#define DLAngle (char)200
+		#define ULAngle (char)201
+		#define HLUp (char)202
+		#define HLDown (char)203
+		#define VLRight (char)204
+		#define HorizontalLine (char)205
+		#define Crossing (char)206
 		*/
 
 		if (rows < 10 && cols < 10) {
-			std::cout << " " << VerticalLine;
-			for (ushort i = 0; i < cols; i++)
-			{
-				std::cout << (i + 1) << VerticalLine;
-			}
-			std::cout << std::endl;
-
-			for (ushort i = 0; i < cols; i++)
-			{
-				std::cout << HorizontalLine << Crossing;
-			}
-			std::cout << HorizontalLine << VLLeft << std::endl;
-
+			writeBoardTop(true, true, cols);
 			for (ushort row = 0; row < rows; ++row)
 			{
 				std::cout << (row + 1) << VerticalLine;
@@ -179,33 +213,12 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 				}
 
 				std::cout << std::endl;
-				for (ushort i = 0; i < cols; i++)
-				{
-					std::cout << HorizontalLine << Crossing;
-				}
-				std::cout << HorizontalLine << VLLeft << std::endl;
+				writeBoardBottom(true, cols);
 
 			}
 		}
 		else {
-			std::cout << "   " << VerticalLine;
-			for (ushort i = 0; i < cols; i++)
-			{
-				if (i + 1 < 10) {
-					std::cout << " " << (i + 1) << " " << VerticalLine;
-				}
-				else {
-					std::cout << (i + 1) << " " << VerticalLine;
-				}
-			}
-			std::cout << std::endl;
-
-			for (ushort i = 0; i < cols; i++)
-			{
-				std::cout << HorizontalLine << HorizontalLine << HorizontalLine << Crossing;
-			}
-			std::cout << HorizontalLine << HorizontalLine << HorizontalLine << VLLeft << std::endl;
-
+			writeBoardTop(true, false, cols);
 			for (ushort row = 0; row < rows; ++row)
 			{
 				if (row + 1 < 10) {
@@ -235,11 +248,7 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 				}
 
 				std::cout << std::endl;
-				for (ushort i = 0; i < cols; i++)
-				{
-					std::cout << HorizontalLine << HorizontalLine << HorizontalLine << Crossing;
-				}
-				std::cout << HorizontalLine << HorizontalLine << HorizontalLine << VLLeft << std::endl;
+				writeBoardBottom(false, cols);
 			}
 		}
 
@@ -256,13 +265,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 
 	if (boardLook == BoardLook::Default) {
 		if (rows < 10 && cols < 10) {
-			std::cout << "  ";
-			for (ushort i = 0; i < cols; i++)
-			{
-				std::cout << (i + 1);
-			}
-			std::cout << std::endl;
-
+			writeBoardTop(false, true, cols);
 
 			for (ushort row = 0; row < rows; ++row)
 			{
@@ -320,17 +323,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 			}
 		}
 		else {
-			std::cout << "   ";
-			for (ushort i = 0; i < cols; i++)
-			{
-				if (i + 1 < 10) {
-					std::cout << " " << (i + 1) << " ";
-				}
-				else {
-					std::cout << (i + 1) << " ";
-				}
-			}
-			std::cout << std::endl;
+			writeBoardTop(true, false, cols);
 
 			for (ushort row = 0; row < rows; ++row)
 			{
@@ -396,19 +389,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 
 		if (rows < 10 && cols < 10) {
 
-			std::cout << " " << VerticalLine;
-			for (ushort i = 0; i < cols; i++)
-			{
-				std::cout << (i + 1) << VerticalLine;
-			}
-			std::cout << std::endl;
-
-			for (ushort i = 0; i < cols; i++)
-			{
-				std::cout << HorizontalLine << Crossing;
-			}
-			std::cout << HorizontalLine << VLLeft << std::endl;
-
+			writeBoardTop(true, true, cols);
 
 			for (ushort row = 0; row < rows; ++row)
 			{
@@ -468,31 +449,11 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 				}
 
 				std::cout << std::endl;
-				for (ushort i = 0; i < cols; i++)
-				{
-					std::cout << HorizontalLine << Crossing;
-				}
-				std::cout << HorizontalLine << VLLeft << std::endl;
+				writeBoardBottom(true, cols);
 			}
 		}
 		else {
-			std::cout << "   " << VerticalLine;
-			for (ushort i = 0; i < cols; i++)
-			{
-				if (i + 1 < 10) {
-					std::cout << " " << (i + 1) << " " << VerticalLine;
-				}
-				else {
-					std::cout << (i + 1) << " " << VerticalLine;
-				}
-			}
-			std::cout << std::endl;
-
-			for (ushort i = 0; i < cols; i++)
-			{
-				std::cout << HorizontalLine << HorizontalLine << HorizontalLine << Crossing;
-			}
-			std::cout << HorizontalLine << HorizontalLine << HorizontalLine << VLLeft << std::endl;
+			writeBoardTop(true, false, cols);
 
 			for (ushort row = 0; row < rows; ++row)
 			{
@@ -556,11 +517,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 				}
 
 				std::cout << std::endl;
-				for (ushort i = 0; i < cols; i++)
-				{
-					std::cout << HorizontalLine << HorizontalLine << HorizontalLine << Crossing;
-				}
-				std::cout << HorizontalLine << HorizontalLine << HorizontalLine << VLLeft << std::endl;
+				writeBoardBottom(false, cols);
 			}
 		}
 	}
@@ -569,7 +526,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 }
 
 
-void Display::WritePauseMenu(ushort currentIndexSelected, const char* const statusMessage) {
+void Display::WritePauseMenu(short currentIndexSelected, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -579,7 +536,7 @@ void Display::WritePauseMenu(ushort currentIndexSelected, const char* const stat
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
-void Display::WriteMainMenu(ushort currentIndexSelected, const char* const statusMessage) {
+void Display::WriteMainMenu(short currentIndexSelected, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -591,7 +548,7 @@ void Display::WriteMainMenu(ushort currentIndexSelected, const char* const statu
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
-void Display::WriteSettingsMenu(ushort currentIndexSelected, const char* const statusMessage) {
+void Display::WriteSettingsMenu(short currentIndexSelected, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -604,7 +561,7 @@ void Display::WriteSettingsMenu(ushort currentIndexSelected, const char* const s
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
-void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
+void Display::WriteLookSettingsMenu(short currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -625,7 +582,7 @@ void Display::WriteLookSettingsMenu(ushort currentIndexSelected, ushort currentU
 
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
-void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
+void Display::WriteControlSettingsMenu(short currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -646,7 +603,7 @@ void Display::WriteControlSettingsMenu(ushort currentIndexSelected, ushort curre
 
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
-void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
+void Display::WriteUncoverSettingsMenu(short currentIndexSelected, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -670,30 +627,30 @@ void Display::WriteUncoverSettingsMenu(ushort currentIndexSelected, ushort curre
 }
 
 
-void Display::WriteSizeSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<Size> sizes, ushort currentUsedIndex, const char* const statusMessage) {
+void Display::WriteSizeSettingsMenu(short currentIndexSelected, ushort options, std::vector<Size*> sizes, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
-	for (ushort i = 0; i < options; i++)
+	for (ushort i = 0; i < options; ++i)
 	{
 		std::cout << (currentIndexSelected == i + 1 ? ">>" : "  ");
 		if (currentUsedIndex == i) {
 			colorizeOutput(GreenFG, WhiteBG);
-			std::cout << (i + 1) << ". Rows:" << sizes[i].rows << "; Cols: " << sizes[i].cols << "; Bombs: " << sizes[i].rows << std::endl;
+			std::cout << (i + 1) << ". Rows:" << sizes[i]->rows << "; Cols: " << sizes[i]->cols << "; Bombs: " << sizes[i]->rows << std::endl;
 			colorizeOutput(WhiteFG, BlackBG);
 		}
 		else {
-			std::cout << (i + 1) << ". Rows:" << sizes[i].rows << "; Cols: " << sizes[i].cols << "; Bombs: " << sizes[i].rows << std::endl;
+			std::cout << (i + 1) << ". Rows:" << sizes[i]->rows << "; Cols: " << sizes[i]->cols << "; Bombs: " << sizes[i]->rows << std::endl;
 		}
 	}
 
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
-void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, const char* const statusMessage) {
+void Display::WriteSymbolsSettingsMenu(short currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
-	for (ushort i = 0; i < options; i++)
+	for (ushort i = 0; i < options; ++i)
 	{
 		std::cout << (currentIndexSelected == i + 1 ? ">>" : "  ");
 		if (currentUsedIndex == i) {
@@ -711,10 +668,10 @@ void Display::WriteSymbolsSettingsMenu(ushort currentIndexSelected, ushort optio
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
-void Display::writeHeader() {
-	std::cout << "          MINESWEEPER" << std::endl;
-	std::cout << std::endl;
-	std::cout << std::endl;
+void Display::WriteExit(const char* const statusMessage) {
+	clearScreen();
+
+	std::cout << "Exiting..." << std::endl << std::endl;
 }
 
 void Display::WriteManual() {
@@ -746,27 +703,29 @@ void Display::WriteManual() {
 
 }
 
-void Display::WriteExit(const char* const statusMessage) {
-	clearScreen();
-
-	std::cout << "Exiting..." << std::endl << std::endl;
+void Display::writeHeader() {
+	std::cout << "         \033[1m MINESWEEPER\033[0m " << std::endl;
+	std::cout << std::endl;
+	std::cout << std::endl;
 }
 
 void Display::clearScreen() {
 
-#if defined (_WIN32)
-	system("cls");
-#elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
-	system("clear");
-	//std::cout<< u8"\033[2J\033[1;1H"; //Using ANSI Escape Sequences 
-#elif defined (__APPLE__)
-	system("clear");
-	//std::cout<<"'\33c\e[3J'";
-#else
-	for (int i = 0; i < 128; ++i) {
-		std::cout << std::endl;
-	}
-#endif
+	std::cout << "\033[2J\033[1;1H";
+
+	/* system calls forbidden
+	#if defined (_WIN32)
+		system("cls");
+	#elif defined (__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+		system("clear");
+	#elif defined (__APPLE__)
+		system("clear");
+	#else
+		for (int i = 0; i < 128; ++i) {
+			std::cout << std::endl;
+		}
+	#endif
+	*/
 
 }
 

@@ -134,7 +134,6 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 	if (Engine::board[row][col] == boardSettings.bombRevealed) {
 		Engine::isWin = false;
 		Engine::isPlaying = false;
-		// TODO: Handle player board to print -> done ?
 		Engine::playerBoard[row][col] = boardSettings.bombRevealed;
 		return;
 	}

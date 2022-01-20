@@ -8,6 +8,7 @@
 typedef unsigned short int ushort;
 
 const ushort NUMBERS_CHAR_ARRAY_SIZE = 9;
+const ushort SYMBOLS_CHAR_ARRAY_SIZE = 20;
 const ushort COMMAND_MAX_LENGTH = 256;
 
 const char LOWER_TO_UPPER_TRANSFORM = 'A' - 'a';
@@ -65,11 +66,30 @@ const char SAVED_GAME_FILE[] = "game.minesweeper";
 #define RevealChar 'r'
 #define MarkChar 'f'
 
+#define ESCAPE 27
+
+#define KEY_UP_WIN    72
+#define KEY_LEFT_WIN  75
+#define KEY_RIGHT_WIN 77
+#define KEY_DOWN_WIN  80
+#define ARROW_SEQUENCE_WIN 224
+#define ENTER_WIN 13
+
+#define KEY_UP_LIN    65
+#define KEY_LEFT_LIN  68
+#define KEY_RIGHT_LIN 67
+#define KEY_DOWN_LIN  66
+#define ARROW_SEQUENCE_LIN 91
+#define ENTER_WIN 13
+
 #define InvalidIndex -1
 
 ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound);
-void initializeMatrix(char** &matrix, ushort rows, ushort cols);
-void copyLine(const char* const source, char* &destination, ushort cols);
-void deleteMatrix(char** &matrix, ushort rows);
+
+char** initializeMatrix(ushort rows, ushort cols);
+void copyLine(const char* const source, char* destination, ushort cols);
+void deleteMatrix(char** matrix, ushort rows);
+
+void copyString(const char* const source, char* destination, ushort cols);
 
 #endif // !COMMON_H_
