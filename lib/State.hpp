@@ -43,7 +43,6 @@ struct BoardSettings {
 
 	BoardSettings() {
 		// Default settings
-
 		boardRows = 9;
 		boardCols = 9;
 		bombsCount = 10;
@@ -90,6 +89,7 @@ const ushort MAIN_MENU_OPTIONS_COUNT = 4;
 const ushort SETTINGS_MENU_OPTIONS_COUNT = 5;
 const ushort OTHER_S_MENU_OPTIONS = 2;
 
+// Handle game state
 struct State {
 
 	State() {
@@ -112,11 +112,31 @@ public:
 	std::vector<Size*> sizes;
 	std::vector<char*> symbols;
 
+	/// <summary>
+	/// Read settings from file or use default
+	/// </summary>
 	void ReadSettings();
+
+	/// <summary>
+	/// Save current settings to file
+	/// </summary>
 	void SaveSettings();
+	
+	/// <summary>
+	/// Save current game with the current state
+	/// </summary>
+	/// <param name="playerBoard"> Pointer to the board presenting the current game state</param>
+	/// <param name="board">Pointer to the board presenting the revealed board</param>
 	bool SaveGame(const char* const* const playerBoard, const char* const* const board);
+
+	/// <summary>
+	/// Delete the file (empty it) holding the last saved game
+	/// </summary>
 	void DeleteSavedGame();
 
+	/// <summary>
+	/// Delete any memory allocated to hold the settings options
+	/// </summary>
 	void DeleteSettingsAllocatedMemory();
 
 	// Set state:
@@ -133,15 +153,18 @@ public:
 	void OpenControlSettingsMenu();
 	void OpenLookSettingsMenu();
 
+	// Select settings
 	void SelectSize(ushort index);
 	void SelectSymbols(ushort index);
 	void SelectUncover(ushort index);
 	void SelectControl(ushort index);
 	void SelectLook(ushort index);
 
+	// Menu control state:
 	void IncreaseMenuOptionSelected(ushort optionsCount);
 	void DecreaseMenuOptionSelected(ushort optionsCount);
 
+	// Ingame control state:
 	void MoveLeftIngame();
 	void MoveRightIngame();
 	void MoveUpIngame();
@@ -150,25 +173,26 @@ public:
 	void LockIngamePosition();
 	void UnlockIngamePosition();
 
+	// Status message hadlers:
 	void SetStatusMessage(const char message[]);
 	const char* const GetStatusMessage();
 
 	const GameState& UpdateGameState();
 
+	// Getters:
 	const GameState& GetGameState();
 	const Settings& GetSettings();
-
 	const ushort& GetCurrentMenuOptionSelected();
 	const ushort& GetCurrentInGameRowIndex();
 	const ushort& GetCurrentInGameColIndex();
-	const bool& GetLockedPosition();
-	const char* const* const GetRawBoardData();
-	const char* const* const GetRawPlayerBoardData();
 	const ushort& GetSizeOptions();
 	const ushort& GetSymbolsOptions();
 	const ushort& GetCurrentSizeIndex();
 	const ushort& GetCurrentSymbolsIndex();
 	const bool& CanContinueGame();
+	const bool& GetLockedPosition();
+	const char* const* const GetRawBoardData();
+	const char* const* const GetRawPlayerBoardData();
 
 private:
 	char** rawBoardData;

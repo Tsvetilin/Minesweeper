@@ -9,8 +9,7 @@
 #define STDIN_FILENO 0
 #endif
 
-// Handles Player input
-
+// Handles player input
 enum class AdvancedPlayerInput {
 	None = 0,
 	UpArrow = 1,
@@ -45,6 +44,7 @@ struct Player {
 		AdvancedInput = AdvancedPlayerInput::None;
 		SimpleInput = SimplePlayerInput();
 
+		// If using Lunix - save the default terminal settings
 #if defined(__has_include) && __has_include(<termios.h>)
 		tcgetattr(STDIN_FILENO, &canonicalTerminal);
 		terminal = canonicalTerminal;
@@ -53,11 +53,16 @@ struct Player {
 	}
 
 public:
+	// Getters:
 	const AdvancedPlayerInput& GetAdvancedInput();
 	const SimplePlayerInput& GetSimpleInput();
+
+	// Input type handlers:
 	bool IsAdvancedInputSupported();
 	void UseAdvancedInputSystem();
 	void UseSimpleInputSystem();
+
+	//
 	bool GetInput();
 
 private:
@@ -68,6 +73,9 @@ private:
 #endif
 
 	bool isAdvancedInputUsed;
+
+	// Skip all white-space chars
+	void trimTextInput(char* text, ushort& index);
 
 	AdvancedPlayerInput GetAdvancedKeyboardInput();
 	SimplePlayerInput GetSimpleKeyboardInput();

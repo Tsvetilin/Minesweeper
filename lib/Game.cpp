@@ -4,7 +4,6 @@
 #include<iostream>
 
 void Game::Start() {
-	// Read settings
 	state.ReadSettings();
 	ApplySettings();
 	display.WriteManual();
@@ -20,8 +19,6 @@ void Game::ApplySettings() {
 		player.UseSimpleInputSystem();
 		state.SelectControl(0);
 	}
-
-	// TODO: finish
 }
 
 bool Game::IsRunning() {
@@ -32,14 +29,9 @@ void Game::Update() {
 
 	const GameState& currentState = Game::state.GetGameState();
 	bool input = Game::player.GetInput();
-	/*if (!input) {
-		return;
-	}
-	*/
+
 	const Settings& currentSettings = state.GetSettings();
 	state.SetStatusMessage("");
-
-	//std::cout << (int)currentState << "  " << (int)player.AdvancedInput << "  " << (int)currentSettings.ControlType << "\n";
 
 	if (currentSettings.controlType == ControlType::AdvancedArrowInput) {
 		const AdvancedPlayerInput& advancedInput = player.GetAdvancedInput();
@@ -47,6 +39,7 @@ void Game::Update() {
 		if (currentState == GameState::Unknown) {
 			if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.OpenMainMenu();
+				state.SetStatusMessage("Use Arrow keys / Enter / Escape(or Q) to navigate!");
 				display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
 			else {
@@ -56,10 +49,12 @@ void Game::Update() {
 		else if (currentState == GameState::MainMenu) {
 			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(MAIN_MENU_OPTIONS_COUNT);
+				state.SetStatusMessage("Use Arrow keys / Enter / Escape(or Q) to navigate!");
 				display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
 			else if (advancedInput == AdvancedPlayerInput::UpArrow) {
 				state.DecreaseMenuOptionSelected(MAIN_MENU_OPTIONS_COUNT);
+				state.SetStatusMessage("Use Arrow keys / Enter / Escape(or Q) to navigate!");
 				display.WriteMainMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 			}
 			else if (advancedInput == AdvancedPlayerInput::Select) {
@@ -93,6 +88,7 @@ void Game::Update() {
 
 				case 3:
 					state.OpenSettingsMenu();
+					state.SetStatusMessage("Use Arrow keys / Enter / Escape(or Q) to navigate!");
 					display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 					break;
 
@@ -118,6 +114,7 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::Settings) {
+			state.SetStatusMessage("Use Arrow keys / Enter / Escape(or Q) to navigate!");
 			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(SETTINGS_MENU_OPTIONS_COUNT);
 				display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
@@ -178,6 +175,7 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::SizeSettings) {
+			state.SetStatusMessage("Use Arrow keys / Enter / Escape(or Q) to navigate!");
 			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(state.GetSizeOptions());
 
@@ -206,6 +204,7 @@ void Game::Update() {
 		}
 
 		else if (currentState == GameState::SymbolsSettings) {
+			state.SetStatusMessage("Use Arrow keys / Enter / Escape(or Q) to navigate!");
 			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(state.GetSymbolsOptions());
 			}
@@ -231,6 +230,7 @@ void Game::Update() {
 			display.WriteSymbolsSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetSymbolsOptions(), state.symbols, state.GetCurrentSymbolsIndex(), state.GetStatusMessage());
 		}
 		else if (currentState == GameState::LookSettings || currentState == GameState::UncoverSettings || currentState == GameState::ControlSettings) {
+			state.SetStatusMessage("Use Arrow keys / Enter / Escape(or Q) to navigate!");
 			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(OTHER_S_MENU_OPTIONS);
 			}
@@ -347,10 +347,10 @@ void Game::Update() {
 			}
 			else {
 				if (engine.IsWin()) {
-					state.SetStatusMessage("You won! GG!\nPress Escape/Enter to continue...");
+					state.SetStatusMessage("You won! GG!\nPress Escape / Enter to continue...");
 				}
 				else {
-					state.SetStatusMessage("You lost! Try again!\nPress Escape/Enter to continue...");
+					state.SetStatusMessage("You lost! Try again!\nPress Escape / Enter to continue...");
 				}
 				display.WriteFinishBoard(currentSettings.boardLook, currentSettings.boardSettings, engine.GetPlayerBoard(), engine.GetBoard(), state.GetStatusMessage());
 			}
@@ -361,6 +361,7 @@ void Game::Update() {
 			1. Resume
 			2. Save and Exit
 			*/
+			state.SetStatusMessage("Use Arrow keys / Enter / Escape(or Q) to navigate!");
 			if (advancedInput == AdvancedPlayerInput::DownArrow) {
 				state.IncreaseMenuOptionSelected(OTHER_S_MENU_OPTIONS);
 				display.WritePauseMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
@@ -374,6 +375,7 @@ void Game::Update() {
 				{
 				case 1:
 					state.ResumeGame();
+					state.SetStatusMessage("Use Arrow keys to navigate & press Enter to lock a position.");
 					display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 					break;
 
@@ -396,6 +398,7 @@ void Game::Update() {
 			}
 			else if (advancedInput == AdvancedPlayerInput::Escape) {
 				state.ResumeGame();
+				state.SetStatusMessage("Use Arrow keys to navigate & press Enter to lock a position.");
 				display.WriteBoard(currentSettings.boardLook, currentSettings.boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 			else {

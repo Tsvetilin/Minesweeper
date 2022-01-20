@@ -108,10 +108,12 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 		return;
 	}
 
+	// Stop if trying to preform move on uncovered position
 	if (Engine::playerBoard[row][col] == boardSettings.uncovered || isNumber(row, col, boardSettings.numbers)) {
 		return;
 	}
 
+	// Mark bomb if possible
 	if (move == Move::MarkBomb) {
 		if (Engine::playerBoard[row][col] == boardSettings.bombMarked)
 		{
@@ -120,6 +122,12 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 		else {
 			Engine::playerBoard[row][col] = boardSettings.bombMarked;
 		}
+
+		if (checkForWin(boardSettings)) {
+			Engine::isPlaying = false;
+			Engine::isWin = true;
+		}
+
 		return;
 	}
 
@@ -127,10 +135,12 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 		return;
 	}
 
+	// Prevent revealing a marked position
 	if (Engine::playerBoard[row][col] == boardSettings.bombMarked) {
 		return;
 	}
 
+	// Lose game if revealing a bomb
 	if (Engine::board[row][col] == boardSettings.bombRevealed) {
 		Engine::isWin = false;
 		Engine::isPlaying = false;
@@ -138,49 +148,13 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 		return;
 	}
 
+	// Reaveal position
 	if (uncoverType == UncoverType::Custom) {
-		if (Engine::board[row][col] == boardSettings.uncovered) {
-			if (row > 0) {
-				if (col > 0) {
-					Engine::playerBoard[row - 1][col - 1] = Engine::board[row - 1][col - 1];
-				}
-			
-				Engine::playerBoard[row - 1][col] = Engine::board[row - 1][col];
-				
-				if (col < cols - 1) {
-					Engine::playerBoard[row - 1][col + 1] = Engine::board[row - 1][col + 1];
-				}
-			}
 
-			if (col > 0) {
-				Engine::playerBoard[row][col - 1] = Engine::board[row][col - 1];
-			}
-			
-			Engine::playerBoard[row][col] = Engine::board[row][col];
-			
-			if (col < cols - 1) {
-				Engine::playerBoard[row][col + 1] = Engine::board[row][col + 1];
-			}
-
-			if (row < rows - 1) {
-				if (col > 0) {
-					Engine::playerBoard[row + 1][col - 1] = Engine::board[row + 1][col - 1];
-				}
-				
-				Engine::playerBoard[row + 1][col] = Engine::board[row + 1][col];
-				
-				if (col < cols - 1) {
-					Engine::playerBoard[row + 1][col + 1] = Engine::board[row + 1][col + 1];
-				}
-			}
-		}
-		else {
-			Engine::playerBoard[row][col] = Engine::board[row][col];
-		}
-
+		uncoverSurroundingEight(row, col, rows, cols, boardSettings.uncovered);
 	}
 	else if (uncoverType == UncoverType::Default) {
-		Engine::revealToNumber(row, col, rows, cols, boardSettings.uncovered, boardSettings.covered,boardSettings.numbers);
+		Engine::revealToNumber(row, col, rows, cols, boardSettings.uncovered, boardSettings.covered, boardSettings.numbers);
 	}
 
 	if (checkForWin(boardSettings)) {
@@ -188,6 +162,51 @@ void Engine::PerformMove(const Move move, const ushort row, const ushort col, co
 		Engine::isWin = true;
 	}
 
+}
+
+void Engine::uncoverSurroundingEight(short row, short col, ushort rows, ushort cols, char uncovered) {
+	if (Engine::board[row][col] == uncovered) {
+		// up row
+		if (row > 0) {
+			if (col > 0) {
+				Engine::playerBoard[row - 1][col - 1] = Engine::board[row - 1][col - 1];
+			}
+
+			Engine::playerBoard[row - 1][col] = Engine::board[row - 1][col];
+
+			if (col < cols - 1) {
+				Engine::playerBoard[row - 1][col + 1] = Engine::board[row - 1][col + 1];
+			}
+		}
+
+		// left col
+		if (col > 0) {
+			Engine::playerBoard[row][col - 1] = Engine::board[row][col - 1];
+		}
+
+		Engine::playerBoard[row][col] = Engine::board[row][col];
+
+		// right col
+		if (col < cols - 1) {
+			Engine::playerBoard[row][col + 1] = Engine::board[row][col + 1];
+		}
+
+		// down row
+		if (row < rows - 1) {
+			if (col > 0) {
+				Engine::playerBoard[row + 1][col - 1] = Engine::board[row + 1][col - 1];
+			}
+
+			Engine::playerBoard[row + 1][col] = Engine::board[row + 1][col];
+
+			if (col < cols - 1) {
+				Engine::playerBoard[row + 1][col + 1] = Engine::board[row + 1][col + 1];
+			}
+		}
+	}
+	else {
+		Engine::playerBoard[row][col] = Engine::board[row][col];
+	}
 }
 
 void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered, const char* const numbers) {
@@ -203,7 +222,7 @@ void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char
 	Engine::playerBoard[row][col] = Engine::board[row][col];
 	Engine::visitedBoard[row][col] = true;
 
-	if(isNumber(row, col, numbers)){
+	if (isNumber(row, col, numbers)) {
 		return;
 	}
 
@@ -231,13 +250,15 @@ bool Engine::checkForWin(const BoardSettings& boardSettings) {
 	ushort cols = boardSettings.boardCols;
 
 	ushort markedBombs = 0;
+	ushort covered = 0;
+
 
 	for (ushort row = 0; row < rows; ++row)
 	{
 		for (ushort col = 0; col < cols; ++col)
 		{
-			if (playerBoard[row][col] == boardSettings.uncovered) {
-				return false;
+			if (playerBoard[row][col] == boardSettings.covered) {
+				++covered;
 			}
 
 			if (playerBoard[row][col] == boardSettings.bombMarked) {
@@ -246,7 +267,7 @@ bool Engine::checkForWin(const BoardSettings& boardSettings) {
 		}
 	}
 
-	return markedBombs == boardSettings.bombsCount;
+	return covered + markedBombs == boardSettings.bombsCount;
 }
 
 bool Engine::isNumber(const ushort row, const ushort col, const char* numbers) {
@@ -304,8 +325,8 @@ void Engine::fillBoard(const ushort rows, const ushort cols, const char uncovere
 }
 
 void Engine::LoadGame(const BoardSettings& boardSettings, const char* const* const rawBoardData, const char* const* const rawPlayerBoardData) {
-	
-	initializeBoard(boardSettings.boardRows,boardSettings.boardCols);
+
+	initializeBoard(boardSettings.boardRows, boardSettings.boardCols);
 
 	for (ushort i = 0; i < boardSettings.boardRows; ++i)
 	{

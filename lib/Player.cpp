@@ -151,7 +151,7 @@ void Player::UseAdvancedInputSystem() {
 void Player::UseSimpleInputSystem() {
 
 #if defined(__has_include) && __has_include(<termios.h>)
-
+	// Restore default terminal settings
 	if (isAdvancedInputUsed) {
 		tcsetattr(STDIN_FILENO, TCSANOW, &canonicalTerminal);
 	}
@@ -185,12 +185,7 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 	ushort words = 1;
 
 	// trim start 
-	while (line[ind] != '\0') {
-		if (line[ind] != ' ') {
-			break;
-		}
-		++ind;
-	}
+	trimTextInput(line, ind);
 
 	// count words
 	while (line[ind] != '\0') {
@@ -211,12 +206,7 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 
 	ind = 0;
 	// trim start 
-	while (line[ind] != '\0') {
-		if (line[ind] != ' ') {
-			break;
-		}
-		++ind;
-	}
+	trimTextInput(line, ind);
 
 	if (words == 1) {
 		if ((line[ind] == QuitChar || line[ind] == QuitChar + LOWER_TO_UPPER_TRANSFORM) && (line[ind + 1] == ' ' || line[ind + 1] == '\0')) {
@@ -246,9 +236,7 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 			++ind;
 		}
 
-		while (line[ind] == ' ') {
-			++ind;
-		}
+		trimTextInput(line, ind);
 
 		while (true) {
 			if (line[ind] == ' ') {
@@ -263,9 +251,8 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 			++ind;
 		}
 
-		while (line[ind] == ' ') {
-			++ind;
-		}
+		trimTextInput(line, ind);
+
 		if (line[ind + 1] != ' ' && line[ind + 1] != '\0') {
 			return result;
 		}
@@ -288,6 +275,11 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 	return result;
 }
 
+void Player::trimTextInput(char* text, ushort& index) {
+	while (text[index] == ' ') {
+		++index;
+	}
+}
 
 const AdvancedPlayerInput& Player::GetAdvancedInput() {
 	return AdvancedInput;

@@ -7,6 +7,7 @@
 #include "Display.hpp"
 #include "Player.hpp"
 
+// Main game object
 struct Game {
 
 	Game() {
@@ -14,10 +15,17 @@ struct Game {
 	}
 
 public:
-	void Start();		// Initialize according to settings
-	bool IsRunning();	// Return true/false according to current state
-	void Update();		// Get user input, update the game state, draw the game
-	void SaveAndExit(); // Save current state and settings
+	// Initialize the game according to the settings
+	void Start();		
+	
+	// Return current state
+	bool IsRunning();	
+	
+	// Handle the main game cycle -> get user input, update the game state, draw the game
+	void Update();		
+	
+	// Save current state and settings
+	void SaveAndExit(); 
 
 private:
 	Engine engine;
