@@ -17,6 +17,7 @@ const char GAME_SETTINGS_FILE[] = "settings.minesweeper";
 const char SETTINGS_TEMPLATE_FILE[] = "settingsTemplate.minesweeper.json";
 const char SAVED_GAME_FILE[] = "game.minesweeper";
 
+// Console color codes for escape codes
 #define BlackFG          "30" 
 #define RedFG            "31" 
 #define GreenFG          "32" 
@@ -50,6 +51,7 @@ const char SAVED_GAME_FILE[] = "game.minesweeper";
 #define BrightCyanBG       "106"
 #define BrightWhiteBG      "107"
 
+// Extended ascii symbols for walls
 #define VLLeft (char)185
 #define VerticalLine (char)186
 #define URAngle (char)187
@@ -62,12 +64,15 @@ const char SAVED_GAME_FILE[] = "game.minesweeper";
 #define HorizontalLine (char)205
 #define Crossing (char)206
 
+// Keys for ingame commands
 #define QuitChar 'q'
 #define RevealChar 'r'
 #define MarkChar 'f'
 
+// ASCII escape code
 #define ESCAPE 27
 
+// ASCII escape codes - Windows specific
 #define KEY_UP_WIN    72
 #define KEY_LEFT_WIN  75
 #define KEY_RIGHT_WIN 77
@@ -75,21 +80,54 @@ const char SAVED_GAME_FILE[] = "game.minesweeper";
 #define ARROW_SEQUENCE_WIN 224
 #define ENTER_WIN 13
 
+// ASCII escape codes - Linux specific
 #define KEY_UP_LIN    65
 #define KEY_LEFT_LIN  68
 #define KEY_RIGHT_LIN 67
 #define KEY_DOWN_LIN  66
 #define ARROW_SEQUENCE_LIN 91
-#define ENTER_WIN 13
+#define ENTER_LIN 10
 
+// Non-existing endex to be passed as parameter
 #define InvalidIndex -1
 
+/// <summary>
+/// Generates random number in range [<paramref name="lowerBound"/>;<paramref name="upperBound"/>]
+/// </summary>
+/// <param name="lowerBound">The lower bound of the range</param>
+/// <param name="upperBound">The upper bound of the range</param>
+/// <returns>Random number in the given range</returns>
 ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound);
 
+/// <summary>
+/// Allocates memory for a matrix with a given size
+/// </summary>
+/// <param name="rows">The number of rows</param>
+/// <param name="cols">The number of columns</param>
+/// <returns>Pointer to the start of the initialized matrix</returns>
 char** initializeMatrix(ushort rows, ushort cols);
+
+/// <summary>
+/// Copies a sequance of chars from an array to another 
+/// </summary>
+/// <param name="source">The array to copy from</param>
+/// <param name="destination">The array to copy to</param>
+/// <param name="cols">The number of elements to copy from the begining</param>
 void copyLine(const char* const source, char* destination, ushort cols);
+
+/// <summary>
+/// Deletes allocated memory for a matrix
+/// </summary>
+/// <param name="matrix">The pointer to the begining of the matrix</param>
+/// <param name="rows">The number of rows in the matrix</param>
 void deleteMatrix(char** matrix, ushort rows);
 
+/// <summary>
+/// Copy a string (null terminated sequence of characters)
+/// </summary>
+/// <param name="source">The string to copy from</param>
+/// <param name="destination">The string to copy to</param>
+/// <param name="cols">The length of the string</param>
 void copyString(const char* const source, char* destination, ushort cols);
 
 #endif // !COMMON_H_

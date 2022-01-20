@@ -1,12 +1,7 @@
 ﻿#include "../lib/Game.hpp"
 
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
 int main()
 {
-   // _CrtSetBreakAlloc(202); // 202 192 165 164
     Game game;
 
     game.Start();
@@ -16,7 +11,23 @@ int main()
     }
 
     game.SaveAndExit();
-    
-    _CrtDumpMemoryLeaks();
-    return 0;
+
+    return 0;   
 }
+
+/* Visual Studio Memory leak test:
+* 
+*#define _CRTDBG_MAP_ALLOC
+*#include <stdlib.h>
+*#include <crtdbg.h>
+*
+* _CrtSetBreakAlloc(n); -> breakpoint on the n-th memory allocation
+* _CrtMemState s1; -> curent state at the beggining
+* 
+* _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG); ->
+* _CrtMemCheckpoint(&s1);  -> get new data
+* _CrtMemDumpStatistics(&s1);
+* _CrtDumpMemoryLeaks(); -> print the results in the standart output window
+* 
+*/
+

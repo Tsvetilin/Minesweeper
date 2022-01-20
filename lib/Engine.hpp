@@ -4,13 +4,18 @@
 
 #include "State.hpp"
 
+/// <summary>
+/// Info about the current move
+/// </summary>
 enum class Move {
 	None = 0,
 	Reveal = 1,
 	MarkBomb = 2,
 };
 
-// Contains main game logic
+/// <summary>
+/// Contains the main game logic
+/// </summary>
 struct Engine {
 
 	Engine() {

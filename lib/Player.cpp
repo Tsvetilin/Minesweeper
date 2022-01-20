@@ -103,7 +103,7 @@ AdvancedPlayerInput Player::GetAdvancedKeyboardInput() {
 		}
 	}
 	else if (buff[1] == buff[2] && buff[1] == '\0') {
-		if (buff[0] == ESCAPE) {
+		if (buff[0] == ENTER_LIN) {
 			input = AdvancedPlayerInput::Select;
 		}
 		else if (buff[0] == QuitChar || buff[0] == QuitChar + LOWER_TO_UPPER_TRANSFORM) {
