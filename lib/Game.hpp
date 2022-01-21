@@ -1,4 +1,3 @@
-#pragma once
 #ifndef GAME_H_
 #define GAME_H_
 
@@ -14,7 +13,6 @@ struct Game {
 		isRunning = false;
 	}
 
-public:
 	// Initialize the game according to the settings
 	void Start();		
 	
@@ -35,6 +33,16 @@ private:
 
 	bool isRunning;
 	void ApplySettings();
+
+	void handleStateUnknown();
+	void handleStateMainMenu();
+	void handleStateSettingsMenu();
+	void handleStateSelectSettings();
+	void handleStatePlaying();
+	void handleStateFinished();
+	void handleStateEscapeMenu();
+	void handleStateExiting();
+
 };
 
 #endif // !GAME_H_

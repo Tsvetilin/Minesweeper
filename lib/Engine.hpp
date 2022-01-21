@@ -1,4 +1,3 @@
-#pragma once
 #ifndef ENGINE_H_
 #define ENGINE_H_
 
@@ -28,7 +27,6 @@ struct Engine {
 		isWin = false;
 	}
 
-public:
 	// Getters
 	const char* const* const GetPlayerBoard();
 	const char* const* const GetBoard();

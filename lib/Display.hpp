@@ -1,4 +1,3 @@
-#pragma once
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
@@ -7,7 +6,6 @@
 // Writes on the console 
 struct Display {
 
-public:
 	/// <summary>
 	/// Write the pause menu to the console
 	/// </summary>

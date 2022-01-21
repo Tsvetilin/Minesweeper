@@ -44,9 +44,9 @@ void State::ReadSettings() {
 		currentSymbolsIndex = 0;
 
 		symbolsOptions = 2;
-		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE]{ "F_-B12345678" });
-		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE]{ "R-0X12345678" });
-	
+		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE] { "F_-B12345678" });
+		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE] { "R-0X12345678" });
+
 
 		// TODO: handle approptiate utf-8 support
 		//symbols.push_back( new char[80]{u8"🚩⬛☐💣1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣"});
@@ -141,7 +141,31 @@ const bool& State::CanContinueGame() {
 		std::getline(savedGame, buffer);
 		if (buffer[0] == '\0') {
 			canContinueGame = false;
-			return canContinueGame;
+		}
+
+		savedGame.close();
+	}
+
+	return canContinueGame;
+}
+
+void State::ReadSavedBoard() {
+	if (canContinueGame) {
+
+		std::fstream savedGame;
+		savedGame.open(SAVED_GAME_FILE, std::ios::in);
+
+		if (!savedGame.is_open()) {
+			canContinueGame = false;
+		}
+
+		std::string buffer;
+		rawBoardData = initializeMatrix(settings.boardSettings.boardRows, settings.boardSettings.boardCols);
+		rawPlayerBoardData = initializeMatrix(settings.boardSettings.boardRows, settings.boardSettings.boardCols);
+
+		std::getline(savedGame, buffer);
+		if (buffer[0] == '\0') {
+			canContinueGame = false;
 		}
 
 		for (ushort i = 0; i < settings.boardSettings.boardRows; i++)
@@ -159,15 +183,12 @@ const bool& State::CanContinueGame() {
 
 		DeleteSavedGame();
 	}
-
-	return canContinueGame;
 }
-
 
 // Set state:
 void State::OpenMainMenu() {
 	State::gameState = GameState::MainMenu;
-	State::currentMenuOptionSelected = 1;
+	resetMenuIndex();
 }
 
 void State::NewGame() {
@@ -198,31 +219,35 @@ void State::FinishGame() {
 
 void State::OpenEscapeMenu() {
 	gameState = GameState::EscapeMenu;
-	currentMenuOptionSelected = 1;
+	resetMenuIndex();
 }
 void State::OpenSettingsMenu() {
-	currentMenuOptionSelected = 1;
+	resetMenuIndex();
 	gameState = GameState::Settings;
 }
 void State::OpenSizeSettingsMenu() {
 	gameState = GameState::SizeSettings;
-	currentMenuOptionSelected = 1;
+	resetMenuIndex();
 }
 void State::OpenSymbolsSettingsMenu() {
 	gameState = GameState::SymbolsSettings;
-	currentMenuOptionSelected = 1;
+	resetMenuIndex();
 }
 void State::OpenUncoverSettingsMenu() {
 	gameState = GameState::UncoverSettings;
-	currentMenuOptionSelected = 1;
+	resetMenuIndex();
 }
 void State::OpenControlSettingsMenu() {
 	gameState = GameState::ControlSettings;
-	currentMenuOptionSelected = 1;
+	resetMenuIndex();
 }
 void State::OpenLookSettingsMenu() {
 	gameState = GameState::LookSettings;
-	currentMenuOptionSelected = 1;
+	resetMenuIndex();
+}
+
+void State::resetMenuIndex() {
+	currentMenuOptionSelected = settings.controlType == ControlType::AdvancedArrowInput ? 1 : -1;
 }
 
 // Ingame state modifiers:

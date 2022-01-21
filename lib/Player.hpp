@@ -1,4 +1,3 @@
-#pragma once
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
@@ -52,7 +51,6 @@ struct Player {
 
 	}
 
-public:
 	// Getters:
 	const AdvancedPlayerInput& GetAdvancedInput();
 	const SimplePlayerInput& GetSimpleInput();

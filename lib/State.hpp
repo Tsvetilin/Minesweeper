@@ -1,4 +1,3 @@
-#pragma once
 #ifndef STATE_H_
 #define STATE_H_
 
@@ -105,10 +104,9 @@ struct State {
 		rawPlayerBoardData = nullptr;
 		rawBoardData = nullptr;
 		isLockedPosition = false;
-		statusMessage[0]='\0';
+		statusMessage[0] = '\0';
 	};
 
-public:
 	std::vector<Size*> sizes;
 	std::vector<char*> symbols;
 
@@ -121,13 +119,18 @@ public:
 	/// Save current settings to file
 	/// </summary>
 	void SaveSettings();
-	
+
 	/// <summary>
 	/// Save current game with the current state
 	/// </summary>
 	/// <param name="playerBoard"> Pointer to the board presenting the current game state</param>
 	/// <param name="board">Pointer to the board presenting the revealed board</param>
 	bool SaveGame(const char* const* const playerBoard, const char* const* const board);
+
+	/// <summary>
+	/// Read the file containing the saved game
+	/// </summary>
+	void ReadSavedBoard();
 
 	/// <summary>
 	/// Delete the file (empty it) holding the last saved game
@@ -203,7 +206,7 @@ private:
 	ushort currentSizeIndex;
 	ushort currentSymbolsIndex;
 
-	ushort currentMenuOptionSelected;
+	short currentMenuOptionSelected;
 
 	ushort currentInGameRowIndex;
 	ushort currentInGameColIndex;
@@ -214,6 +217,8 @@ private:
 	Settings settings;
 
 	char statusMessage[COMMAND_MAX_LENGTH];
+
+	void resetMenuIndex();
 };
 
 #endif // !STATE_H_
