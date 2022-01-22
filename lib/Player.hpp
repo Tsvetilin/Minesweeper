@@ -72,9 +72,6 @@ private:
 
 	bool isAdvancedInputUsed;
 
-	// Skip all white-space chars
-	void trimTextInput(char* text, ushort& index);
-
 	AdvancedPlayerInput GetAdvancedKeyboardInput();
 	SimplePlayerInput GetSimpleKeyboardInput();
 	AdvancedPlayerInput AdvancedInput;

@@ -275,12 +275,6 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 	return result;
 }
 
-void Player::trimTextInput(char* text, ushort& index) {
-	while (text[index] == ' ') {
-		++index;
-	}
-}
-
 const AdvancedPlayerInput& Player::GetAdvancedInput() {
 	return AdvancedInput;
 }

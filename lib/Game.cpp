@@ -41,7 +41,7 @@ void Game::Update() {
 	else if (currentState == GameState::Settings) {
 		handleStateSettingsMenu();
 	}
-	else if (currentState == GameState::SizeSettings ||currentState == GameState::SymbolsSettings ||currentState == GameState::LookSettings || currentState == GameState::UncoverSettings || currentState == GameState::ControlSettings) {
+	else if (currentState == GameState::SizeSettings || currentState == GameState::SymbolsSettings || currentState == GameState::LookSettings || currentState == GameState::UncoverSettings || currentState == GameState::ControlSettings) {
 		handleStateSelectSettings();
 	}
 	else if (currentState == GameState::Playing) {
@@ -90,6 +90,8 @@ void Game::handleStateMainMenu() {
 	bool isInvalidCmd = false;
 	bool isEscape = false;
 	short optionSelectedIndex = InvalidIndex;
+	short x = InvalidIndex;
+	short y = InvalidIndex;
 	/*
 	1. Start new game
 	2. Continue game
@@ -161,6 +163,7 @@ void Game::handleStateMainMenu() {
 				}
 				else {
 					state.SetStatusMessage("Can't load previous game! Write a number from 1 to 4 to select an option.");
+					isInvalidCmd = true;
 				}
 				break;
 
@@ -194,7 +197,11 @@ void Game::handleStateMainMenu() {
 		case 1:
 			state.NewGame();
 			engine.GenerateBoard(state.GetSettings().boardSettings);
-			display.WriteBoard(state.GetSettings().boardLook, state.GetSettings().boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+			if (state.GetSettings().controlType == ControlType::AdvancedArrowInput) {
+				x = state.GetCurrentInGameRowIndex();
+				y = state.GetCurrentInGameColIndex();
+			}
+			display.WriteBoard(state.GetSettings().boardLook, state.GetSettings().boardSettings, x, y, engine.GetPlayerBoard(), state.GetStatusMessage());
 			return;
 
 		case 2:
@@ -202,7 +209,11 @@ void Game::handleStateMainMenu() {
 				state.ReadSavedBoard();
 				engine.LoadGame(state.GetSettings().boardSettings, state.GetRawBoardData(), state.GetRawPlayerBoardData());
 				state.ContinueGame();
-				display.WriteBoard(state.GetSettings().boardLook, state.GetSettings().boardSettings, state.GetCurrentInGameRowIndex(), state.GetCurrentInGameColIndex(), engine.GetPlayerBoard(), state.GetStatusMessage());
+				if (state.GetSettings().controlType == ControlType::AdvancedArrowInput) {
+					x = state.GetCurrentInGameRowIndex();
+					y = state.GetCurrentInGameColIndex();
+				}
+				display.WriteBoard(state.GetSettings().boardLook, state.GetSettings().boardSettings, x, y, engine.GetPlayerBoard(), state.GetStatusMessage());
 			}
 			return;
 
@@ -513,10 +524,20 @@ void Game::handleStatePlaying() {
 		state.FinishGame();
 
 		if (engine.IsWin()) {
-			state.SetStatusMessage("You won! GG!\nPress Escape/Enter to continue...");
+			if (state.GetSettings().controlType == ControlType::AdvancedArrowInput) {
+				state.SetStatusMessage("You won! GG!\nPress Escape/Enter to continue...");
+			}
+			else {
+				state.SetStatusMessage("You won! GG!\n\Write Q to continue...");
+			}
 		}
 		else {
-			state.SetStatusMessage("You lost! Try again!\nPress Escape/Enter to continue...");
+			if (state.GetSettings().controlType == ControlType::AdvancedArrowInput) {
+				state.SetStatusMessage("You lost! Try again!\nPress Escape/Enter to continue...");
+			}
+			else {
+				state.SetStatusMessage("You lost! Try again!\nWrite Q to continue...");
+			}
 		}
 
 		display.WriteFinishBoard(state.GetSettings().boardLook, state.GetSettings().boardSettings, engine.GetPlayerBoard(), engine.GetBoard(), state.GetStatusMessage());
@@ -666,4 +687,3 @@ void Game::handleStateExiting() {
 	isRunning = false;
 	display.WriteExit(state.GetStatusMessage());
 }
-

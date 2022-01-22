@@ -22,54 +22,25 @@ void State::ReadSettings() {
 		settingsFile.close();
 	}
 
-	std::fstream settingsTemplate;
-	settingsTemplate.open(SETTINGS_TEMPLATE_FILE, std::ios::binary | std::ios::in);
-	if (settingsTemplate.is_open()) {
-		std::string buffer;
-		while (true) {
-			std::getline(settingsTemplate, buffer);
-			if (buffer[0] == '}') {
-				break;
-			}
+	readSettingOptions();
 
-			// TODO: implement json parser
-
-		}
-		settingsTemplate.close();
-	}
-	else {
-		// add default settings options
-
-		currentSizeIndex = 0;
-		currentSymbolsIndex = 0;
-
-		symbolsOptions = 2;
-		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE] { "F_-B12345678" });
-		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE] { "R-0X12345678" });
-
-
-		// TODO: handle approptiate utf-8 support
-		//symbols.push_back( new char[80]{u8"🚩⬛☐💣1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣"});
-
-		sizeOptions = 5;
-		sizes.push_back(new Size(9, 9, 10));
-		sizes.push_back(new Size(10, 10, 15));
-		sizes.push_back(new Size(16, 16, 40));
-		sizes.push_back(new Size(16, 30, 99));
-		sizes.push_back(new Size(24, 30, 200));
-	}
+	synchronizeOptionsSelected();
 }
 
 void State::DeleteSettingsAllocatedMemory() {
-	for (ushort i = 0; i < symbolsOptions; ++i)
-	{
-		delete[] symbols[i];
-	}
-
-	for (ushort i = 0; i < sizeOptions; ++i)
+	for (short i = sizeOptions - 1; i >= 0; --i)
 	{
 		delete sizes[i];
+		sizes.pop_back();
 	}
+	sizeOptions = 0;
+
+	for (short i = symbolsOptions - 1; i >= 0; --i)
+	{
+		delete[] symbols[i];
+		symbols.pop_back();
+	}
+	symbolsOptions = 0;
 }
 
 void State::DeleteSavedGame() {
@@ -393,4 +364,296 @@ const GameState& State::GetGameState() {
 
 const Settings& State::GetSettings() {
 	return settings;
+}
+
+// TODO: add more validation cases & improve read supported syntax
+void State::readSettingOptions() {
+	
+	std::fstream settingsTemplate;
+	settingsTemplate.open(SETTINGS_TEMPLATE_FILE, std::ios::in);
+	
+	bool isJsonRead = false;
+	bool isJsonCorrect = true;
+	if (settingsTemplate.is_open()) {
+		isJsonRead = true;
+		bool isStarted = false;
+		bool isSizeSectionStarted = false;
+		bool isSymbolsSectionStarted = false;
+		bool isSizeSectionFinished = false;
+		bool isSymbolsSectionFinished = false;
+
+		std::string buffer;
+		while (true) {
+			std::getline(settingsTemplate, buffer);
+
+			if (buffer[0] == '\0') {
+				break;
+			}
+
+			if (!isJsonCorrect) {
+				break;
+			}
+
+			if (!isStarted) {
+				if (isObjectStart(buffer)) {
+					isStarted = true;
+				}
+				else {
+					isJsonCorrect = false;
+					break;
+				}
+			}
+			else if (isStarted && !((isSizeSectionStarted && !isSizeSectionFinished) || (isSymbolsSectionStarted && !isSymbolsSectionFinished)) && !(isSizeSectionFinished && isSymbolsSectionFinished)) {
+				if (isObjectName(buffer, SizeSection)) {
+					if (isArrayStart(buffer)) {
+						isSizeSectionStarted = true;
+					}
+					else {
+						std::getline(settingsTemplate, buffer);
+						isSizeSectionStarted = isArrayStart(buffer);
+					}
+				}
+				else if (isObjectName(buffer, SymbolSection)) {
+					if (isArrayStart(buffer)) {
+						isSymbolsSectionStarted = true;
+					}
+					else {
+						std::getline(settingsTemplate, buffer);
+						isSymbolsSectionStarted = isArrayStart(buffer);
+					}
+				}
+			}
+			else if (isStarted && isSizeSectionStarted && !isSizeSectionFinished && (!isSymbolsSectionStarted || (isSymbolsSectionStarted && isSymbolsSectionFinished))) {
+				if (!isObjectStart(buffer)) {
+					isJsonCorrect = false;
+					break;
+				}
+
+				while (true) {
+
+					ushort rows = 0;
+					ushort cols = 0;
+					ushort bombs = 0;
+					std::getline(settingsTemplate, buffer);
+					if (!getIntValueWithNameCheck(buffer, SizeSectionRows, rows)) {
+						isJsonCorrect = false;
+						break;
+					}
+
+					std::getline(settingsTemplate, buffer);
+					if (!getIntValueWithNameCheck(buffer, SizeSectionCols, cols)) {
+						isJsonCorrect = false;
+						break;
+					}
+
+					std::getline(settingsTemplate, buffer);
+					if (!getIntValueWithNameCheck(buffer, SizeSectionBombs, bombs)) {
+						isJsonCorrect = false;
+						break;
+					}
+
+					std::getline(settingsTemplate, buffer);
+					if (!isObjectEnd(buffer)) {
+						isJsonCorrect = false;
+						break;
+					}
+
+					sizes.push_back(new Size(rows, cols, bombs));
+					++sizeOptions;
+
+					std::getline(settingsTemplate, buffer);
+					if (isObjectStart(buffer)) {
+					}
+					else if (isArrayEnd(buffer)) {
+						isSizeSectionFinished = true;
+						break;
+					}
+					else {
+						isJsonCorrect = false;
+						break;
+					}
+
+				}
+			}
+			else if (isStarted && isSymbolsSectionStarted && !isSymbolsSectionFinished && (!isSizeSectionStarted || (isSizeSectionStarted && isSizeSectionFinished))) {
+				if (!isObjectStart(buffer)) {
+					isJsonCorrect = false;
+					break;
+				}
+
+				char result[SYMBOLS_CHAR_ARRAY_SIZE]{};
+				result[SYMBOLS_CHAR_ARRAY_SIZE-1] = '\0';
+				while (true) {
+					std::string temp;
+
+
+					std::getline(settingsTemplate, buffer);
+					if (getStringtValueWithNameCheck(buffer, SymbolSectionMarked, temp)) {
+						result[0] = temp[0];
+					}
+					else {
+						isJsonCorrect = false;
+						break;
+					}
+
+					std::getline(settingsTemplate, buffer);
+					if (getStringtValueWithNameCheck(buffer, SymbolSectionCovered, temp)) {
+						result[1] = temp[0];
+					}
+					else {
+						isJsonCorrect = false;
+						break;
+					}
+
+					std::getline(settingsTemplate, buffer);
+					if (getStringtValueWithNameCheck(buffer, SymbolSectionUncovered, temp)) {
+						result[2] = temp[0];
+					}
+					else {
+						isJsonCorrect = false;
+						break;
+					}
+
+					std::getline(settingsTemplate, buffer);
+					if (getStringtValueWithNameCheck(buffer, SymbolSectionRevealed, temp)) {
+						result[3] = temp[0];
+					}
+					else {
+						isJsonCorrect = false;
+						break;
+					}
+
+					std::getline(settingsTemplate, buffer);
+					if (getStringtValueWithNameCheck(buffer, SymbolSectionNumbers, temp)) {
+						copyLine(temp.c_str(), result + 4, 8);
+					}
+					else {
+						isJsonCorrect = false;
+						break;
+					}
+
+					std::getline(settingsTemplate, buffer);
+					if (!isObjectEnd(buffer)) {
+						isJsonCorrect = false;
+						break;
+					}
+
+					char* toAdd = new char[SYMBOLS_CHAR_ARRAY_SIZE];
+					copyString(result, toAdd, strLen(result));
+					symbols.push_back(toAdd);
+					++symbolsOptions;
+
+					std::getline(settingsTemplate, buffer);
+					if (isObjectStart(buffer)) {
+					}
+					else if (isArrayEnd(buffer)) {
+						isSymbolsSectionFinished = true;
+						break;
+					}
+					else {
+						isJsonCorrect = false;
+						break;
+					}
+
+				}
+			}
+			else if (isStarted && isSymbolsSectionFinished && isSizeSectionFinished) {
+				if (isObjectEnd(buffer)) {
+					break;
+				}
+				else {
+					isJsonCorrect = false;
+					break;
+				}
+			}
+			else {
+				isJsonCorrect = false;
+				break;
+			}
+
+		}
+		settingsTemplate.close();
+	}
+
+	if (isJsonRead && !isJsonCorrect) {
+		DeleteSettingsAllocatedMemory();
+		isJsonRead = false;
+	}
+
+	if (!isJsonRead) {
+		// add default settings options
+
+		currentSizeIndex = 0;
+		currentSymbolsIndex = 0;
+
+		symbolsOptions = 2;
+		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE] { "F_-B12345678" });
+		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE] { "R-0X12345678" });
+		symbols.push_back(new char[SYMBOLS_CHAR_ARRAY_SIZE] { "M *B12345678" });
+
+		// TODO: handle approptiate utf-8 support
+		//symbols.push_back( new char[80]{u8"🚩⬛☐💣1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣"});
+
+		sizeOptions = 5;
+		sizes.push_back(new Size(9, 9, 10));
+		sizes.push_back(new Size(10, 10, 15));
+		sizes.push_back(new Size(16, 16, 40));
+		sizes.push_back(new Size(16, 30, 99));
+		sizes.push_back(new Size(24, 30, 200));
+	}
+}
+
+void State::synchronizeOptionsSelected() {
+	short ind = -1;
+	for (ushort i = 0; i < sizeOptions; ++i)
+	{
+		if (sizes[i]->bombs == settings.boardSettings.bombsCount && 
+			sizes[i]->rows == settings.boardSettings.boardRows && 
+			sizes[i]->cols == settings.boardSettings.boardCols) {
+			ind = i;
+			break;
+		}
+	}
+
+	if (ind != -1) {
+		currentSizeIndex = ind;
+	}
+	else {
+		sizes.push_back(new Size(settings.boardSettings.boardRows, 
+								 settings.boardSettings.boardCols,
+								 settings.boardSettings.bombsCount));
+		++sizeOptions;
+		currentSizeIndex = (ushort)(sizes.size() - 1);
+	}
+
+
+	ind = -1;
+	for (ushort i = 0; i < symbolsOptions; ++i)
+	{
+		if (symbols[i][0] == settings.boardSettings.bombMarked && 
+			symbols[i][1] == settings.boardSettings.covered && 
+			symbols[i][2] == settings.boardSettings.uncovered && 
+			symbols[i][3] == settings.boardSettings.bombRevealed &&
+			strcmp(symbols[i]+4, settings.boardSettings.numbers)==0) {
+			ind = i;
+			break;
+		}
+	}
+
+	if (ind != -1) {
+		currentSymbolsIndex = ind;
+	}
+	else {
+		char* result = new char[SYMBOLS_CHAR_ARRAY_SIZE]{};
+		result[SYMBOLS_CHAR_ARRAY_SIZE-1] = '\0';
+		result[0] = settings.boardSettings.bombMarked;
+		result[1] = settings.boardSettings.covered;
+		result[2] = settings.boardSettings.uncovered;
+		result[3] = settings.boardSettings.bombRevealed;
+		copyString(settings.boardSettings.numbers,result + 4,8);
+
+		symbols.push_back(result);
+		++symbolsOptions;
+		currentSymbolsIndex = (ushort)symbols.size() - 1;
+	}
 }

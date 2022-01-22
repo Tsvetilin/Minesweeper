@@ -3,11 +3,12 @@
 
 #include <stdlib.h>
 #include <ctime>
+#include<string>
 
 typedef unsigned short int ushort;
 
 const ushort NUMBERS_CHAR_ARRAY_SIZE = 9;
-const ushort SYMBOLS_CHAR_ARRAY_SIZE = 20;
+const ushort SYMBOLS_CHAR_ARRAY_SIZE = 13;
 const ushort COMMAND_MAX_LENGTH = 256;
 
 const char LOWER_TO_UPPER_TRANSFORM = 'A' - 'a';
@@ -90,6 +91,18 @@ const char SAVED_GAME_FILE[] = "game.minesweeper";
 // Non-existing endex to be passed as parameter
 #define InvalidIndex -1
 
+// Settings template json names
+#define SymbolSection "IngameCharacters"
+#define SymbolSectionCovered "Covered"
+#define SymbolSectionUncovered "Uncoverd"
+#define SymbolSectionMarked "BombMarked"
+#define SymbolSectionRevealed "BombRevealed"
+#define SymbolSectionNumbers "Numbers"
+#define SizeSection "BoardSizes"
+#define SizeSectionRows "BoardRows"
+#define SizeSectionCols "BoardCols"
+#define SizeSectionBombs "BombsCount"
+
 /// <summary>
 /// Generates random number in range [<paramref name="lowerBound"/>;<paramref name="upperBound"/>]
 /// </summary>
@@ -128,5 +141,29 @@ void deleteMatrix(char** matrix, ushort rows);
 /// <param name="destination">The string to copy to</param>
 /// <param name="cols">The length of the string</param>
 void copyString(const char* const source, char* destination, ushort cols);
+
+/// <summary>
+/// Skip all white-space chars
+/// </summary>
+/// <param name="text">Text to work with</param>
+/// <param name="index">Reference to the current index to start skip from. To be changed as the first non-white space char index.</param>
+void trimTextInput(const char* const text, ushort& index);
+
+bool compareSequence(const char* const toCompare, const char* const compareWith);
+
+ushort strLen(std::string str);
+void trimText(std::string text, ushort& index);
+bool isObjectStart(std::string str);
+bool isObjectEnd(std::string str);
+bool isObjectName(std::string str, std::string name);
+int getIntValue(std::string str);
+std::string getStringValue(std::string str);
+bool isArrayStart(std::string str);
+bool isArrayEnd(std::string str);
+bool getIntValueWithNameCheck(std::string str, std::string name, ushort& valueResult);
+bool getStringtValueWithNameCheck(std::string str, std::string name, std::string& valueResult);
+
+// UTF-8 Byte Order Mark (BOM)
+void SkipBOM(std::string str, ushort& index);
 
 #endif // !COMMON_H_

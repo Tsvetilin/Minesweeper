@@ -219,6 +219,8 @@ private:
 	char statusMessage[COMMAND_MAX_LENGTH];
 
 	void resetMenuIndex();
+	void readSettingOptions();
+	void synchronizeOptionsSelected();
 };
 
 #endif // !STATE_H_
