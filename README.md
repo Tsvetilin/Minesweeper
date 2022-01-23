@@ -22,7 +22,7 @@ Not all functionality may be supported on your OS and the Console you're using:
 ## Playing
 **Settings:**
 - Can be changed in the settings menu
-- You can copy the settings.json file and use it as template to write your own board sizes and symbols! ***Important***: It must be named `settingsTemplate.minesweeper.json` and placed in the same directory as the .exe (or .out) file. The json syntax must strictly follow the example.
+- You can copy the `settings.json` file from the `assets` folder and use it as template to write your own board sizes and symbols! ***Important***: It must be named `settingsTemplate.minesweeper.json` and placed in the same directory as the .exe (or .out) file. The json syntax must strictly follow the example.
 - The current game settings are saved in the file `settings.minesweeper`
 - If a game is saved, it is placed in the `game.minesweeper` file
 
