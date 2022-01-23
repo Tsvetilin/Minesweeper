@@ -8,6 +8,11 @@
 #define STDIN_FILENO 0
 #endif
 
+#ifdef _WIN32
+#define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+#define DISABLE_NEWLINE_AUTO_RETURN  0x0008
+#endif
+
 // Handles player input
 enum class AdvancedPlayerInput {
 	None = 0,
@@ -49,6 +54,10 @@ struct Player {
 		terminal = canonicalTerminal;
 #endif
 
+#ifdef _WIN32
+		activateVirtualTerminal();
+#endif
+
 	}
 
 	// Getters:
@@ -76,6 +85,10 @@ private:
 	SimplePlayerInput GetSimpleKeyboardInput();
 	AdvancedPlayerInput AdvancedInput;
 	SimplePlayerInput SimpleInput;
+
+#ifdef _WIN32
+	void activateVirtualTerminal();
+#endif
 
 };
 

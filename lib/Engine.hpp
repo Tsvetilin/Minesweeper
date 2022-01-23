@@ -37,7 +37,9 @@ struct Engine {
 	/// <param name="rawPlayerBoardData"> Pointer to the board to be the current game state</param>
 	/// <param name="rawBoardData">Pointer to the board to be the revealed board</param>
 	/// <param name="boardSettings">Board settings to be used</param>
-	void LoadGame(const BoardSettings& boardSettings, const char* const* const rawBoardData, const char* const* const rawPlayerBoardData);
+	void LoadGame(const BoardSettings& boardSettings, 
+				  const char* const* const rawBoardData, 
+				  const char* const* const rawPlayerBoardData);
 
 	/// <summary>
 	/// Generate board according to the settings specified
@@ -53,7 +55,11 @@ struct Engine {
 	/// <param name="col">The column to perform the move on</param>
 	/// <param name="boardSettings">Current game's board settings</param>
 	/// <param name="uncoverType">Current game's uncover type</param>
-	void PerformMove(const Move move, const ushort row, const ushort col, const BoardSettings& boardSettings, const UncoverType uncoverType);
+	void PerformMove(const Move move, 
+					 const ushort row,
+					 const ushort col,
+					 const BoardSettings& boardSettings,
+					 const UncoverType uncoverType);
 
 	/// <summary>
 	/// Free all resources related to the current game
@@ -75,7 +81,13 @@ private:
 	/// <summary>
 	/// Recursively reveal all surrounding cells until reaching a number
 	/// </summary>
-	void revealToNumber(const short row, const short col, const ushort rows, const ushort cols, const char uncovered, const char covered, const char* const numbers);
+	void revealToNumber(const short row,
+						const short col,
+						const ushort rows,
+						const ushort cols, 
+						const char uncovered, 
+						const char covered,
+						const char* const numbers);
 
 	/// <summary>
 	/// Reveal only the surrounding 8 cells if no number position is hit

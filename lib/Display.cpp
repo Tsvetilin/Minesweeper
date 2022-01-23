@@ -84,7 +84,12 @@ void Display::writeBoardBottom(bool isSmallBoard, ushort cols) {
 }
 
 
-void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int currentRowIndex, int currentColIndex, const char* const* const board, const char* const statusMessage) {
+void Display::WriteBoard(BoardLook boardLook,
+						 BoardSettings boardSize, 
+						 int currentRowIndex,
+						 int currentColIndex, 
+						 const char* const* const board, 
+						 const char* const statusMessage) {
 	clearScreen();
 
 	ushort rows = boardSize.boardRows;
@@ -257,7 +262,11 @@ void Display::WriteBoard(BoardLook boardLook, BoardSettings boardSize, int curre
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
 
-void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, const char* const* const playerBoard, const char* const* const board, const char* const statusMessage) {
+void Display::WriteFinishBoard(BoardLook boardLook,
+							   BoardSettings boardSize,
+							   const char* const* const playerBoard, 
+							   const char* const* const board,
+							   const char* const statusMessage) {
 	clearScreen();
 
 	ushort rows = boardSize.boardRows;
@@ -323,7 +332,7 @@ void Display::WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, con
 			}
 		}
 		else {
-			writeBoardTop(true, false, cols);
+			writeBoardTop(false, false, cols);
 
 			for (ushort row = 0; row < rows; ++row)
 			{
@@ -627,7 +636,11 @@ void Display::WriteUncoverSettingsMenu(short currentIndexSelected, ushort curren
 }
 
 
-void Display::WriteSizeSettingsMenu(short currentIndexSelected, ushort options, std::vector<Size*> sizes, ushort currentUsedIndex, const char* const statusMessage) {
+void Display::WriteSizeSettingsMenu(short currentIndexSelected,
+									ushort options,
+									std::vector<Size*> sizes,
+									ushort currentUsedIndex,
+									const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -637,7 +650,7 @@ void Display::WriteSizeSettingsMenu(short currentIndexSelected, ushort options, 
 		if (currentUsedIndex == i) {
 			colorizeOutput(GreenFG, WhiteBG);
 			std::cout << (i + 1) << ". Rows:" << sizes[i]->rows << "; Cols: " << sizes[i]->cols << "; Bombs: " << sizes[i]->rows << std::endl;
-			colorizeOutput(WhiteFG, BlackBG);
+			colorizeOutput();
 		}
 		else {
 			std::cout << (i + 1) << ". Rows:" << sizes[i]->rows << "; Cols: " << sizes[i]->cols << "; Bombs: " << sizes[i]->rows << std::endl;
@@ -646,7 +659,11 @@ void Display::WriteSizeSettingsMenu(short currentIndexSelected, ushort options, 
 
 	std::cout << std::endl << std::endl << statusMessage << std::endl;
 }
-void Display::WriteSymbolsSettingsMenu(short currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, const char* const statusMessage) {
+void Display::WriteSymbolsSettingsMenu(short currentIndexSelected, 
+									   ushort options,
+									   std::vector<char*> sizes,
+									   ushort currentUsedIndex,
+									   const char* const statusMessage) {
 	clearScreen();
 	writeHeader();
 
@@ -683,7 +700,10 @@ void Display::WriteManual() {
 	std::cout << "Here are some things you need to know before start playing:" << std::endl;
 	std::cout << "0. All of the settings and features listed below are accesible via the menu!" << std::endl;
 	std::cout << "1. The game has two working modes:" << std::endl;
-	std::cout << "		 a. Controlling via arrow keys and the key presses. This type of control uses Up/Down/Left/Right keys to navigate, as well as Enter/Escape buttons. Some commands require other keys to be pressed. IMPORTANT: Using English alphabet is required to be able to detect the commands!" << std::endl;
+	std::cout << "		 a. Controlling via arrow keys and the key presses. \
+This type of control uses Up/Down/Left/Right keys to navigate, as well as Enter/Escape buttons. \
+Some commands require other keys to be pressed. \
+IMPORTANT: Using English alphabet is required to be able to detect the commands!" << std::endl;
 	std::cout << "		 b. Controlling via writing to the console." << std::endl;
 	std::cout << "2. There are two styles of the game:" << std::endl;
 	std::cout << "		 a. Borderless: minimalistic." << std::endl;
@@ -692,7 +712,8 @@ void Display::WriteManual() {
 	std::cout << "		 a. Standard: as in the original game." << std::endl;
 	std::cout << "		 b. Custom: revealing just the surrounding 8 cells there are no bombs nearby." << std::endl;
 	std::cout << "4. There are several board size presets." << std::endl;
-	std::cout << "5. There are several symbols presets, representing the different. IMPORTANT: Not all consoles may support those!" << std::endl;
+	std::cout << "5. There are several symbols presets, representing the different. \
+IMPORTANT: Not all consoles may support those!" << std::endl;
 	std::cout << std::endl;
 	std::cout << "You can always go Back or Pause by pressing Escape or Q (if 1a) or Write Q (if 1b)!" << std::endl;
 	std::cout << std::endl;

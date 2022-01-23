@@ -209,7 +209,8 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 	trimTextInput(line, ind);
 
 	if (words == 1) {
-		if ((line[ind] == QuitChar || line[ind] == QuitChar + LOWER_TO_UPPER_TRANSFORM) && (line[ind + 1] == ' ' || line[ind + 1] == '\0')) {
+		if ((line[ind] == QuitChar || line[ind] == QuitChar + LOWER_TO_UPPER_TRANSFORM) &&
+			(line[ind + 1] == ' ' || line[ind + 1] == '\0')) {
 			result.isValidCmd = true;
 			result.ingameCmd = QuitChar;
 		}
@@ -220,8 +221,6 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 	}
 	else if (words == 3) {
 		ushort n1 = 0, n2 = 0;
-		bool isW2 = false;
-		bool isW3 = false;
 
 		while (true) {
 			if (line[ind] == ' ') {
@@ -256,11 +255,10 @@ SimplePlayerInput Player::GetSimpleKeyboardInput() {
 		if (line[ind + 1] != ' ' && line[ind + 1] != '\0') {
 			return result;
 		}
-		if (line[ind] == MarkChar || line[ind] == MarkChar + LOWER_TO_UPPER_TRANSFORM)
-		{
+		if (line[ind] == MarkChar || line[ind] == MarkChar + LOWER_TO_UPPER_TRANSFORM){
 			result.ingameCmd = MarkChar;
 		}
-		else if (line[ind] == RevealChar || line[ind] == MarkChar + LOWER_TO_UPPER_TRANSFORM) {
+		else if (line[ind] == RevealChar || line[ind] == RevealChar + LOWER_TO_UPPER_TRANSFORM) {
 			result.ingameCmd = RevealChar;
 		}
 		else {
@@ -282,3 +280,17 @@ const AdvancedPlayerInput& Player::GetAdvancedInput() {
 const SimplePlayerInput& Player::GetSimpleInput() {
 	return SimpleInput;
 }
+
+#ifdef _WIN32
+#include <windows.h>
+
+void Player::activateVirtualTerminal()
+{
+	HANDLE handleOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD consoleMode;
+	GetConsoleMode(handleOut, &consoleMode);
+	consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	consoleMode |= DISABLE_NEWLINE_AUTO_RETURN;
+	SetConsoleMode(handleOut, consoleMode);
+}
+#endif

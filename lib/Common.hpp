@@ -146,11 +146,15 @@ void copyString(const char* const source, char* destination, ushort cols);
 /// Skip all white-space chars
 /// </summary>
 /// <param name="text">Text to work with</param>
-/// <param name="index">Reference to the current index to start skip from. To be changed as the first non-white space char index.</param>
+/// <param name="index">
+/// Reference to the current index to start skip from. 
+/// To be changed as the first non-white space char index.
+/// </param>
 void trimTextInput(const char* const text, ushort& index);
 
 bool compareSequence(const char* const toCompare, const char* const compareWith);
 
+// JSON parser helpers
 ushort strLen(std::string str);
 void trimText(std::string text, ushort& index);
 bool isObjectStart(std::string str);
@@ -164,6 +168,6 @@ bool getIntValueWithNameCheck(std::string str, std::string name, ushort& valueRe
 bool getStringtValueWithNameCheck(std::string str, std::string name, std::string& valueResult);
 
 // UTF-8 Byte Order Mark (BOM)
-void SkipBOM(std::string str, ushort& index);
+void skipBOM(std::string str, ushort& index);
 
 #endif // !COMMON_H_

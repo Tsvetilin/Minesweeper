@@ -4,6 +4,7 @@
 #include "Common.hpp"
 
 #include <vector>
+#include <cstring>
 
 // Handles game state
 enum class GameState {
@@ -68,7 +69,7 @@ struct Settings {
 	BoardSettings boardSettings;								// Board settings -> board size & bombs count
 	UncoverType uncoverType = UncoverType::Default;				// Default / custom uncover
 	ControlType controlType = ControlType::AdvancedArrowInput;	// Arrow / Input controls
-	BoardLook boardLook = BoardLook::Fancy;				        // Fancy / default board look
+	BoardLook boardLook = BoardLook::Default;				    // Fancy / default board look
 };
 
 struct Size {
@@ -185,7 +186,7 @@ struct State {
 	// Getters:
 	const GameState& GetGameState();
 	const Settings& GetSettings();
-	const ushort& GetCurrentMenuOptionSelected();
+	const short& GetCurrentMenuOptionSelected();
 	const ushort& GetCurrentInGameRowIndex();
 	const ushort& GetCurrentInGameColIndex();
 	const ushort& GetSizeOptions();

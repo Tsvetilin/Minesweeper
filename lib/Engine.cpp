@@ -1,7 +1,3 @@
-#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 #include "Engine.hpp"
 #include "Common.hpp"
 
@@ -91,7 +87,11 @@ void Engine::GenerateBoard(const BoardSettings& boardSettings) {
 	}
 }
 
-void Engine::PerformMove(const Move move, const ushort row, const ushort col, const BoardSettings& boardSettings, const UncoverType uncoverType) {
+void Engine::PerformMove(const Move move,
+						 const ushort row,
+						 const ushort col,
+						 const BoardSettings& boardSettings,
+						 const UncoverType uncoverType) {
 
 	if (!Engine::isPlaying) {
 		return;
@@ -209,7 +209,13 @@ void Engine::uncoverSurroundingEight(short row, short col, ushort rows, ushort c
 	}
 }
 
-void Engine::revealToNumber(short row, short col, ushort rows, ushort cols, char uncovered, char covered, const char* const numbers) {
+void Engine::revealToNumber(short row,
+							short col,
+							ushort rows,
+							ushort cols, 
+							char uncovered,
+							char covered, 
+							const char* const numbers) {
 
 	if (row > rows - 1 || row<0 || col>cols - 1 || col < 0) {
 		return;
@@ -324,7 +330,9 @@ void Engine::fillBoard(const ushort rows, const ushort cols, const char uncovere
 	}
 }
 
-void Engine::LoadGame(const BoardSettings& boardSettings, const char* const* const rawBoardData, const char* const* const rawPlayerBoardData) {
+void Engine::LoadGame(const BoardSettings& boardSettings, 
+					  const char* const* const rawBoardData, 
+					  const char* const* const rawPlayerBoardData) {
 
 	initializeBoard(boardSettings.boardRows, boardSettings.boardCols);
 

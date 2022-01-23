@@ -32,6 +32,7 @@ private:
 	Player player;
 
 	bool isRunning;
+
 	void ApplySettings();
 
 	void handleStateUnknown();

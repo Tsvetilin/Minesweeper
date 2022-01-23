@@ -59,7 +59,11 @@ struct Display {
 	/// <param name="sizes">List of the sizes to choose from. See <see cref="Size"></param>
 	/// <param name="currentUsedIndex">The index of the currently active setting</param>
 	/// <param name="statusMessage">Game status message</param>
-	void WriteSizeSettingsMenu(short currentIndexSelected, ushort options, std::vector<Size*> sizes, ushort currentUsedIndex, const char* const statusMessage);
+	void WriteSizeSettingsMenu(short currentIndexSelected,
+							   ushort options,
+							   std::vector<Size*> sizes, 
+							   ushort currentUsedIndex,
+							   const char* const statusMessage);
 
 	/// <summary>
 	/// Write the game board symbols settings menu to the console
@@ -69,7 +73,11 @@ struct Display {
 	/// <param name="sizes">List of the sizes to choose from</param>
 	/// <param name="currentUsedIndex">The index of the currently active setting</param>
 	/// <param name="statusMessage">Game status message</param>
-	void WriteSymbolsSettingsMenu(short currentIndexSelected, ushort options, std::vector<char*> sizes, ushort currentUsedIndex, const char* const statusMessage);
+	void WriteSymbolsSettingsMenu(short currentIndexSelected, 
+								  ushort options,
+								  std::vector<char*> sizes,
+								  ushort currentUsedIndex, 
+								  const char* const statusMessage);
 
 	/// <summary>
 	/// Writes current game board according to the settings passed
@@ -80,7 +88,12 @@ struct Display {
 	/// <param name="currentColIndex">The current player position's colum</param>
 	/// <param name="board">Pointer to the board to be printed</param>
 	/// <param name="statusMessage">Game status message</param>
-	void WriteBoard(BoardLook boardLook, BoardSettings boardSize, int currentRowIndex, int currentColIndex, const char* const* const board, const char* const statusMessage);
+	void WriteBoard(BoardLook boardLook, 
+					BoardSettings boardSize,
+					int currentRowIndex, 
+					int currentColIndex,
+					const char* const* const board,
+					const char* const statusMessage);
 	
 	/// <summary>
 	/// Writes the game board with revealed mines.
@@ -90,7 +103,11 @@ struct Display {
 	/// <param name="playerBoard">Pointer to the player's current board</param>
 	/// <param name="board">Pointer to the revealed board to be printed</param>
 	/// <param name="statusMessage">Game status message</param>
-	void WriteFinishBoard(BoardLook boardLook, BoardSettings boardSize, const char* const* const playerBoard, const char* const* const board, const char* const statusMessage);
+	void WriteFinishBoard(BoardLook boardLook, 
+						  BoardSettings boardSize,
+						  const char* const* const playerBoard,
+						  const char* const* const board,
+						  const char* const statusMessage);
 	
 	/// <summary>
 	/// Writes exit message.

@@ -45,7 +45,7 @@ void trimTextInput(const char* const text, ushort& index) {
 }
 
 bool compareSequence(const char* const toCompare, const char* const compareWith) {
-	ushort length = strlen(compareWith);
+	ushort length = (ushort)strlen(compareWith);
 
 	for (ushort i = 0; i < length; ++i)
 	{
@@ -87,7 +87,7 @@ ushort strLen(std::string str) {
 
 bool isObjectStart(std::string str) {
 	ushort index = 0;
-	SkipBOM(str, index);
+	skipBOM(str, index);
 	trimText(str, index);
 	return str[index] == '{';
 }
@@ -120,7 +120,7 @@ bool isObjectName(std::string str, std::string name) {
 
 
 int getIntValue(std::string str) {
-	short index = str.find(":");
+	short index = (short)str.find(":");
 	if (index == -1) {
 		return index;
 	}
@@ -133,18 +133,19 @@ std::string getStringValue(std::string str) {
 
 	std::string result = "";
 
-	ushort index = str.find(":");
+	short index = (short)str.find(":");
 	if (index == -1) {
 		return result;
 	}
-	++index;
+	
+	ushort chckIndex = index + 1;
 
-	trimText(str, index);
-	if (str[index] == '"') {
-		++index;
-		while (str[index] != '"') {
-			result += str[index];
-			++index;
+	trimText(str, chckIndex);
+	if (str[chckIndex] == '"') {
+		++chckIndex;
+		while (str[chckIndex] != '"') {
+			result += str[chckIndex];
+			++chckIndex;
 		}
 	}
 
@@ -159,7 +160,7 @@ bool isArrayStart(std::string str) {
 		return true;
 	}
 
-	short indexOfColumn = str.find(":");
+	short indexOfColumn = (short)str.find(":");
 	if (indexOfColumn > index) {
 		index = indexOfColumn + 1;
 		trimText(str, index);
@@ -194,7 +195,7 @@ bool getStringtValueWithNameCheck(std::string str, std::string name, std::string
 	return false;
 }
 
-void SkipBOM(std::string str, ushort& index)
+void skipBOM(std::string str, ushort& index)
 {
 	if (str[0] == '\xEF' && str[1] == '\xBB' && str[2] == '\xBF') {
 		index += 3;
