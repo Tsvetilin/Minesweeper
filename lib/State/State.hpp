@@ -38,67 +38,6 @@ enum class GameState {
 	ControlSettings=14,
 };
 
-enum class BoardLook {
-	Default = 0,
-	Fancy = 1,
-};
-
-enum class UncoverType {
-	Default = 0, // As in original game
-	Custom = 1,  // Uncover just the surrounding 8 
-};
-
-enum class ControlType {
-	PrimitiveInput = 0,
-	AdvancedArrowInput = 1,
-};
-
-// Default board settings
-struct BoardSettings {
-
-	BoardSettings() {
-		// Default settings
-		boardRows = 9;
-		boardCols = 9;
-		bombsCount = 10;
-		bombRevealed = 'B';
-		bombMarked = 'F';
-		uncovered = '-';
-		covered = '_';
-		char numbersDefault[NUMBERS_CHAR_ARRAY_SIZE]{ "12345678" };
-
-		copyString(numbersDefault,numbers,(ushort)strlen(numbersDefault));
-	}
-
-	ushort boardRows;
-	ushort boardCols;
-	ushort bombsCount;
-	char bombRevealed;
-	char bombMarked;
-	char uncovered;
-	char covered;
-	char numbers[NUMBERS_CHAR_ARRAY_SIZE];
-};
-
-struct Settings {
-	BoardSettings boardSettings;								// Board settings -> board size & bombs count
-	UncoverType uncoverType = UncoverType::Default;				// Default / custom uncover
-	ControlType controlType = ControlType::AdvancedArrowInput;	// Arrow / Input controls
-	BoardLook boardLook = BoardLook::Default;				    // Fancy / default board look
-};
-
-struct Size {
-
-	Size(ushort rows, ushort cols, ushort bombs) {
-		this->rows = rows;
-		this->cols = cols;
-		this->bombs = bombs;
-	}
-
-	ushort rows;
-	ushort cols;
-	ushort bombs;
-};
 
 const ushort MAIN_MENU_OPTIONS_COUNT = 4;
 const ushort SETTINGS_MENU_OPTIONS_COUNT = 5;

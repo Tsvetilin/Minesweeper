@@ -139,21 +139,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="lib\Common.cpp" />
-    <ClCompile Include="lib\Display.cpp" />
+    <ClCompile Include="lib\Board\Board.cpp" />
+    <ClCompile Include="lib\Board\CustomBoard.cpp" />
+    <ClCompile Include="lib\Board\StandartBoard.cpp" />
+    <ClCompile Include="lib\Common\Common.cpp" />
+    <ClCompile Include="lib\Display\Display.cpp" />
     <ClCompile Include="lib\Engine.cpp" />
     <ClCompile Include="lib\Game.cpp" />
-    <ClCompile Include="lib\Player.cpp" />
-    <ClCompile Include="lib\State.cpp" />
+    <ClCompile Include="lib\Input\Player.cpp" />
+    <ClCompile Include="lib\State\State.cpp" />
     <ClCompile Include="src\Minesweeper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lib\Common.hpp" />
-    <ClInclude Include="lib\Display.hpp" />
+    <ClInclude Include="lib\Board\Board.hpp" />
+    <ClInclude Include="lib\Board\BoardSettings.hpp" />
+    <ClInclude Include="lib\Board\CustomBoard.hpp" />
+    <ClInclude Include="lib\Board\StandartBoard.hpp" />
+    <ClInclude Include="lib\Common\App.hpp" />
+    <ClInclude Include="lib\Common\Common.hpp" />
+    <ClInclude Include="lib\Common\GlobalConstants.hpp" />
+    <ClInclude Include="lib\Common\List.hpp" />
+    <ClInclude Include="lib\Common\String.hpp" />
+    <ClInclude Include="lib\Display\Display.hpp" />
+    <ClInclude Include="lib\Display\BoardDisplay.hpp" />
+    <ClInclude Include="lib\Display\MenuDisplay.hpp" />
     <ClInclude Include="lib\Engine.hpp" />
     <ClInclude Include="lib\Game.hpp" />
-    <ClInclude Include="lib\Player.hpp" />
-    <ClInclude Include="lib\State.hpp" />
+    <ClInclude Include="lib\Input\AdvancedInputHandler.hpp" />
+    <ClInclude Include="lib\Input\InputHandler.hpp" />
+    <ClInclude Include="lib\Input\SimpleInputHandler.hpp" />
+    <ClInclude Include="lib\Input\Player.hpp" />
+    <ClInclude Include="lib\State\State.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\settings.json" />

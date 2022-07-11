@@ -17,15 +17,8 @@
 
 int main()
 {
-    Game game;
-
-    game.Start();
-
-    while (game.IsRunning()) {
-        game.Update();
-    }
-
-    game.SaveAndExit();
+    Game game(std::cin, std::cout);
+    game.Run();
 
     return 0;   
 }

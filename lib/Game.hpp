@@ -20,14 +20,28 @@
 #include "State.hpp"
 #include "Display.hpp"
 #include "Player.hpp"
+#include <iostream>
 
 // Main game object
 struct Game {
 
-	Game() {
+	Game(std::istream&, std::ostream&) {
 		isRunning = false;
 	}
 
+	void Run() {
+
+		Start();
+
+		while (IsRunning()) {
+			Update();
+		}
+
+		SaveAndExit();
+
+	}
+
+private:
 	// Initialize the game according to the settings
 	void Start();		
 	
@@ -40,7 +54,7 @@ struct Game {
 	// Save current state and settings
 	void SaveAndExit(); 
 
-private:
+
 	Engine engine;
 	State state;
 	Display display;
