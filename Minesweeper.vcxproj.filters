@@ -27,7 +27,7 @@
     <ClCompile Include="lib\State\State.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lib\Engine.cpp">
+    <ClCompile Include="lib\Engine\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="lib\Display\Display.cpp">
@@ -50,7 +50,7 @@
     <ClInclude Include="lib\Display\Display.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\Engine.hpp">
+    <ClInclude Include="lib\Engine\Engine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\Input\Player.hpp">
@@ -102,6 +102,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="lib\Common\App.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\Board\BoardMarks.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\Engine\Move.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\Engine\EngineState.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\Board\BoardSize.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\Board\BoardSymbols.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

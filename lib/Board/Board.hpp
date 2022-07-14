@@ -1,15 +1,27 @@
 #pragma once
-#include "../Common.hpp"
-#include "../Engine.hpp"
+#include "../Common/Common.hpp"
+#include "BoardMarks.hpp"
+#include "BoardSize.hpp"
 
 class Board {
-	ushort rows;
-	ushort cols;
+	BoardSize size;
 
-	const BoardSettings* settings;
+	bool** visitedBoard;
+	BoardMark** board;
+	BoardMark** playerBoard;
 
+	bool isNumber(const ushort row, const ushort col, const char* const numbers);
+
+	void copyFrom(const Board& other);
+	void free();
 public:
-	virtual Board* generateBoard(ushort rows, ushort cols);
-	virtual void reveal(ushort row, ushort col) const = 0;
+	Board(const BoardSize& size);
+	Board(const Board&);
+	Board& operator=(const Board&);
+	virtual Board* generateBoard();
+	virtual void reveal(ushort row, ushort col) = 0;
+	virtual void markBomb(ushort row, ushort col);
 	virtual Board* clone() const = 0;
+	virtual ~Board() = default;
 };
+

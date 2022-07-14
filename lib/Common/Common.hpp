@@ -127,14 +127,6 @@ const char SAVED_GAME_FILE[] = "game.minesweeper";
 ushort GenerateRandomNumber(ushort lowerBound, ushort upperBound);
 
 /// <summary>
-/// Allocates memory for a matrix with a given size
-/// </summary>
-/// <param name="rows">The number of rows</param>
-/// <param name="cols">The number of columns</param>
-/// <returns>Pointer to the start of the initialized matrix</returns>
-char** initializeMatrix(ushort rows, ushort cols);
-
-/// <summary>
 /// Copies a sequance of chars from an array to another 
 /// </summary>
 /// <param name="source">The array to copy from</param>
@@ -184,5 +176,21 @@ bool getStringtValueWithNameCheck(std::string str, std::string name, std::string
 
 // UTF-8 Byte Order Mark (BOM)
 void skipBOM(std::string str, ushort& index);
+
+/// <summary>
+/// Allocates memory for a matrix with a given size
+/// </summary>
+/// <typeparam name="T">Type of the elements of the matrix</typeparam>
+/// <param name="matrix">Pointer to the matrix</param>
+/// <param name="rows">The number of rows</param>
+/// <param name="cols">The number of columns</param>
+template <typename T>
+void initializeMatrix(T** matrix, ushort rows, ushort cols) {
+	matrix = new T*[rows];
+	for (size_t i = 0; i < rows; i++)
+	{
+		matrix[i] = new T[cols];
+	}
+}
 
 #endif // !COMMON_H_
