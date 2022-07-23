@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Common/Common.hpp"
+#include "../Common/Serializable.hpp"
 #include "BoardSymbols.hpp"
 
 enum class BoardLook {
@@ -18,7 +19,7 @@ enum class ControlType {
 	AdvancedArrowInput = 1,
 };
 
-struct Settings {
+struct Settings : public Serializable {
 	BoardSize size;												// Board size
 	BoardSymbols symbols;										// Board style
 	UncoverType uncoverType = UncoverType::Default;				// Default / custom uncover

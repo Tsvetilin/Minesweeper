@@ -23,7 +23,7 @@ void Game::Start() {
 	isRunning = true;
 }
 
-void Game::ApplySettings() {
+void Game::applySettings() {
 	const Settings& settings = Game::state.GetSettings();
 	if (settings.controlType == ControlType::AdvancedArrowInput && player.IsAdvancedInputSupported()) {
 		player.UseAdvancedInputSystem();
@@ -34,12 +34,12 @@ void Game::ApplySettings() {
 	}
 }
 
-bool Game::IsRunning() {
+bool Game::isRunning() {
 	return isRunning;
 }
 
 
-void Game::Update() {
+void Game::update() {
 
 	const GameState& currentState = Game::state.GetGameState();
 
@@ -72,7 +72,7 @@ void Game::Update() {
 
 }
 
-void Game::SaveAndExit() {
+void Game::saveAndExit() {
 	state.DeleteSettingsAllocatedMemory();
 	state.SaveSettings();
 }
@@ -466,7 +466,7 @@ and make sure you are writing in the English alphabet. ");
 		}
 
 		state.SaveSettings();
-		ApplySettings();
+		applySettings();
 		state.OpenSettingsMenu();
 		display.WriteSettingsMenu(state.GetCurrentMenuOptionSelected(), state.GetStatusMessage());
 		return;

@@ -13,4 +13,7 @@ class StandartBoard : public Board {
 		const char uncovered,
 		const char covered,
 		const char* const numbers);
+public:
+
+
 };

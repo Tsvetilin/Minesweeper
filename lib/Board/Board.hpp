@@ -2,15 +2,16 @@
 #include "../Common/Common.hpp"
 #include "BoardMarks.hpp"
 #include "BoardSize.hpp"
+#include "../Common/Serializable.hpp"
 
-class Board {
+class Board : public Serializable{
 	BoardSize size;
 
 	bool** visitedBoard;
 	BoardMark** board;
 	BoardMark** playerBoard;
 
-	bool isNumber(const ushort row, const ushort col, const char* const numbers);
+	bool isNumber(ushort row, ushort col);
 
 	void copyFrom(const Board& other);
 	void free();
@@ -24,4 +25,3 @@ public:
 	virtual Board* clone() const = 0;
 	virtual ~Board() = default;
 };
-

@@ -1,6 +1,9 @@
+#pragma once
+
+#include "../Common/Common.hpp"
 #include "../Common/Common.hpp"
 
-struct BoardSize {
+struct BoardSize : public Serializable {
 
 	BoardSize(ushort rows = 9, ushort cols = 9, ushort bombs = 10) {
 		this->rows = rows;

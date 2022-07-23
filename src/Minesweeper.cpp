@@ -18,7 +18,7 @@
 int main()
 {
     Game game(std::cin, std::cout);
-    game.Run();
+    game.run();
 
     return 0;   
 }

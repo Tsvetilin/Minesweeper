@@ -171,9 +171,11 @@
     <ClInclude Include="lib\Engine\Move.hpp" />
     <ClInclude Include="lib\Game.hpp" />
     <ClInclude Include="lib\Input\AdvancedInputHandler.hpp" />
+    <ClInclude Include="lib\Input\InputData.hpp" />
     <ClInclude Include="lib\Input\InputHandler.hpp" />
     <ClInclude Include="lib\Input\SimpleInputHandler.hpp" />
     <ClInclude Include="lib\Input\Player.hpp" />
+    <ClInclude Include="lib\State\Command.hpp" />
     <ClInclude Include="lib\State\State.hpp" />
   </ItemGroup>
   <ItemGroup>

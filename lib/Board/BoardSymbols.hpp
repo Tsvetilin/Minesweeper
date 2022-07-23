@@ -1,8 +1,11 @@
+#pragma once
+
 #include "../Common/Common.hpp"
+#include "../Common/Serializable.hpp"
 #include "BoardMarks.hpp"
 
 char numbersDefault[NUMBERS_CHAR_ARRAY_SIZE]{ "12345678" };
-struct BoardSymbols {
+struct BoardSymbols : public Serializable {
 
 	BoardSymbols(
 		char bombRevealed = 'B',

@@ -1,68 +1,69 @@
 /**
-*
-* Solution to course project # 13
-* Introduction to programming course
-* Faculty of Mathematics and Informatics of Sofia University
-* Winter semester 2021/2022
-*
-* @author Tsvetilin Tsvetilov
-* @idnumber 3MI0600062
-* @compiler VC
-*
-* File with definitons of functions related to the game cycle
-*
-*/
+ *
+ * Solution to course project # 13
+ * Introduction to programming course
+ * Faculty of Mathematics and Informatics of Sofia University
+ * Winter semester 2021/2022
+ *
+ * @author Tsvetilin Tsvetilov
+ * @idnumber 3MI0600062
+ * @compiler VC
+ *
+ * File with definitons of functions related to the game cycle
+ *
+ */
 
-#ifndef GAME_H_
-#define GAME_H_
+#pragma once
 
-#include "Engine.hpp"
-#include "State.hpp"
-#include "Display.hpp"
-#include "Player.hpp"
+#include "../lib/Common/App.hpp"
+#include "../lib/Engine/Engine.hpp"
+#include "../lib/State/State.hpp"
+#include "../lib/Display/Display.hpp"
+#include "../lib/Input/Player.hpp"
+
 #include <iostream>
 
 // Main game object
-struct Game {
+class Game : public App
+{
 
-	Game(std::istream&, std::ostream&) {
-		isRunning = false;
-	}
+public:
+	Game(std::istream &is, std::ostream &os) : App(is, os), isOperating(false) {}
 
-	void Run() {
+	void run()
+	{
 
-		Start();
+		start();
 
-		while (IsRunning()) {
-			Update();
+		while (isRunning())
+		{
+			update();
 		}
 
-		SaveAndExit();
-
+		saveAndExit();
 	}
 
 private:
 	// Initialize the game according to the settings
-	void Start();		
-	
-	// Return current state
-	bool IsRunning();	
-	
-	// Handle the main game cycle -> get user input, update the game state, draw the game
-	void Update();		
-	
-	// Save current state and settings
-	void SaveAndExit(); 
+	void start();
 
+	// Return current state
+	bool isRunning();
+
+	// Handle the main game cycle -> get user input, update the game state, draw the game
+	void update();
+
+	// Save current state and settings
+	void saveAndExit();
 
 	Engine engine;
 	State state;
 	Display display;
 	Player player;
 
-	bool isRunning;
+	bool isOperating;
 
-	void ApplySettings();
+	void applySettings();
 
 	void handleStateUnknown();
 	void handleStateMainMenu();
@@ -72,7 +73,4 @@ private:
 	void handleStateFinished();
 	void handleStateEscapeMenu();
 	void handleStateExiting();
-
 };
-
-#endif // !GAME_H_
