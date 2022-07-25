@@ -2,6 +2,7 @@
 #include "../Common/Common.hpp"
 #include "BoardMarks.hpp"
 #include "BoardSize.hpp"
+#include "BoardOperationResult.hpp"
 #include "../Common/Serializable.hpp"
 
 class Board : public Serializable{
@@ -20,8 +21,11 @@ public:
 	Board(const Board&);
 	Board& operator=(const Board&);
 	virtual Board* generateBoard();
-	virtual void reveal(ushort row, ushort col) = 0;
-	virtual void markBomb(ushort row, ushort col);
+	virtual BoardOperationResult reveal(ushort row, ushort col) = 0;
+	virtual BoardOperationResult markBomb(ushort row, ushort col);
 	virtual Board* clone() const = 0;
 	virtual ~Board() = default;
+
+	virtual void serialize(std::ostream&) const override;
+	virtual void deserialize(std::istream&) override;
 };

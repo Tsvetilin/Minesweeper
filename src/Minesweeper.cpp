@@ -9,7 +9,7 @@
 * @idnumber 3MI0600062
 * @compiler VC
 *
-* Program entry point
+* Minesweeper game
 *
 */
 

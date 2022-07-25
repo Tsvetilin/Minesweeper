@@ -6,5 +6,5 @@
 class BoardFactory{
 
 public:
-    static Board* getBoard(const BoardSize&);
+    static Board* getBoard(UncoverType uncoverType, const BoardSize&);
 };
