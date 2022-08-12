@@ -165,7 +165,9 @@
     <ClInclude Include="lib\Common\String.hpp" />
     <ClInclude Include="lib\Display\Display.hpp" />
     <ClInclude Include="lib\Display\BoardDisplay.hpp" />
+    <ClInclude Include="lib\Display\FancyBoardDisplay.hpp" />
     <ClInclude Include="lib\Display\MenuDisplay.hpp" />
+    <ClInclude Include="lib\Display\StandartBoardDisplay.hpp" />
     <ClInclude Include="lib\Engine\Engine.hpp" />
     <ClInclude Include="lib\Engine\EngineState.hpp" />
     <ClInclude Include="lib\Engine\Move.hpp" />
